@@ -52,8 +52,8 @@ use_sentiment_analysis_and_visualization = False
 
 IEX_TOKEN = os.environ.get('IEX_TOKEN')
 IEX_TOKEN = F'?token={IEX_TOKEN}' 
-
-
+IEX_TOKEN_SANDBOX = os.environ.get('IEX_TOKEN_SANDBOX')
+IEX_TOKEN_SANDBOX = F'?token={IEX_TOKEN_SANDBOX}' 
 '''*****************************************************************************
 # Parameters for main function
 *****************************************************************************'''
@@ -510,46 +510,58 @@ def reformatandaddinfoto_symbolsdict(symbols):
 
     #updat symbols dict (add info like marketCap, latestPrice)
     for k,v in symbols.items():
-        url = 'https://cloud.iexapis.com/stable/stock/' + str(k) + '/quote' + IEX_TOKEN
+
+        time.sleep(0.4)
+
+        #url = 'https://cloud.iexapis.com/stable/stock/' + str(k) + '/quote' + IEX_TOKEN
+        url =  'https://sandbox.iexapis.com/stable/stock/' + str(k) + '/quote' + IEX_TOKEN_SANDBOX
+        
         r = requests.get(url)
-        j = r.json()
-        # print(j)
-
-        try:            
-            j_val = j["marketCap"]
-            j_val = "$%.2f" % (j_val/1000000000) + "B" #{symbol: $20.00B}
-            symbols[k].update({"marketCap": j_val})
-        except:
-            # dict_symbolmc[str(k)] = 'None/possible crypto'
-            symbols[k].update({"marketCap": "NA/crypto"})
+        # print(r)
 
         try:
-            j_val = j["latestPrice"]
-            j_val = "$%.2f" % (j_val) #{symbol: $20.00}
-            symbols[k].update({"latestPrice": j_val})
-        except:
-            symbols[k].update({"latestPrice": "NA/crypto"})
+            j = r.json()
+            # print(j)
 
-        try:
-            j_val = j["changePercent"]
-            j_val = "%.2f" % (j_val*100) + "%" #{symbol: 0.02%}
-            symbols[k].update({"changePercent": j_val})
-        except:
-            symbols[k].update({"changePercent": "NA/crypto"})
+            try:            
+                j_val = j["marketCap"]
+                j_val = "$%.2f" % (j_val/1000000000) + "B" #{symbol: $20.00B}
+                symbols[k].update({"marketCap": j_val})
+            except:
+                # dict_symbolmc[str(k)] = 'None/possible crypto'
+                symbols[k].update({"marketCap": "NA/crypto"})
 
-        try:
-            j_val = j["companyName"]
-            symbols[k].update({"companyName": j_val})
-        except:
-            symbols[k].update({"companyName": "NA/crypto"})
+            try:
+                j_val = j["latestPrice"]
+                j_val = "$%.2f" % (j_val) #{symbol: $20.00}
+                symbols[k].update({"latestPrice": j_val})
+            except:
+                symbols[k].update({"latestPrice": "NA/crypto"})
 
-        try:
-            j_val = j["peRatio"]
-            if j_val == "" or j_val == None: j_val = "NA"
-            symbols[k].update({"peRatio": j_val})
-            
-        except:
-            symbols[k].update({"peRatio": "NA/crypto"})
+            try:
+                j_val = j["changePercent"]
+                j_val = "%.2f" % (j_val*100) + "%" #{symbol: 0.02%}
+                symbols[k].update({"changePercent": j_val})
+            except:
+                symbols[k].update({"changePercent": "NA/crypto"})
+
+            try:
+                j_val = j["companyName"]
+                symbols[k].update({"companyName": j_val})
+            except:
+                symbols[k].update({"companyName": "NA/crypto"})
+
+            try:
+                j_val = j["peRatio"]
+                if j_val == "" or j_val == None: j_val = "NA"
+                symbols[k].update({"peRatio": j_val})
+                
+            except:
+                symbols[k].update({"peRatio": "NA/crypto"})
+
+        except Exception as e:
+            print(e, '--', k, r.reason)
+            continue #try to bypass json.decoder error
 
     # pprint.pprint(symbols)
     
@@ -958,7 +970,7 @@ if __name__ == '__main__':
     schedule.every().day.at("18:00").do(run_batch_of_processes_1)
     schedule.every().day.at("21:00").do(run_batch_of_processes_1)
     
-    # run_batch_of_processes_1() ##immediate, test
+    run_batch_of_processes_1() ##immediate, test
 
     while True:   
       schedule.run_pending()

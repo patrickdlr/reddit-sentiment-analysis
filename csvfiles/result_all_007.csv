@@ -1,335 +1,359 @@
-Date and time: 01/12/2022 15:38
+Date and time: 01/31/2022 13:00
 Sub count: 64
 Market Cap min: >2 trillions
 upvoteRatio: 0.5 | ups: 20 | limit: 1 | upvotes: 2 | picks: 100 | picks_ayz: 100
-It took 2826.42 seconds to analyze 19991 comments in 766 posts in 64 subreddits.
-number of tickers: 327
+It took 6263.38 seconds to analyze 22883 comments in 759 posts in 64 subreddits.
+number of tickers: 351
 
-Number    ,Symbols   ,  Mentions, MarketCap,     Price, PctChange,      Name,ShortFloat
-1         ,SPY       ,        44,      None,      None,      None,
-2         ,AMC       ,        40,      None,      None,      None,
-3         ,GME       ,        38,      None,      None,      None,
-4         ,CPI       ,        30,      None,      None,      None,
-5         ,TSLA      ,        28,      None,      None,      None,
-6         ,O         ,        26,      None,      None,      None,
-7         ,TD        ,        18,      None,      None,      None,
-8         ,TFSA      ,        18,      None,      None,      None,
-9         ,MSFT      ,        14,      None,    $334.x,      0.x%, Microsoft Corporation Common Stock
-10        ,QQQ       ,        14,      None,      None,      None,
-11        ,AMD       ,        14,      None,      None,      None,
-12        ,SNDL      ,        12,      None,      None,      None,
-13        ,QYLD      ,        11,      None,      None,      None,
-14        ,F         ,        10,      None,      None,      None,
-15        ,SCHD      ,        10,      None,      None,      None,
-16        ,NVDA      ,         9,      None,      None,      None,
-17        ,TTWO      ,         9,      None,      None,      None,
-18        ,NAKD      ,         9,      None,      None,      None,
-19        ,DWAC      ,         9,      None,      None,      None,
-20        ,SQ        ,         8,      None,      None,      None,
-21        ,PLTR      ,         8,      None,      None,      None,
-22        ,AI        ,         8,      None,      None,      None,
-23        ,ICE       ,         8,      None,      None,      None,
-24        ,SU        ,         8,      None,      None,      None,
-25        ,NOK       ,         8,      None,      None,      None,
-26        ,AAPL      ,         7,      None,    $175.x,      2.x%, Apple Inc. Common Stock
-27        ,TQQQ      ,         7,      None,      None,      None,
-28        ,PYPL      ,         7,      None,      None,      None,
-29        ,UI        ,         7,      None,      None,      None,
-30        ,R         ,         7,      None,      None,      None,
-31        ,GS        ,         6,      None,      None,      None,
-32        ,ARKK      ,         6,      None,      None,      None,
-33        ,BAM       ,         6,      None,      None,      None,
-34        ,TLRY      ,         6,      None,      None,      None,
-35        ,TSM       ,         6,      None,      None,      None,
-36        ,LSPD      ,         6,      None,      None,      None,
-37        ,AQN       ,         6,      None,      None,      None,
-38        ,E         ,         6,      None,      None,      None,
-39        ,M         ,         5,      None,      None,      None,
-40        ,B         ,         5,      None,      None,      None,
-41        ,INTC      ,         5,      None,      None,      None,
-42        ,BB        ,         5,      None,      None,      None,
-43        ,RNW       ,         5,      None,      None,      None,
-44        ,SHOP      ,         5,      None,      None,      None,
-45        ,C         ,         4,      None,      None,      None,
-46        ,JPM       ,         4,      None,      None,      None,
-47        ,SMH       ,         4,      None,      None,      None,
-48        ,BABA      ,         4,      None,      None,      None,
-49        ,GM        ,         4,      None,      None,      None,
-50        ,FB        ,         4,      None,      None,      None,
-51        ,STAG      ,         4,      None,      None,      None,
-52        ,ABR       ,         4,      None,      None,      None,
-53        ,CVE       ,         4,      None,      None,      None,
-54        ,SP        ,         4,      None,      None,      None,
-55        ,T         ,         3,      None,      None,      None,
-56        ,RE        ,         3,      None,      None,      None,
-57        ,CASH      ,         3,      None,      None,      None,
-58        ,CRSR      ,         3,      None,      None,      None,
-59        ,GOOG      ,         3,      None,   $2974.x,      0.x%, Alphabet Inc. Class C Capital Stock
-60        ,DIS       ,         3,      None,      None,      None,
-61        ,JUST      ,         3,      None,      None,      None,
-62        ,SE        ,         3,      None,      None,      None,
-63        ,CRM       ,         3,      None,      None,      None,
-64        ,FSD       ,         3,      None,      None,      None,
-65        ,LCID      ,         3,      None,      None,      None,
-66        ,RBLX      ,         3,      None,      None,      None,
-67        ,ATVI      ,         3,      None,      None,      None,
-68        ,ARKG      ,         3,      None,      None,      None,
-69        ,TA        ,         3,      None,      None,      None,
-70        ,ML        ,         3,      None,      None,      None,
-71        ,CC        ,         3,      None,      None,      None,
-72        ,DTE       ,         3,      None,      None,      None,
-73        ,L         ,         3,      None,      None,      None,
-74        ,LNG       ,         3,      None,      None,      None,
-75        ,DRIP      ,         3,      None,      None,      None,
-76        ,MAIN      ,         3,      None,      None,      None,
-77        ,IIPR      ,         3,      None,      None,      None,
-78        ,GET       ,         3,      None,      None,      None,
-79        ,VERY      ,         3,      None,      None,      None,
-80        ,RY        ,         3,      None,      None,      None,
-81        ,GP        ,         2,      None,      None,      None,
-82        ,JP        ,         2,      None,      None,      None,
-83        ,V         ,         2,      None,      None,      None,
-84        ,GOOGL     ,         2,      None,   $2963.x,      0.x%, Alphabet Inc. Class A Common Stock
-85        ,AMZN      ,         2,      None,   $3523.x,     -0.x%," Amazon.com, Inc. Common Stock"
-86        ,SOFI      ,         2,      None,      None,      None,
-87        ,ABBV      ,         2,      None,      None,      None,
-88        ,NIO       ,         2,      None,      None,      None,
-89        ,SOXL      ,         2,      None,      None,      None,
-90        ,COIN      ,         2,      None,      None,      None,
-91        ,TMF       ,         2,      None,      None,      None,
-92        ,NET       ,         2,      None,      None,      None,
-93        ,RIO       ,         2,      None,      None,      None,
-94        ,J         ,         2,      None,      None,      None,
-95        ,FT        ,         2,      None,      None,      None,
-96        ,ANY       ,         2,      None,      None,      None,
-97        ,MT        ,         2,      None,      None,      None,
-98        ,NEW       ,         2,      None,      None,      None,
-99        ,UVXY      ,         2,      None,      None,      None,
-100       ,UP        ,         2,      None,      None,      None,
-101       ,ESG       ,         2,      None,      None,      None,
-102       ,EPS       ,         2,      None,      None,      None,
-103       ,MUB       ,         2,      None,      None,      None,
-104       ,BND       ,         2,      None,      None,      None,
-105       ,REIT      ,         2,      None,      None,      None,
-106       ,HOLD      ,         2,      None,      None,      None,
-107       ,BP        ,         2,      None,      None,      None,
-108       ,IBKR      ,         2,      None,      None,      None,
-109       ,IVR       ,         2,      None,      None,      None,
-110       ,DOGZ      ,         2,      None,      None,      None,
-111       ,KR        ,         2,      None,      None,      None,
-112       ,NVAX      ,         2,      None,      None,      None,
-113       ,SBUX      ,         2,      None,      None,      None,
-114       ,TV        ,         2,      None,      None,      None,
-115       ,IDEX      ,         2,      None,      None,      None,
-116       ,G         ,         2,      None,      None,      None,
-117       ,NNDM      ,         2,      None,      None,      None,
-118       ,CNQ       ,         2,      None,      None,      None,
-119       ,MFC       ,         2,      None,      None,      None,
-120       ,AL        ,         2,      None,      None,      None,
-121       ,AIM       ,         2,      None,      None,      None,
-122       ,DRIV      ,         2,      None,      None,      None,
-123       ,BNY       ,         1,      None,      None,      None,
-124       ,STEM      ,         1,      None,      None,      None,
-125       ,DEI       ,         1,      None,      None,      None,
-126       ,MS        ,         1,      None,      None,      None,
-127       ,UPS       ,         1,      None,      None,      None,
-128       ,VC        ,         1,      None,      None,      None,
-129       ,DS        ,         1,      None,      None,      None,
-130       ,MAN       ,         1,      None,      None,      None,
-131       ,DAX       ,         1,      None,      None,      None,
-132       ,ADS       ,         1,      None,      None,      None,
-133       ,LOW       ,         1,      None,      None,      None,
-134       ,PAY       ,         1,      None,      None,      None,
-135       ,MTTR      ,         1,      None,      None,      None,
-136       ,BTI       ,         1,      None,      None,      None,
-137       ,CSCO      ,         1,      None,      None,      None,
-138       ,RSI       ,         1,      None,      None,      None,
-139       ,PHG       ,         1,      None,      None,      None,
-140       ,SA        ,         1,      None,      None,      None,
-141       ,CLFD      ,         1,      None,      None,      None,
-142       ,ADBE      ,         1,      None,      None,      None,
-143       ,KO        ,         1,      None,      None,      None,
-144       ,ALLY      ,         1,      None,      None,      None,
-145       ,STOR      ,         1,      None,      None,      None,
-146       ,BMY       ,         1,      None,      None,      None,
-147       ,DKNG      ,         1,      None,      None,      None,
-148       ,PINS      ,         1,      None,      None,      None,
-149       ,CRWD      ,         1,      None,      None,      None,
-150       ,AVUV      ,         1,      None,      None,      None,
-151       ,CROX      ,         1,      None,      None,      None,
-152       ,PENN      ,         1,      None,      None,      None,
-153       ,CMG       ,         1,      None,      None,      None,
-154       ,ILMN      ,         1,      None,      None,      None,
-155       ,MVIS      ,         1,      None,      None,      None,
-156       ,COST      ,         1,      None,      None,      None,
-157       ,HL        ,         1,      None,      None,      None,
-158       ,UPRO      ,         1,      None,      None,      None,
-159       ,GGPI      ,         1,      None,      None,      None,
-160       ,RKLB      ,         1,      None,      None,      None,
-161       ,CCI       ,         1,      None,      None,      None,
-162       ,AMT       ,         1,      None,      None,      None,
-163       ,VHI       ,         1,      None,      None,      None,
-164       ,ASTS      ,         1,      None,      None,      None,
-165       ,IOT       ,         1,      None,      None,      None,
-166       ,GPS       ,         1,      None,      None,      None,
-167       ,GLD       ,         1,      None,      None,      None,
-168       ,IBM       ,         1,      None,      None,      None,
-169       ,BFLY      ,         1,      None,      None,      None,
-170       ,DISCA     ,         1,      None,      None,      None,
-171       ,BX        ,         1,      None,      None,      None,
-172       ,CLF       ,         1,      None,      None,      None,
-173       ,AAA       ,         1,      None,      None,      None,
-174       ,NYC       ,         1,      None,      None,      None,
-175       ,IQ        ,         1,      None,      None,      None,
-176       ,ALT       ,         1,      None,      None,      None,
-177       ,DOW       ,         1,      None,      None,      None,
-178       ,BCH       ,         1,      None,      None,      None,
-179       ,ID        ,         1,      None,      None,      None,
-180       ,CVNA      ,         1,      None,      None,      None,
-181       ,ACA       ,         1,      None,      None,      None,
-182       ,IG        ,         1,      None,      None,      None,
-183       ,EVER      ,         1,      None,      None,      None,
-184       ,SRV       ,         1,      None,      None,      None,
-185       ,HSBC      ,         1,      None,      None,      None,
-186       ,AGI       ,         1,      None,      None,      None,
-187       ,STL       ,         1,      None,      None,      None,
-188       ,HUYA      ,         1,      None,      None,      None,
-189       ,SQQQ      ,         1,      None,      None,      None,
-190       ,SPGI      ,         1,      None,      None,      None,
-191       ,FFR       ,         1,      None,      None,      None,
-192       ,FINX      ,         1,      None,      None,      None,
-193       ,BITF      ,         1,      None,      None,      None,
-194       ,GNUS      ,         1,      None,      None,      None,
-195       ,BYD       ,         1,      None,      None,      None,
-196       ,CHKP      ,         1,      None,      None,      None,
-197       ,DVN       ,         1,      None,      None,      None,
-198       ,OXY       ,         1,      None,      None,      None,
-199       ,COO       ,         1,      None,      None,      None,
-200       ,SD        ,         1,      None,      None,      None,
-201       ,VGT       ,         1,      None,      None,      None,
-202       ,ENPH      ,         1,      None,      None,      None,
-203       ,REAL      ,         1,      None,      None,      None,
-204       ,DOCU      ,         1,      None,      None,      None,
-205       ,MA        ,         1,      None,      None,      None,
-206       ,SBLK      ,         1,      None,      None,      None,
-207       ,HYS       ,         1,      None,      None,      None,
-208       ,BNDW      ,         1,      None,      None,      None,
-209       ,TLT       ,         1,      None,      None,      None,
-210       ,HYD       ,         1,      None,      None,      None,
-211       ,NTSX      ,         1,      None,      None,      None,
-212       ,EDV       ,         1,      None,      None,      None,
-213       ,CD        ,         1,      None,      None,      None,
-214       ,AGG       ,         1,      None,      None,      None,
-215       ,TIP       ,         1,      None,      None,      None,
-216       ,IP        ,         1,      None,      None,      None,
-217       ,RMD       ,         1,      None,      None,      None,
-218       ,GE        ,         1,      None,      None,      None,
-219       ,NEXT      ,         1,      None,      None,      None,
-220       ,COOL      ,         1,      None,      None,      None,
-221       ,LIVE      ,         1,      None,      None,      None,
-222       ,FUBO      ,         1,      None,      None,      None,
-223       ,ABC       ,         1,      None,      None,      None,
-224       ,NAK       ,         1,      None,      None,      None,
-225       ,CIDM      ,         1,      None,      None,      None,
-226       ,CPRI      ,         1,      None,      None,      None,
-227       ,ALLK      ,         1,      None,      None,      None,
-228       ,SPOT      ,         1,      None,      None,      None,
-229       ,AMGN      ,         1,      None,      None,      None,
-230       ,MRK       ,         1,      None,      None,      None,
-231       ,NLY       ,         1,      None,      None,      None,
-232       ,AGNC      ,         1,      None,      None,      None,
-233       ,JEPI      ,         1,      None,      None,      None,
-234       ,DIVO      ,         1,      None,      None,      None,
-235       ,NUSI      ,         1,      None,      None,      None,
-236       ,HNDL      ,         1,      None,      None,      None,
-237       ,PBA       ,         1,      None,      None,      None,
-238       ,EPD       ,         1,      None,      None,      None,
-239       ,ERX       ,         1,      None,      None,      None,
-240       ,HD        ,         1,      None,      None,      None,
-241       ,ADC       ,         1,      None,      None,      None,
-242       ,MPW       ,         1,      None,      None,      None,
-243       ,GLAD      ,         1,      None,      None,      None,
-244       ,NRZ       ,         1,      None,      None,      None,
-245       ,RYLD      ,         1,      None,      None,      None,
-246       ,MMAT      ,         1,      None,      None,      None,
-247       ,RKDA      ,         1,      None,      None,      None,
-248       ,GSAT      ,         1,      None,      None,      None,
-249       ,MNMD      ,         1,      None,      None,      None,
-250       ,ALPP      ,         1,      None,      None,      None,
-251       ,PLUG      ,         1,      None,      None,      None,
-252       ,MESA      ,         1,      None,      None,      None,
-253       ,SWKS      ,         1,      None,      None,      None,
-254       ,QCOM      ,         1,      None,      None,      None,
-255       ,QRVO      ,         1,      None,      None,      None,
-256       ,OG        ,         1,      None,      None,      None,
-257       ,DNA       ,         1,      None,      None,      None,
-258       ,JMIA      ,         1,      None,      None,      None,
-259       ,CS        ,         1,      None,      None,      None,
-260       ,SCHB      ,         1,      None,      None,      None,
-261       ,SFT       ,         1,      None,      None,      None,
-262       ,BNDX      ,         1,      None,      None,      None,
-263       ,HUGE      ,         1,      None,      None,      None,
-264       ,MSM       ,         1,      None,      None,      None,
-265       ,HOOD      ,         1,      None,      None,      None,
-266       ,LFG       ,         1,      None,      None,      None,
-267       ,SAVA      ,         1,      None,      None,      None,
-268       ,ME        ,         1,      None,      None,      None,
-269       ,CTXR      ,         1,      None,      None,      None,
-270       ,SARK      ,         1,      None,      None,      None,
-271       ,ESGA      ,         1,      None,      None,      None,
-272       ,VET       ,         1,      None,      None,      None,
-273       ,ENB       ,         1,      None,      None,      None,
-274       ,TRP       ,         1,      None,      None,      None,
-275       ,DLR       ,         1,      None,      None,      None,
-276       ,ARC       ,         1,      None,      None,      None,
-277       ,BNS       ,         1,      None,      None,      None,
-278       ,NTR       ,         1,      None,      None,      None,
-279       ,CPG       ,         1,      None,      None,      None,
-280       ,RESP      ,         1,      None,      None,      None,
-281       ,CNR       ,         1,      None,      None,      None,
-282       ,CP        ,         1,      None,      None,      None,
-283       ,CTS       ,         1,      None,      None,      None,
-284       ,SNP       ,         1,      None,      None,      None,
-285       ,HUT       ,         1,      None,      None,      None,
-286       ,CAR       ,         1,      None,      None,      None,
-287       ,AN        ,         1,      None,      None,      None,
-288       ,BMO       ,         1,      None,      None,      None,
-289       ,TDW       ,         1,      None,      None,      None,
-290       ,DB        ,         1,      None,      None,      None,
-291       ,DAC       ,         1,      None,      None,      None,
-292       ,SPLG      ,         1,      None,      None,      None,
-293       ,OI        ,         1,      None,      None,      None,
-294       ,AZZ       ,         1,      None,      None,      None,
-295       ,IVA       ,         1,      None,      None,      None,
-296       ,CVM       ,         1,      None,      None,      None,
-297       ,IR        ,         1,      None,      None,      None,
-298       ,SF        ,         1,      None,      None,      None,
-299       ,PNW       ,         1,      None,      None,      None,
-300       ,LEAP      ,         1,      None,      None,      None,
-301       ,AA        ,         1,      None,      None,      None,
-302       ,PSTH      ,         1,      None,      None,      None,
-303       ,H         ,         1,      None,      None,      None,
-304       ,D         ,         1,      None,      None,      None,
-305       ,IWM       ,         1,      None,      None,      None,
-306       ,GOLD      ,         1,      None,      None,      None,
-307       ,PTON      ,         1,      None,      None,      None,
-308       ,JNJ       ,         1,      None,      None,      None,
-309       ,UST       ,         1,      None,      None,      None,
-310       ,DCF       ,         1,      None,      None,      None,
-311       ,PEG       ,         1,      None,      None,      None,
-312       ,BHP       ,         1,      None,      None,      None,
-313       ,FCF       ,         1,      None,      None,      None,
-314       ,DOYU      ,         1,      None,      None,      None,
-315       ,VALE      ,         1,      None,      None,      None,
-316       ,CCL       ,         1,      None,      None,      None,
-317       ,RCL       ,         1,      None,      None,      None,
-318       ,GD        ,         1,      None,      None,      None,
-319       ,GGT       ,         1,      None,      None,      None,
-320       ,BOE       ,         1,      None,      None,      None,
-321       ,ABB       ,         1,      None,      None,      None,
-322       ,LPI       ,         1,      None,      None,      None,
-323       ,DFS       ,         1,      None,      None,      None,
-324       ,MFG       ,         1,      None,      None,      None,
-325       ,CMC       ,         1,      None,      None,      None,
-326       ,EFT       ,         1,      None,      None,      None,
-327       ,GAME      ,         1,      None,      None,      None,
+Number    ,Symbols   ,  Mentions, marketCap,latestPric,changePerc,   peRatio,companyNam
+1         ,SPY       ,        52,  $438.33B,   $468.58,     1.79%,        NA,SSgA Active Trust - S&P 500 ETF TRUST ETF
+2         ,GME       ,        35,    $8.57B,   $109.42,    11.55%,    -51.76,Gamestop Corporation - Class A
+3         ,AMD       ,        29,  $138.91B,   $118.77,     8.95%,     35.81,Advanced Micro Devices Inc.
+4         ,AAPL      ,        27, $2954.41B,   $177.25,     2.75%,     29.64, Apple Inc
+5         ,AMC       ,        27,    $8.26B,    $16.70,     6.66%,      -3.1,AMC Entertainment Holdings Inc - Class A
+6         ,MSFT      ,        18, $2425.31B,   $313.60,     0.84%,     33.51,Microsoft Corporation
+7         ,TFSA      ,        18, NA/crypto,    $26.83, NA/crypto,        NA,Terra Income Fund 6 Inc - 7% NT REDEEM 31/03/2026 USD 25
+8         ,TD        ,        14,  $151.06B,    $83.41,     2.04%,      6.58,Toronto Dominion Bank
+9         ,AMZN      ,        13, $1585.00B,  $3107.51,     3.86%,     60.13,Amazon.com Inc.
+10        ,SNDL      ,        13,    $0.79B,     $0.49,     5.01%,        NA,Sundial Growers Inc
+11        ,TSLA      ,        12,  $945.53B,   $971.57,    10.88%,    309.58, Tesla Inc
+12        ,QQQ       ,         9,  $194.40B,   $373.77,     3.30%,        NA,Invesco Capital Management LLC - Invesco QQQ Trust Series 1
+13        ,DTE       ,         9,   $23.80B,   $124.59,     0.16%,     31.51,DTE Energy Co.
+14        ,NAKD      ,         9,    $2.42B,     $2.67,     0.00%,        -3,Cenntro Electric Group Limited
+15        ,NOK       ,         8,   $33.69B,     $6.20,     3.27%,     -15.3,Nokia Corp - ADR
+16        ,NFLX      ,         7,  $197.11B,   $440.30,    11.29%,     19.49,NetFlix Inc
+17        ,F         ,         7,   $81.59B,    $20.40,     3.99%,     28.34,Ford Motor Co.
+18        ,INTC      ,         7,  $203.56B,    $49.81,     2.37%,      5.06,Intel Corp.
+19        ,HOOD      ,         7,   $10.75B,    $14.52,    11.71%,   1263.94,Robinhood Markets Inc - Class A
+20        ,IBM       ,         7,  $123.69B,   $139.44,    -0.69%,     27.45,International Business Machines Corp.
+21        ,O         ,         7,   $29.29B,    $72.67,    -0.12%,     54.89,Realty Income Corp.
+22        ,GS        ,         6,  $123.70B,   $367.35,     2.30%,      6.03,"Goldman Sachs Group, Inc."
+23        ,T         ,         6,  $184.15B,    $26.00,     1.16%,    202.42,"AT&T, Inc."
+24        ,ARKK      ,         6,      None,      None,      None,      None,      None
+25        ,NVDA      ,         6,  $618.13B,   $247.00,     7.48%,     78.22,NVIDIA Corp
+26        ,TA        ,         6,    $0.69B,    $47.72,     4.45%,        NA,TravelCenters of America Inc
+27        ,BTI       ,         6,   $98.82B,    $44.87,     0.19%,     11.77,British American Tobacco Plc - ADR
+28        ,CFA       ,         5,      None,      None,      None,      None,      None
+29        ,JPM       ,         5,  $447.23B,   $151.90,     1.42%,       9.6,JPMorgan Chase & Co.
+30        ,PYPL      ,         5,      None,      None,      None,      None,      None
+31        ,TQQQ      ,         5,   $18.88B,    $63.62,     9.99%,        NA,ProShares Trust - ProShares UltraPro QQQ
+32        ,DRIP      ,         5,      None,      None,      None,      None,      None
+33        ,CPI       ,         4, NA/crypto,    $27.54, NA/crypto,        NA,IndexIQ ETF Trust - IQ Real Return ETF
+34        ,GM        ,         4,   $79.97B,    $55.06,     5.04%,      7.18,General Motors Company
+35        ,GOOGL     ,         4, $1826.44B,  $2728.56,     1.48%,     27.66,Alphabet Inc - Class A
+36        ,KO        ,         4,  $269.49B,    $61.68,     0.29%,     30.78,Coca-Cola Co
+37        ,SQQQ      ,         4,    $2.05B,    $38.79,   -10.24%,        NA,ProShares Trust - ProShares UltraPro Short QQQ
+38        ,BABA      ,         4,  $344.52B,   $126.01,     9.28%,     17.71,Alibaba Group Holding Ltd - ADR
+39        ,NIO       ,         4,   $39.26B,    $24.58,    17.29%,    -24.62,NIO Inc - ADR
+40        ,NYC       ,         4,    $0.11B,    $11.19,     1.45%,        NA,New York City REIT Inc - Class A
+41        ,EPS       ,         4,    $0.73B,    $49.03,     1.76%,        NA,WisdomTree Trust - WisdomTree U.S. LargeCap Fund
+42        ,UI        ,         4,      None,      None,      None,      None,      None
+43        ,E         ,         4,   $56.40B,    $30.97,    -1.58%,     64.34,Eni Spa - ADR
+44        ,ICLN      ,         4,      None,      None,      None,      None,      None
+45        ,SCHD      ,         4,      None,      None,      None,      None,      None
+46        ,LMT       ,         4,      None,      None,      None,      None,      None
+47        ,LCID      ,         4,   $49.72B,    $30.75,     8.21%,        NA,Lucid Group Inc
+48        ,BB        ,         4,    $4.79B,     $8.54,     4.54%,    -10.97,BlackBerry Ltd
+49        ,PLTR      ,         4,      None,      None,      None,      None,      None
+50        ,VC        ,         3,    $2.97B,   $105.87,     3.39%,    102.03,Visteon Corp.
+51        ,BAC       ,         3,      None,      None,      None,      None,      None
+52        ,UP        ,         3,      None,      None,      None,      None,      None
+53        ,DIS       ,         3,      None,      None,      None,      None,      None
+54        ,DOCU      ,         3,      None,      None,      None,      None,      None
+55        ,SOXL      ,         3,      None,      None,      None,      None,      None
+56        ,ABBV      ,         3,      None,      None,      None,      None,      None
+57        ,V         ,         3,      None,      None,      None,      None,      None
+58        ,FB        ,         3,      None,      None,      None,      None,      None
+59        ,SOFI      ,         3,      None,      None,      None,      None,      None
+60        ,BND       ,         3,      None,      None,      None,      None,      None
+61        ,JUST      ,         3,      None,      None,      None,      None,      None
+62        ,FT        ,         3,      None,      None,      None,      None,      None
+63        ,UVXY      ,         3,      None,      None,      None,      None,      None
+64        ,SBUX      ,         3,      None,      None,      None,      None,      None
+65        ,TSM       ,         3,  $641.63B,   $123.41,     4.35%,     32.06,Taiwan Semiconductor Manufacturing - ADR
+66        ,SPCE      ,         3,      None,      None,      None,      None,      None
+67        ,REIT      ,         3,    $0.02B,    $28.86,     0.00%,        NA,ALPS Fund Services - ALPS Active REIT ETF
+68        ,JP        ,         3,    $0.03B,     $0.81,     6.37%,        NA,Jupai Holdings Ltd - ADR
+69        ,ESG       ,         3,    $0.20B,   $113.29,     0.96%,        NA,FlexShares Trust - FlexShares STOXX US ESG Select Index Fund
+70        ,HOLD      ,         3,    $0.04B,   $100.96,    -0.01%,        NA,Advisorshares Trust - AdvisorShares North Square McKee Core Reserves ETF
+71        ,ATVI      ,         3,   $64.10B,    $82.36,    -0.17%,     24.17,Activision Blizzard Inc
+72        ,CC        ,         3,    $5.55B,    $33.08,     0.76%,     14.18,Chemours Company
+73        ,K         ,         3,   $21.85B,    $63.00,    -3.62%,     17.56,Kellogg Co
+74        ,LEAP      ,         3,    $0.42B,     $9.86,    -0.21%,        NA,Ribbit LEAP Ltd - Class A
+75        ,IVR       ,         3,    $0.84B,     $2.73,     3.60%,     13.06,Invesco Mortgage Capital Inc
+76        ,LSPD      ,         3,    $5.03B,    $33.55,    12.75%,        NA,Lightspeed Commerce Inc (Sub Voting)
+77        ,BC        ,         3,    $7.07B,    $94.36,     0.58%,     12.34,Brunswick Corp.
+78        ,THG       ,         3,    $5.14B,   $142.32,     1.49%,     12.14,Hanover Insurance Group Inc
+79        ,AIM       ,         3,    $0.04B,     $0.86,    10.59%,     -2.23,AIM ImmunoTech Inc
+80        ,MD        ,         2,    $2.18B,    $24.78,    -1.05%,    114.09,MEDNAX Inc
+81        ,MS        ,         2,  $184.74B,   $103.96,     0.76%,      13.4,Morgan Stanley
+82        ,UPS       ,         2,  $180.89B,   $210.84,     2.05%,     28.13,"United Parcel Service, Inc. - Class B"
+83        ,COST      ,         2,  $233.47B,   $510.62,     2.53%,     43.94,Costco Wholesale Corp
+84        ,JNJ       ,         2,  $458.80B,   $179.94,     0.30%,     26.38,Johnson & Johnson
+85        ,AXP       ,         2,  $140.86B,   $181.99,     1.61%,     18.91,American Express Co.
+86        ,B         ,         2,    $2.39B,    $47.09,     0.20%,     26.01,Barnes Group Inc.
+87        ,ADM       ,         2,   $42.11B,    $76.00,    -1.21%,      16.2,Archer Daniels Midland Co.
+88        ,AB        ,         2,    $4.69B,    $47.26,     2.97%,        NA,AllianceBernstein Holding Lp - Unit
+89        ,META      ,         2,      None,      None,      None,      None,      None
+90        ,IWM       ,         2,      None,      None,      None,      None,      None
+91        ,NVAX      ,         2,    $7.14B,    $94.10,    13.60%,     -6.37,"Novavax, Inc."
+92        ,SNAP      ,         2,   $49.53B,    $33.25,     7.26%,    -80.04,Snap Inc - Class A
+93        ,RBLX      ,         2,      None,      None,      None,      None,      None
+94        ,AN        ,         2,    $7.35B,   $114.00,     0.99%,      7.73,Autonation Inc.
+95        ,CPA       ,         2,      None,      None,      None,      None,      None
+96        ,IP        ,         2,   $19.46B,    $49.37,     2.34%,      11.7,International Paper Co.
+97        ,EVER      ,         2,      None,      None,      None,      None,      None
+98        ,BRN       ,         2,    $0.03B,     $2.79,     6.29%,        NA,Barnwell Industries Inc.
+99        ,TV        ,         2,    $5.96B,    $10.68,     6.62%,        NA,Grupo Televisa SAB - ADR - Level III
+100       ,BROS      ,         2,    $1.86B,    $52.93,    10.15%,        NA,Dutch Bros Inc - Class A
+101       ,JO        ,         2,      None,      None,      None,      None,      None
+102       ,UBER      ,         2,      None,      None,      None,      None,      None
+103       ,SQ        ,         2,      None,      None,      None,      None,      None
+104       ,LNG       ,         2,      None,      None,      None,      None,      None
+105       ,ASML      ,         2,      None,      None,      None,      None,      None
+106       ,S         ,         2,      None,      None,      None,      None,      None
+107       ,RIVN      ,         2,      None,      None,      None,      None,      None
+108       ,IBKR      ,         2,    $6.74B,    $68.23,     3.74%,     21.08,Interactive Brokers Group Inc - Class A
+109       ,ENB       ,         2,      None,      None,      None,      None,      None
+110       ,PFE       ,         2,  $299.97B,    $54.75,    -3.09%,     16.33,Pfizer Inc.
+111       ,QCOM      ,         2,  $204.54B,   $179.91,     5.69%,     11.47,"Qualcomm, Inc."
+112       ,OG        ,         2,    $0.08B,     $2.11,     6.56%,        NA,Onion Global Ltd - ADR
+113       ,TCS       ,         2,    $0.52B,    $10.30,     3.96%,      5.42,Container Store Group Inc
+114       ,M         ,         2,    $7.93B,    $25.70,     0.66%,        10,Macy`s Inc
+115       ,IDEX      ,         2,    $0.54B,     $1.07,    17.08%,        NA,Ideanomics Inc
+116       ,ORC       ,         2,    $0.73B,     $4.18,     3.75%,     -4.51,Orchid Island Capital Inc
+117       ,ME        ,         2,    $0.45B,     $4.82,    11.25%,        NA,23andMe Holding Co - Class A
+118       ,CVE       ,         2,   $30.49B,    $14.72,     0.77%,        NA,Cenovus Energy Inc
+119       ,EQ        ,         2,    $0.12B,     $3.94,     6.83%,        NA,Equillium Inc
+120       ,GSY       ,         2,    $2.81B,    $50.96,     0.00%,        NA,Invesco Capital Management LLC - Invesco Ultra Short Duration ETF
+121       ,MTCH      ,         2,   $33.42B,   $116.87,     3.13%,     61.73,Match Group Inc. - New
+122       ,PL        ,         2,    $1.51B,     $6.20,    10.32%,        NA,Planet Labs PBC - Class A
+123       ,R         ,         2,    $4.12B,    $75.80,     1.36%,     11.25,"Ryder System, Inc."
+124       ,BP        ,         2,  $104.07B,    $31.18,    -0.49%,     -5.36,BP plc - ADR
+125       ,SP        ,         2,    $0.67B,    $28.91,     3.40%,     25.94,SP Plus Corp
+126       ,MIT       ,         1,    $0.49B,    $10.02,     0.42%,        NA,Mason Industrial Technology Inc - Class A
+127       ,NXP       ,         1,    $0.26B,    $15.80,     0.27%,        NA,Nuveen Select Tax-Free Income Portfolio
+128       ,FTC       ,         1,    $1.14B,   $105.70,     1.59%,        NA,First Trust Exchange-Traded Fund III - First Trust Large Capital Growth AlphaDEX Fund
+129       ,PUMP      ,         1,    $1.09B,    $10.64,     1.16%,     -13.8,ProPetro Holding Corp
+130       ,BNY       ,         1,    $0.17B,    $13.76,     0.07%,        NA,BlackRock New York Municipal Income Trust
+131       ,STEM      ,         1,    $1.79B,    $12.63,     8.90%,        NA,Stem Inc - Class A
+132       ,DEI       ,         1,    $5.57B,    $31.57,     0.00%,     91.02,Douglas Emmett Inc
+133       ,C         ,         1,  $134.19B,    $67.21,     0.67%,      6.51,Citigroup Inc
+134       ,GP        ,         1,    $0.13B,     $5.86,    10.78%,        NA,GreenPower Motor Company Inc
+135       ,DS        ,         1,    $0.13B,     $1.40,     8.67%,      -6.9,Drive Shack Inc
+136       ,MAN       ,         1,    $5.72B,   $105.23,     1.13%,     16.92,ManpowerGroup
+137       ,DAX       ,         1,    $0.04B,    $32.37,     1.68%,        NA,Global X Funds - Global X DAX Germany ETF
+138       ,NRZ       ,         1,    $4.99B,    $11.08,     2.84%,      8.07,New Residential Investment Corp
+139       ,APLE      ,         1,    $3.76B,    $16.74,     3.84%,    -79.98,Apple Hospitality REIT Inc
+140       ,BMY       ,         1,  $147.12B,    $67.59,    -0.03%,    -28.04,Bristol-Myers Squibb Co.
+141       ,URBN      ,         1,    $2.81B,    $28.86,     2.29%,      9.96,"Urban Outfitters, Inc."
+142       ,SFM       ,         1,    $3.10B,    $27.72,     0.96%,     12.02,Sprouts Farmers Market Inc
+143       ,RKT       ,         1,    $1.73B,    $13.25,     2.25%,     -4.22,Rocket Companies Inc Class A
+144       ,PPH       ,         1,    $0.40B,    $76.41,     0.52%,        NA,VanEck ETF Trust - VanEck Pharmaceutical ETF
+145       ,DRIV      ,         1,    $1.45B,    $28.54,     4.30%,        NA,Global X Funds - Global X Autonomous & Electric Vehicles ETF
+146       ,IDRV      ,         1,    $0.64B,    $52.27,     4.61%,        NA,iShares Trust - iShares Self-Driving EV and Tech ETF
+147       ,FINX      ,         1,    $0.92B,    $35.56,     5.96%,        NA,Global X Funds - Global X Funds Global X FinTech ETF
+148       ,SABR      ,         1,    $3.09B,     $9.44,     5.27%,     -2.86,Sabre Corp
+149       ,SARK      ,         1,    $0.27B,    $45.92,    -9.46%,        NA,Collaborative Investment Series Trust - Tuttle Capital Short Innovation ETF
+150       ,SENS      ,         1,    $1.23B,     $2.74,    12.52%,        NA,Senseonics Holdings Inc
+151       ,APOG      ,         1,    $1.15B,    $44.50,     0.23%,    -52.27,Apogee Enterprises Inc.
+152       ,RPAR      ,         1,    $1.70B,    $24.27,     0.60%,        NA,Tidal ETF Trust - RPAR Risk Parity ETF
+153       ,UPRO      ,         1,    $3.32B,    $66.15,     5.48%,        NA,ProShares Trust - ProShares UltraPro S&P 500 ETF
+154       ,CURE      ,         1,    $0.23B,   $120.22,     2.11%,        NA,Direxion Shares ETF Trust - Direxion Daily Healthcare Bull 3X Shares
+155       ,GTY       ,         1,    $1.39B,    $30.39,     1.13%,      17.4,Getty Realty Corp.
+156       ,TLT       ,         1,   $16.18B,   $147.23,    -0.52%,        NA,BlackRock Institutional Trust Company N.A. - BTC iShares 20+ Year Treasury Bond ETF
+157       ,UNG       ,         1,    $0.47B,    $17.56,     4.75%,        NA,United States Commodity Funds LLC - United States Natural Gas Fund
+158       ,QQQM      ,         1,    $3.95B,   $153.94,     3.47%,        NA,Invesco Exchange-Traded Fund Trust II - Invesco NASDAQ 100 ETF
+159       ,ARKG      ,         1,    $4.21B,    $50.40,     8.09%,        NA,ARK Investment Management LLC - ARK Genomic Revolution ETF
+160       ,ALLY      ,         1,   $17.21B,    $49.44,     2.05%,      5.84,Ally Financial Inc
+161       ,KRBN      ,         1,    $1.81B,    $53.15,     0.82%,        NA,KraneShares ICAV - KraneShares Global Carbon Strategy ETF
+162       ,HD        ,         1,  $388.53B,   $380.81,     0.12%,     25.45,"Home Depot, Inc."
+163       ,RUN       ,         1,    $5.47B,    $26.99,    10.98%,       -25,Sunrun Inc
+164       ,MT        ,         1,   $28.77B,    $29.87,     1.72%,      2.89,ArcelorMittal - New York Shares - Level III
+165       ,TWLO      ,         1,   $35.87B,   $206.53,     9.84%,    -42.16,Twilio Inc Class A
+166       ,ASPN      ,         1,    $1.02B,    $31.20,     6.72%,        NA,Aspen Aerogels Inc.
+167       ,ONON      ,         1,    $0.00B,    $27.60,     8.47%,        NA,On Holding AG Class A
+168       ,UPST      ,         1,    $9.35B,   $112.19,    14.87%,        NA,Upstart Holdings Inc
+169       ,CLFD      ,         1,    $0.92B,    $66.79,    10.26%,        NA,Clearfield Inc
+170       ,HES       ,         1,   $28.73B,    $95.04,     1.42%,    148.87,Hess Corporation
+171       ,BBQ       ,         1,    $0.16B,    $15.02,     1.27%,      7.54,BBQ Holdings Inc
+172       ,STX       ,         1,   $24.34B,   $111.03,     0.11%,     13.87,Seagate Technology Holdings Plc
+173       ,FSD       ,         1,    $0.49B,    $15.06,    -0.14%,        NA,First Trust High Income Long Short Fund
+174       ,PCAR      ,         1,   $32.65B,    $96.78,    -0.80%,      18.6,Paccar Inc.
+175       ,SE        ,         1,   $65.73B,   $153.73,    10.49%,    -76.09,Sea Ltd - ADR
+176       ,HITI      ,         1,    $0.25B,     $4.31,     1.51%,        NA,High Tide Inc.
+177       ,BEAM      ,         1,    $4.92B,    $72.08,     8.02%,     -10.9,Beam Therapeutics Inc
+178       ,DEA       ,         1,    $1.86B,    $21.39,     0.34%,     72.31,Easterly Government Properties Inc
+179       ,VERY      ,         1,    $0.09B,     $5.70,    -9.19%,        NA,Vericity Inc
+180       ,PHO       ,         1,    $1.97B,    $55.38,     1.94%,        NA,Invesco Capital Management LLC - Invesco Water Resources ETF
+181       ,CVNA      ,         1,    $7.84B,   $168.19,    11.18%,      -160,Carvana Co. - Class A
+182       ,ICE       ,         1,   $72.97B,   $128.86,     1.89%,     24.41,Intercontinental Exchange Inc
+183       ,ACA       ,         1,    $2.26B,    $47.42,     1.70%,        NA,Arcosa Inc
+184       ,IG        ,         1,    $0.44B,    $25.76,     0.49%,        NA,Principal Exchange-Traded Funds - Principal Investment Grade Corporate Active ETF
+185       ,NEW       ,         1,    $0.16B,     $1.85,   842.84%,     -0.77,Puxin Limited - ADR
+186       ,CD        ,         1,    $0.93B,     $5.36,    17.24%,        NA,Chindata Group Holdings Ltd - ADR
+187       ,ANY       ,         1,    $0.08B,     $2.11,     6.49%,        NA,Sphere 3D Corp
+188       ,VG        ,         1,    $5.55B,    $21.42,    -0.05%,   -337.27,Vonage Holdings Corp
+189       ,SCHB      ,         1,   $23.49B,   $106.66,     2.07%,        NA,Schwab Strategic Trust - Schwab U.S. Broad Market ETF
+190       ,SCHG      ,         1,   $16.40B,   $156.50,     3.32%,        NA,Schwab Strategic Trust - Schwab U.S. Large-Cap Growth ETF
+191       ,VGT       ,         1,   $54.34B,   $438.67,     3.14%,        NA,"Vanguard Group, Inc. - Vanguard Information Technology ETF"
+192       ,FTEC      ,         1,    $6.70B,   $130.52,     3.08%,        NA,Fidelity Covington Trust - Fidelity MSCI Information Technology Index ETF
+193       ,AWAY      ,         1,    $0.25B,    $23.59,     5.39%,        NA,ETF Managers Trust - ETFMG Travel Tech ETF
+194       ,LYFT      ,         1,   $12.91B,    $39.39,     7.80%,       -11,Lyft Inc Cls A
+195       ,CDL       ,         1,    $0.26B,    $62.85,     0.00%,        NA,Victory Portfolios II - VictoryShares US Large Cap High Div Volatility Wtd ETF
+196       ,MRNA      ,         1,   $71.92B,   $173.87,     6.33%,     10.19,Moderna Inc
+197       ,AR        ,         1,    $6.24B,    $19.92,    -0.48%,     -5.73,Antero Resources Corp
+198       ,CVX       ,         1,  $254.69B,   $131.81,     0.55%,      26.5,Chevron Corp.
+199       ,MSCI      ,         1,   $44.87B,   $557.23,     5.73%,     65.35,  MSCI Inc
+200       ,REZ       ,         1,    $1.31B,    $96.66,     0.98%,        NA,BlackRock Institutional Trust Company N.A. - iShares Residential and Multisector Real Estate ETF
+201       ,HERO      ,         1,    $0.37B,    $26.80,     4.11%,        NA,Global X Funds - Global X Video Games & Esports ETF
+202       ,SOXX      ,         1,    $8.98B,   $492.53,     5.76%,        NA,BlackRock Institutional Trust Company N.A. - iShares Semiconductor ETF
+203       ,SLB       ,         1,   $54.99B,    $39.32,    -1.55%,      15.4,Schlumberger Ltd.
+204       ,HAL       ,         1,   $28.09B,    $30.75,    -2.06%,     69.79,Halliburton Co.
+205       ,OVV       ,         1,   $10.49B,    $40.40,     1.53%,     -18.2,Ovintiv Inc
+206       ,D         ,         1,   $67.82B,    $83.04,     1.54%,     28.57,Dominion Energy Inc
+207       ,VIG       ,         1,   $67.96B,   $170.76,     1.20%,        NA,"Vanguard Group, Inc. - Vanguard Dividend Appreciation FTF"
+208       ,FOA       ,         1,    $0.22B,     $3.86,    -0.55%,        NA,Finance of America Companies Inc
+209       ,QTNT      ,         1,    $0.17B,     $1.69,     7.55%,        NA,Quotient Ltd
+210       ,ANF       ,         1,    $2.21B,    $40.00,     7.02%,         9,Abercrombie & Fitch Co. - Class A
+211       ,MX        ,         1,    $0.85B,    $18.10,     3.29%,        NA,MagnaChip Semiconductor Corp
+212       ,MAX       ,         1,    $0.59B,    $15.06,     6.19%,        NA,MediaAlpha Inc - Class A
+213       ,LRCX      ,         1,   $84.08B,   $615.00,     5.20%,        20,Lam Research Corp.
+214       ,MU        ,         1,   $96.20B,    $85.06,     4.02%,     12.79,Micron Technology Inc.
+215       ,RTM       ,         1,    $0.47B,   $172.16,     0.63%,        NA,Invesco Capital Management LLC - Invesco S&P 500 Equal Weight Materials ETF
+216       ,TMF       ,         1,    $0.42B,    $25.17,    -1.68%,        NA,Direxion Shares ETF Trust - Direxion Daily 20+ Year Treasury Bull 3X Shares
+217       ,AGG       ,         1,   $93.28B,   $112.60,    -0.01%,        NA,BlackRock Institutional Trust Company N.A. - iShares Core U.S. Aggregate Bond ETF
+218       ,VGLT      ,         1,    $2.88B,    $89.82,    -0.44%,        NA,"Vanguard Group, Inc. - Vanguard Long-Term Treasury ETF"
+219       ,RTX       ,         1,  $137.47B,    $90.95,    -0.16%,      42.7,Raytheon Technologies Corporation
+220       ,CAPE      ,         1,    $0.00B,    $22.16,     1.32%,        NA,Barclays Bank PLC - ZC SP ETN REDEEM 12/10/2022 USD 50 - Ser A
+221       ,FANG      ,         1,   $23.52B,   $131.78,    -2.03%,     50.21,Diamondback Energy Inc
+222       ,CAR       ,         1,   $10.16B,   $182.49,     6.89%,     15.11,Avis Budget Group Inc
+223       ,IVE       ,         1,   $25.71B,   $155.53,     1.02%,        NA,BlackRock Institutional Trust Company N.A. - iShares S&P 500 Value ETF
+224       ,IQ        ,         1,    $3.03B,     $4.09,    16.97%,     -1.71,iQIYI Inc - ADR
+225       ,CLOV      ,         1,    $1.15B,     $2.63,    12.55%,        NA,Clover Health Investments Corp - Class A
+226       ,DIDI      ,         1,   $16.39B,     $3.78,    -3.09%,     -0.97,DiDi Global Inc - ADR
+227       ,HR        ,         1,    $4.64B,    $31.48,     1.44%,    151.27,"Healthcare Realty Trust, Inc."
+228       ,AMP       ,         1,   $35.63B,   $304.98,     2.11%,     16.57,Ameriprise Financial Inc
+229       ,CDC       ,         1,    $1.21B,    $70.57,     0.61%,        NA,Victory Portfolios II - VictoryShares US EQ Income Enhanced Volatility Wtd ETF
+230       ,CTV       ,         1,    $0.61B,     $5.10,    -6.29%,        NA,Innovid Corp
+231       ,BBC       ,         1, NA/crypto,    $28.28, NA/crypto,        NA,ETFis Series Trust I - Virtus LifeSci Biotech Clinical Trials ETF
+232       ,COOL      ,         1,    $0.39B,     $9.93,     0.10%,        NA,Corner Growth Acquisition Corp - Class A
+233       ,LIVE      ,         1,    $0.04B,    $24.67,    -4.60%,        NA,Live Ventures Inc
+234       ,MFC       ,         1,   $42.37B,    $21.52,     1.78%,        NA,Manulife Financial Corp.
+235       ,PSA       ,         1,   $64.08B,   $368.06,    -0.58%,     43.48,Public Storage
+236       ,CSPR      ,         1,    $0.30B,     $7.10,     0.00%,     -2.93,Casper Sleep Inc
+237       ,AJRD      ,         1,    $3.19B,    $39.78,     0.41%,     23.08,Aerojet Rocketdyne Holdings Inc
+238       ,ABC       ,         1,   $28.79B,   $138.40,    -0.45%,      9.41,Amerisource Bergen Corp.
+239       ,NAK       ,         1,    $0.17B,     $0.31,    -2.60%,        NA,Northern Dynasty Minerals Ltd.
+240       ,CIDM      ,         1,    $0.15B,     $0.88,    11.11%,        NA,Cinedigm Corp - Class A
+241       ,TX        ,         1,    $8.33B,    $42.10,    -1.90%,      2.39,Ternium S.A. - ADR
+242       ,PINS      ,         1,   $18.93B,    $30.24,    10.21%,      58.2,Pinterest Inc - Class A
+243       ,MO        ,         1,   $95.75B,    $52.16,     0.80%,      35.3,Altria Group Inc.
+244       ,VICI      ,         1,   $18.45B,    $28.66,     1.41%,      15.7,VICI Properties Inc
+245       ,MMP       ,         1,   $10.60B,    $50.15,     0.37%,     12.33,Magellan Midstream Partners L.P.
+246       ,BX        ,         1,   $94.49B,   $137.39,     6.22%,     15.03,Blackstone Inc
+247       ,STAG      ,         1,    $7.56B,    $44.34,     2.53%,     34.94,STAG Industrial Inc
+248       ,MMM       ,         1,  $100.08B,   $173.09,     1.81%,     16.44,    3M Co.
+249       ,EPD       ,         1,   $52.72B,    $24.71,    -0.09%,     13.46,Enterprise Products Partners L P - Unit
+250       ,NYCB      ,         1,    $5.60B,    $12.21,    -0.68%,      9.56,New York Community Bancorp Inc.
+251       ,TROW      ,         1,   $36.29B,   $158.48,     3.07%,        NA,T. Rowe Price Group Inc.
+252       ,LTC       ,         1,    $1.48B,    $37.25,     1.72%,     23.52,"LTC Properties, Inc."
+253       ,MAIN      ,         1,    $3.17B,    $45.84,     3.02%,     10.03,Main Street Capital Corporation
+254       ,IRT       ,         1,    $2.43B,    $23.72,     0.59%,        NA,Independence Realty Trust Inc
+255       ,STOR      ,         1,    $8.82B,    $31.95,     1.95%,     34.95,Store Capital Corp
+256       ,MDLZ      ,         1,   $97.86B,    $69.26,     0.92%,     22.41,Mondelez International Inc. - Class A
+257       ,CAT       ,         1,  $113.32B,   $205.05,     0.21%,     21.64,Caterpillar Inc.
+258       ,PEP       ,         1,  $246.47B,   $177.57,     0.47%,     30.63,PepsiCo Inc
+259       ,GIS       ,         1,   $42.87B,    $68.82,    -1.05%,     18.93,"General Mills, Inc."
+260       ,MCD       ,         1,  $196.67B,   $265.83,     1.36%,     27.92,McDonald`s Corp
+261       ,DAC       ,         1,    $1.96B,    $93.00,     0.04%,        NA,Danaos Corporation
+262       ,AVCT      ,         1,    $0.11B,     $1.28,    10.09%,        NA,American Virtual Cloud Technologies Inc
+263       ,LAC       ,         1,    $3.22B,    $26.63,     6.88%,        NA,Lithium Americas Corp
+264       ,BBIG      ,         1,    $0.47B,     $3.45,    13.58%,        NA,Vinco Ventures Inc
+265       ,PLUG      ,         1,   $13.09B,    $22.89,    16.68%,    -15.18,Plug Power Inc
+266       ,CRSR      ,         1,    $1.93B,    $19.83,     6.07%,        NA,Corsair Gaming Inc
+267       ,SNOW      ,         1,   $81.83B,   $277.90,     9.10%,    -75.09,Snowflake Inc - Class A
+268       ,MESA      ,         1,    $0.18B,     $5.00,     7.39%,        NA,Mesa Air Group Inc.
+269       ,SWKS      ,         1,   $24.46B,   $152.66,     4.84%,       8.2,"Skyworks Solutions, Inc."
+270       ,QRVO      ,         1,   $15.39B,   $139.03,     6.39%,     14.78, Qorvo Inc
+271       ,GE        ,         1,  $107.27B,    $97.86,     2.63%,   -250.78,General Electric Co.
+272       ,JMIA      ,         1,    $0.88B,     $8.87,    16.36%,        NA,Jumia Technologies Ag - ADR
+273       ,CS        ,         1,   $26.10B,     $9.55,     2.44%,     87.88,Credit Suisse Group AG - ADR
+274       ,QS        ,         1,    $5.69B,    $16.98,    16.01%,        NA,QuantumScape Corp - Class A
+275       ,RRR       ,         1,    $3.14B,    $46.18,     1.24%,     31.28,Red Rock Resorts Inc - Class A
+276       ,L         ,         1,   $15.73B,    $60.54,     1.36%,      10.1,Loews Corp.
+277       ,ATR       ,         1,    $7.78B,   $118.40,     1.99%,     34.02,Aptargroup Inc.
+278       ,MOVE      ,         1,    $0.08B,     $2.41,    -0.65%,        NA,Movano Inc
+279       ,SBEV      ,         1,    $0.14B,     $4.33,     6.79%,        NA,Splash Beverage Group Inc
+280       ,FF        ,         1,    $0.36B,     $8.10,     2.90%,     36.53,Futurefuel Corp
+281       ,SI        ,         1,    $2.96B,   $109.79,    12.62%,     39.46,Silvergate Capital Corp - Class A
+282       ,PSEC      ,         1,    $3.35B,     $8.66,     1.39%,        NA,Prospect Capital Corp
+283       ,OXSQ      ,         1,    $0.21B,     $4.16,     0.89%,      2.65,Oxford Square Capital Corp
+284       ,NYMT      ,         1,    $1.49B,     $3.89,     3.03%,      7.29,New York Mortgage Trust Inc
+285       ,MFA       ,         1,    $2.08B,     $4.69,     2.24%,      7.25,MFA Financial Inc
+286       ,BKEP      ,         1,    $0.15B,     $3.73,     0.97%,        NA,Blueknight Energy Partners LP - Unit
+287       ,NCMI      ,         1,    $0.21B,     $2.69,     1.58%,     -2.34,National Cinemedia Inc
+288       ,GRN       ,         1,    $0.00B,    $35.53,     0.53%,        NA,Barclays Bank PLC - ZC SP ETN REDEEM 08/09/2049 USD 50
+289       ,CNQ       ,         1,   $61.14B,    $52.50,     0.04%,     13.44,Canadian Natural Resources Ltd.
+290       ,AC        ,         1,    $0.14B,    $46.10,    -2.08%,        NA,Associated Capital Group Inc - Class A
+291       ,CYBR      ,         1,    $5.44B,   $142.20,     6.38%,   -100.73,CyberArk Software Ltd
+292       ,BNGO      ,         1,    $0.66B,     $2.28,    14.53%,        NA,Bionano Genomics Inc
+293       ,ESGA      ,         1, NA/crypto,    $57.75, NA/crypto,        NA,American Century ETF Trust - American Century Sustainable Equity ETF
+294       ,OC        ,         1,    $8.93B,    $90.30,     1.10%,      9.39,Owens Corning
+295       ,FREE      ,         1,    $0.37B,     $9.67,     4.03%,        NA,Whole Earth Brands Inc - Class A
+296       ,AQN       ,         1,    $9.81B,    $14.52,     2.19%,        NA,Algonquin Power & Utilities Corp
+297       ,SU        ,         1,   $43.13B,    $28.72,     0.97%,     27.88,"Suncor Energy, Inc."
+298       ,IPA       ,         1,    $0.12B,     $6.34,     6.12%,        NA,ImmunoPrecise Antibodies Ltd
+299       ,HUT       ,         1,    $1.02B,     $6.09,     7.78%,        NA,Hut 8 Mining Corp
+300       ,CP        ,         1,   $68.63B,    $74.60,    -1.27%,     18.97,Canadian Pacific Railway Ltd
+301       ,MF        ,         1,    $0.61B,     $3.00,     4.46%,        NA,Missfresh Ltd - ADR
+302       ,TTP       ,         1,    $0.26B,    $26.91,     1.67%,        NA,Tortoise Pipeline & Energy Fund Inc
+303       ,BMO       ,         1,   $76.65B,   $116.60,     0.11%,      6.19,Bank of Montreal
+304       ,BAM       ,         1,   $92.72B,    $57.50,     3.73%,     25.63,Brookfield Asset Management Inc. - Class A
+305       ,FN        ,         1,    $4.28B,   $118.80,     3.61%,     27.61,  Fabrinet
+306       ,HDIV      ,         1,    $0.01B,    $31.25,     0.00%,        NA,Exchange Listed Funds Trust - QRAFT AI-Enhanced U.S. High Dividend ETF
+307       ,GDV       ,         1,    $2.38B,    $26.21,     1.50%,        NA,Gabelli Dividend & Income Trust
+308       ,ENS       ,         1,    $3.16B,    $75.48,     1.60%,     22.47,   Enersys
+309       ,DGS       ,         1,    $2.50B,    $54.49,     2.65%,        NA,WisdomTree Trust - WisdomTree Emerging Markets SmallCap Dividend Fund
+310       ,FORD      ,         1,    $0.02B,     $1.53,     2.07%,        NA,"Forward Industries, Inc."
+311       ,GL        ,         1,   $10.36B,   $106.30,     0.26%,     14.45,Globe Life Inc
+312       ,DE        ,         1,  $120.88B,   $381.00,     0.72%,     10.14,Deere & Co.
+313       ,POR       ,         1,    $4.88B,    $53.30,     0.18%,     20.92,Portland General Electric Co
+314       ,SUB       ,         1,    $7.14B,   $109.27,     0.43%,        NA,BlackRock Institutional Trust Company N.A. - iShares Short-Term National Muni Bond ETF
+315       ,SAVE      ,         1,    $2.35B,    $21.66,     5.82%,     -4.12,Spirit Airlines Inc
+316       ,MA        ,         1,  $381.10B,   $388.83,     1.03%,     49.49,Mastercard Incorporated - Class A
+317       ,GOOG      ,         1, $1836.97B,  $2768.12,     1.82%,        NA,Alphabet Inc - Class C
+318       ,RSI       ,         1,    $2.11B,    $10.56,    14.88%,        NA,Rush Street Interactive Inc - Class A
+319       ,MKC       ,         1,   $27.60B,   $100.44,     2.21%,     17.93,"McCormick & Co., Inc. (Non Voting)"
+320       ,AMRS      ,         1,      None,      None,      None,      None,      None
+321       ,GAIN      ,         1,      None,      None,      None,      None,      None
+322       ,FILL      ,         1,      None,      None,      None,      None,      None
+323       ,FOUR      ,         1,    $2.74B,    $54.22,    10.53%,        NA,Shift4 Payments Inc - Class A
+324       ,FIVE      ,         1,      None,      None,      None,      None,      None
+325       ,BEST      ,         1,      None,      None,      None,      None,      None
+326       ,ETSY      ,         1,      None,      None,      None,      None,      None
+327       ,J         ,         1,      None,      None,      None,      None,      None
+328       ,MUST      ,         1,    $0.19B,    $22.39,    -0.19%,        NA,Columbia ETF Trust I - Columbia Multi-Sector Municipal Income ETF
+329       ,NKLA      ,         1,    $3.27B,     $8.29,     7.29%,     -7.09,Nikola Corporation
+330       ,DOW       ,         1,   $44.19B,    $59.94,    -0.52%,      7.99,   Dow Inc
+331       ,LHX       ,         1,      None,      None,      None,      None,      None
+332       ,SEED      ,         1,    $0.03B,     $4.66,     0.90%,        NA,Origin Agritech Ltd.
+333       ,AFRM      ,         1,   $13.64B,    $66.00,     7.50%,    -24.52,Affirm Holdings Inc - Class A
+334       ,RC        ,         1,      None,      None,      None,      None,      None
+335       ,AI        ,         1,    $2.72B,    $27.61,    13.32%,     -27.3,C3.ai Inc - Class A
+336       ,EDF       ,         1,    $0.11B,     $6.70,     2.30%,        NA,Stone Harbor Emerging Markets Income Fund
+337       ,DCF       ,         1,    $0.14B,     $9.29,     0.12%,        NA,BNY Mellon Alcentra Global Credit Income 2024 Target Term Fund Inc
+338       ,PEG       ,         1,   $35.04B,    $68.71,     0.76%,    -51.51,Public Service Enterprise Group Inc.
+339       ,BHP       ,         1,   $97.31B,    $64.40,    -0.92%,      7.21,BHP Group Limited - ADR
+340       ,RIO       ,         1,      None,      None,      None,      None,      None
+341       ,FCF       ,         1,    $1.63B,    $17.06,     0.00%,     12.41,First Commonwealth Financial Corp.
+342       ,NNDM      ,         1,      None,      None,      None,      None,      None
+343       ,ML        ,         1,    $0.61B,     $2.65,     7.34%,        NA,MoneyLion Inc - Class A
+344       ,DOYU      ,         1,      None,      None,      None,      None,      None
+345       ,VALE      ,         1,   $81.49B,    $15.46,    -2.57%,      4.58,Vale S.A. - ADR
+346       ,CCL       ,         1,   $22.79B,    $19.96,     4.50%,     -1.22,Carnival Corp. (Paired Stock)
+347       ,RCL       ,         1,   $19.83B,    $78.62,     4.48%,     -3.68,Royal Caribbean Group
+348       ,ABB       ,         1,   $74.73B,    $35.72,     2.41%,     39.38,ABB Ltd. - ADR
+349       ,LPI       ,         1,    $1.18B,    $69.60,    -2.86%,      -3.8,Laredo Petroleum Inc.
+350       ,DFS       ,         1,   $35.47B,   $117.12,     1.78%,       7.1,Discover Financial Services
+351       ,QYLD      ,         1,    $6.25B,    $21.38,     2.02%,        NA,Global X Funds - Global X NASDAQ 100 Covered Call ETF

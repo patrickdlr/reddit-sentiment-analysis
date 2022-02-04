@@ -1,54 +1,75 @@
-Date and time: 01/11/2022 13:44
+Date and time: 02/03/2022 20:55
 Sub count: 1
 Market Cap min: 4.0 billion(s)
 upvoteRatio: 0.5 | ups: 20 | limit: 1 | upvotes: 2 | picks: 100 | picks_ayz: 100
-It took 35.58 seconds to analyze 2881 comments in 16 posts in 1 subreddits.
-number of tickers: 46
+It took 55.75 seconds to analyze 4137 comments in 37 posts in 1 subreddits.
+number of tickers: 67
 
 Number    ,Symbols   ,  Mentions, marketCap,latestPric,changePerc,   peRatio,companyNam
-1         ,SPY       ,        30,  $451.96B,   $469.75,     0.91%,        NA,SSgA Active Trust - S&P 500 ETF TRUST ETF
-2         ,CPI       ,        23,    $0.06B,    $27.52,     0.25%,        NA,IndexIQ ETF Trust - IQ Real Return ETF
-3         ,GME       ,        18,    $9.95B,   $130.30,    -0.65%,     -59.5,Gamestop Corporation - Class A
-4         ,TSLA      ,        12, $1068.99B,  $1064.45,     0.60%,     351.3, Tesla Inc
-5         ,HOOD      ,         3,   $11.97B,    $16.41,     5.12%,   1414.66,Robinhood Markets Inc - Class A
-6         ,V         ,         2,  $472.49B,   $214.38,     1.14%,     19.06,Visa Inc - Class A
-7         ,AMZN      ,         2, $1677.85B,  $3308.40,     2.44%,     64.72,Amazon.com Inc.
-8         ,AAPL      ,         2, $2857.37B,   $174.93,     1.59%,     15.58, Apple Inc
-9         ,MSFT      ,         2, $2364.79B,   $314.97,     0.22%,     35.23,Microsoft Corporation
-10        ,TSM       ,         2,  $669.89B,   $129.17,     3.33%,     32.21,Taiwan Semiconductor Manufacturing - ADR
-11        ,QQQ       ,         2,  $209.07B,   $385.92,     1.53%,        NA,Invesco Capital Management LLC - Invesco QQQ Trust Series 1
-12        ,RC        ,         2,    $1.19B,    $16.19,     0.81%,       8.3,Ready Capital Corp
-13        ,LCID      ,         2,   $74.75B,    $45.40,     8.82%,        NA,Lucid Group Inc
-14        ,F         ,         2,   $95.58B,    $24.35,     2.10%,        34,Ford Motor Co.
-15        ,GS        ,         2,  $134.94B,   $403.05,     0.97%,      6.66,"Goldman Sachs Group, Inc."
-16        ,SJW       ,         1,    $2.05B,    $68.79,    -0.79%,     36.21, SJW Group
-17        ,GET       ,         1,    $0.21B,     $1.30,     3.17%,        NA,Getnet Adquirencia E Servicos Para Meios De Pagamento S.A - ADR
-18        ,BABA      ,         1,  $358.36B,   $132.19,     3.03%,     18.33,Alibaba Group Holding Ltd - ADR
-19        ,FUBO      ,         1,    $2.14B,    $14.79,     9.07%,        NA,fuboTV Inc
-20        ,AMD       ,         1,  $165.76B,   $137.26,     3.98%,     41.98,Advanced Micro Devices Inc.
-21        ,CCL       ,         1,   $24.27B,    $21.98,     2.71%,     -2.58,Carnival Corp. (Paired Stock)
-22        ,NES       ,         1,    $0.04B,     $2.42,     4.31%,        NA,Nuverra Environmental Solutions Inc
-23        ,DASH      ,         1,   $45.63B,   $143.64,     7.64%,    -19.44,DoorDash Inc - Class A
-24        ,FB        ,         1,  $954.55B,   $334.46,     1.95%,     23.92,Meta Platforms Inc - Class A
-25        ,D         ,         1,   $63.98B,    $79.13,    -0.88%,     27.19,Dominion Energy Inc
-26        ,L         ,         1,   $15.51B,    $61.13,     0.66%,      9.94,Loews Corp.
-27        ,MF        ,         1,    $0.97B,     $4.67,    -0.43%,        NA,Missfresh Ltd - ADR
-28        ,ALOT      ,         1,    $0.09B,    $13.05,    -0.46%,        NA,AstroNova Inc
-29        ,AMC       ,         1,   $11.70B,    $22.79,     0.04%,      -4.4,AMC Entertainment Holdings Inc - Class A
-30        ,BILL      ,         1,   $21.77B,   $212.32,     5.64%,   -114.15,Bill.com Holdings Inc
-31        ,PUMP      ,         1,    $1.02B,     $9.84,     2.08%,    -12.86,ProPetro Holding Corp
-32        ,JP        ,         1,    $0.03B,     $0.90,    -0.02%,        NA,Jupai Holdings Ltd - ADR
-33        ,OI        ,         1,    $2.05B,    $13.04,     0.62%,        NA,O-I Glass Inc
-34        ,HEAR      ,         1,    $0.34B,    $21.21,     1.14%,     13.01,Turtle Beach Corp
-35        ,EET       ,         1,    $0.05B,    $89.33,     4.51%,        NA,ProShares Trust - ProShares Ultra MSCI Emerging Markets
-36        ,TLRY      ,         1,    $3.40B,     $7.38,     1.23%,     -5.43,Tilray Inc - Class 2
-37        ,J         ,         1,   $17.37B,   $134.15,     0.45%,     18.45,"Jacobs Engineering Group, Inc."
-38        ,LFG       ,         1,    $0.99B,    $18.50,     2.15%,        NA,Archaea Energy Inc - Class A
-39        ,TEAM      ,         1,   $78.71B,   $314.75,     0.57%,    -73.37,Atlassian Corporation Plc - Class A
-40        ,SIX       ,         1,    $3.72B,    $43.22,     1.12%,     80.59,Six Flags Entertainment Corp
-41        ,FUN       ,         1,    $2.72B,    $47.85,     1.01%,        NA,Cedar Fair L.P.
-42        ,T         ,         1,  $188.07B,    $26.34,    -0.45%,    200.61,"AT&T, Inc."
-43        ,SAVA      ,         1,    $1.99B,    $49.72,     2.77%,        NA,Cassava Sciences Inc
-44        ,SOFI      ,         1,   $11.27B,    $13.96,     4.45%,        NA,SoFi Technologies Inc
-45        ,OG        ,         1,    $0.09B,     $2.20,     0.00%,        NA,Onion Global Ltd - ADR
-46        ,SI        ,         1,    $3.43B,   $129.08,     4.67%,     46.43,Silvergate Capital Corp - Class A
+1         ,AMZN      ,        52, $1415.19B,  $2835.06,    -7.87%,     55.51,Amazon.com Inc.
+2         ,FB        ,        35,  $689.32B,   $243.07,   -26.96%,     17.03,Meta Platforms Inc - Class A
+3         ,SNAP      ,        26,   $37.20B,    $24.70,   -24.38%,       -62,Snap Inc - Class A
+4         ,EPS       ,        11,    $0.70B,    $49.20,    -2.64%,        NA,WisdomTree Trust - WisdomTree U.S. LargeCap Fund
+5         ,GME       ,        10,    $7.73B,   $101.10,    -0.82%,    -46.02,Gamestop Corporation - Class A
+6         ,SPY       ,         9,  $424.81B,   $460.90,    -2.41%,        NA,SSgA Active Trust - S&P 500 ETF TRUST ETF
+7         ,F         ,         9,   $81.79B,    $20.26,    -3.61%,      27.9,Ford Motor Co.
+8         ,RIVN      ,         6,   $54.89B,    $62.08,    -6.34%,    -13.99,Rivian Automotive Inc - Class A
+9         ,QQQ       ,         4,  $186.72B,   $357.61,    -4.19%,        NA,Invesco Capital Management LLC - Invesco QQQ Trust Series 1
+10        ,AMC       ,         4,    $7.69B,    $15.06,    -3.62%,     -3.01,AMC Entertainment Holdings Inc - Class A
+11        ,AMD       ,         4,  $151.44B,   $125.95,    -2.28%,      37.4,Advanced Micro Devices Inc.
+12        ,PINS      ,         4,   $15.72B,    $25.62,   -10.37%,     47.81,Pinterest Inc - Class A
+13        ,MSFT      ,         4, $2280.93B,   $306.42,    -3.95%,     33.11,Microsoft Corporation
+14        ,GOOGL     ,         3, $2022.00B,  $2908.00,    -3.43%,     29.23,Alphabet Inc - Class A
+15        ,TSLA      ,         3,  $921.31B,   $903.53,    -1.64%,    302.32, Tesla Inc
+16        ,ATVI      ,         3,   $63.54B,    $82.49,    -0.39%,      24.2,Activision Blizzard Inc
+17        ,UP        ,         3,    $0.94B,     $3.90,     1.15%,        NA,Wheels Up Experience Inc - Class A
+18        ,AAPL      ,         3, $2943.48B,   $176.70,    -1.68%,     29.22, Apple Inc
+19        ,PYPL      ,         3,  $148.16B,   $129.10,    -6.29%,     30.11,PayPal Holdings Inc
+20        ,NVDA      ,         3,  $613.69B,   $243.61,    -5.30%,     75.44,NVIDIA Corp
+21        ,NFLX      ,         2,  $183.44B,   $423.20,    -5.81%,     18.27,NetFlix Inc
+22        ,AN        ,         2,    $7.08B,   $110.53,    -0.93%,       7.6,Autonation Inc.
+23        ,SI        ,         2,    $2.72B,   $104.85,    -2.72%,     38.38,Silvergate Capital Corp - Class A
+24        ,OG        ,         2,    $0.07B,     $1.82,    -1.66%,        NA,Onion Global Ltd - ADR
+25        ,HOOD      ,         2,   $10.81B,    $14.26,     0.97%,   1256.32,Robinhood Markets Inc - Class A
+26        ,LFG       ,         2,    $0.94B,    $17.19,    -3.05%,        NA,Archaea Energy Inc - Class A
+27        ,GOOG      ,         2, $2019.87B,  $2912.71,    -3.75%,        NA,Alphabet Inc - Class C
+28        ,TQQQ      ,         1,   $17.48B,    $57.94,   -12.35%,        NA,ProShares Trust - ProShares UltraPro QQQ
+29        ,CPI       ,         1,    $0.03B,    $28.29,    -0.51%,        NA,IndexIQ ETF Trust - IQ Real Return ETF
+30        ,HOG       ,         1,    $5.71B,    $36.30,    -2.15%,     10.64,"Harley-Davidson, Inc."
+31        ,CLOV      ,         1,    $1.18B,     $2.64,    -7.54%,        NA,Clover Health Investments Corp - Class A
+32        ,NVAX      ,         1,    $7.02B,    $89.12,    -1.09%,     -6.05,"Novavax, Inc."
+33        ,SOFI      ,         1,    $9.77B,    $11.61,    -4.92%,        NA,SoFi Technologies Inc
+34        ,MTCH      ,         1,   $31.98B,   $117.58,    -5.16%,     61.56,Match Group Inc. - New
+35        ,R         ,         1,    $3.94B,    $72.78,    -2.35%,     10.78,"Ryder System, Inc."
+36        ,RY        ,         1,  $169.77B,   $117.66,    -0.64%,      6.48,Royal Bank Of Canada
+37        ,UWMC      ,         1,    $0.45B,     $4.57,    -7.45%,        NA,UWM Holdings Corporation - Class A
+38        ,USO       ,         1,    $2.61B,    $64.69,     1.60%,        NA,United States Commodity Funds LLC - United States Oil Fund
+39        ,GL        ,         1,   $10.53B,   $104.29,    -1.60%,     14.29,Globe Life Inc
+40        ,UPS       ,         1,  $200.08B,   $235.72,    -1.50%,     31.78,"United Parcel Service, Inc. - Class B"
+41        ,JP        ,         1,    $0.03B,     $0.87,     1.85%,        NA,Jupai Holdings Ltd - ADR
+42        ,AKA       ,         1,    $0.92B,     $6.99,    -3.48%,        NA,a.k.a. Brands Holding Corp
+43        ,BK        ,         1,   $50.43B,    $61.33,    -0.47%,        16,Bank Of New York Mellon Corp
+44        ,EVER      ,         1,    $0.37B,    $16.50,    -4.01%,        NA,EverQuote Inc - Class A
+45        ,GLD       ,         1,   $60.73B,   $172.60,    -0.15%,        NA,SSgA Active Trust - SPDR Gold Shares ETF
+46        ,AR        ,         1,    $6.80B,    $21.69,    -4.66%,     -6.32,Antero Resources Corp
+47        ,JOB       ,         1,    $0.06B,     $0.52,    -0.81%,        NA,GEE Group Inc
+48        ,JOE       ,         1,    $2.78B,    $48.99,    -1.93%,      44.2,St. Joe Co.
+49        ,MLN       ,         1,    $0.24B,    $21.33,    -0.15%,        NA,VanEck ETF Trust - VanEck Long Muni ETF
+50        ,FT        ,         1,    $0.21B,     $8.70,    -0.87%,        NA,Franklin Universal Trust
+51        ,ARKK      ,         1,   $11.98B,    $69.58,    -5.85%,        NA,ARK Investment Management LLC - ARK Innovation ETF
+52        ,DTE       ,         1,   $23.56B,   $122.99,    -0.14%,     30.49,DTE Energy Co.
+53        ,BTO       ,         1,    $0.86B,    $43.72,    -1.45%,        NA,John Hancock Financial Opportunities Fund
+54        ,MARK      ,         1,    $0.09B,     $0.87,    -0.30%,        NA,Remark Holdings Inc
+55        ,GET       ,         1,    $0.19B,     $1.22,    -1.63%,        NA,Getnet Adquirencia E Servicos Para Meios De Pagamento S.A - ADR
+56        ,EM        ,         1,    $0.40B,     $1.83,    -1.63%,        NA,Smart Share Global Ltd - ADR
+57        ,SHOP      ,         1,  $100.89B,   $819.06,    -8.90%,     31.53,Shopify Inc - Class A
+58        ,BABA      ,         1,  $337.61B,   $125.78,     0.48%,     17.51,Alibaba Group Holding Ltd - ADR
+59        ,CRM       ,         1,  $211.08B,   $219.75,    -5.57%,     120.9,Salesforce.Com Inc
+60        ,FLEE      ,         1,    $0.21B,    $29.32,    -1.50%,        NA,Franklin Templeton ETF Trust - Franklin FTSE Europe ETF
+61        ,BP        ,         1,  $109.93B,    $32.18,     0.61%,      -2.8,BP plc - ADR
+62        ,QCOM      ,         1,  $205.82B,   $182.10,    -4.93%,     11.49,"Qualcomm, Inc."
+63        ,C         ,         1,  $132.37B,    $67.14,    -1.51%,       6.4,Citigroup Inc
+64        ,GM        ,         1,   $79.17B,    $55.63,    -0.73%,       7.3,General Motors Company
+65        ,META      ,         1,      None,      None,      None,      None,      None
+66        ,HUGE      ,         1,    $0.03B,     $0.86,    -3.28%,        NA,FSD Pharma Inc - Class B (Sub Voting)
+67        ,TV        ,         1,    $5.92B,    $10.41,    -1.88%,        NA,Grupo Televisa SAB - ADR - Level III

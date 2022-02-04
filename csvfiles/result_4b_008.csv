@@ -1,336 +1,334 @@
-Date and time: 01/12/2022 18:00
+Date and time: 01/13/2022 21:00
 Sub count: 64
 Market Cap min: 4.0 billion(s)
 upvoteRatio: 0.5 | ups: 20 | limit: 1 | upvotes: 2 | picks: 100 | picks_ayz: 100
-It took 42042.30 seconds to analyze 20786 comments in 784 posts in 64 subreddits.
-number of tickers: 328
+It took 2891.37 seconds to analyze 21746 comments in 742 posts in 64 subreddits.
+number of tickers: 326
 
 Number    ,Symbols   ,  Mentions, marketCap,latestPric,changePerc,   peRatio,companyNam
-1         ,AMC       ,        52,   $11.06B,    $21.55,    -5.15%,     -4.16,AMC Entertainment Holdings Inc - Class A
-2         ,GME       ,        43,    $9.51B,   $124.55,    -2.74%,    -56.87,Gamestop Corporation - Class A
-3         ,CPI       ,        32, NA/crypto,    $27.54, NA/crypto,        NA,IndexIQ ETF Trust - IQ Real Return ETF
-4         ,SPY       ,        30,  $447.19B,   $467.37,    -0.78%,        NA,SSgA Active Trust - S&P 500 ETF TRUST ETF
-5         ,O         ,        27,   $29.10B,    $71.98,     0.16%,     56.68,Realty Income Corp.
-6         ,TSLA      ,        21, $1064.09B,  $1059.58,    -4.22%,    349.69, Tesla Inc
-7         ,TSM       ,        16,  $729.63B,   $140.69,     6.40%,     35.08,Taiwan Semiconductor Manufacturing - ADR
-8         ,AMD       ,        14,  $162.68B,   $134.71,    -2.01%,      41.2,Advanced Micro Devices Inc.
-9         ,TD        ,        14,  $149.64B,    $82.01,     1.07%,      6.58,Toronto Dominion Bank
-10        ,QQQ       ,        13,  $205.42B,   $380.83,    -1.68%,        NA,Invesco Capital Management LLC - Invesco QQQ Trust Series 1
-11        ,QYLD      ,        13,    $6.07B,    $21.89,    -1.00%,        NA,Global X Funds - Global X NASDAQ 100 Covered Call ETF
-12        ,MSFT      ,        12, $2312.31B,   $307.98,    -3.23%,     34.45,Microsoft Corporation
-13        ,SNDL      ,        12,    $0.95B,     $0.57,    -1.77%,        NA,Sundial Growers Inc
-14        ,TFSA      ,        12, NA/crypto,    $25.57, NA/crypto,        NA,Terra Income Fund 6 Inc - 7% NT REDEEM 31/03/2026 USD 25
-15        ,SCHD      ,        11,   $32.28B,    $82.04,     0.17%,        NA,Schwab Strategic Trust - Schwab US Dividend Equity ETF
-16        ,F         ,        10,   $98.76B,    $25.16,     2.82%,     35.13,Ford Motor Co.
-17        ,SQ        ,         9,   $59.24B,   $139.39,    -4.18%,    135.33,Block Inc - Class A
-18        ,TLRY      ,         9,    $3.27B,     $7.01,    -1.96%,     -5.15,Tilray Brands Inc - Class 2
-19        ,TTWO      ,         9,   $17.94B,   $155.62,    -0.28%,     32.22,"Take-Two Interactive Software, Inc."
-20        ,NAKD      ,         9,    $2.40B,     $2.65,   -13.68%,     -2.95,Cenntro Electric Group Limited
-21        ,PLTR      ,         8,   $30.30B,    $16.24,    -2.87%,    -13.65,Palantir Technologies Inc - Class A
-22        ,AAPL      ,         8, $2831.64B,   $173.35,    -1.24%,     15.44, Apple Inc
-23        ,TQQQ      ,         8,    $9.95B,    $72.44,    -5.11%,        NA,ProShares Trust - ProShares UltraPro QQQ
-24        ,ICE       ,         8,   $73.30B,   $130.10,    -2.53%,     24.05,Intercontinental Exchange Inc
-25        ,NOK       ,         8,   $33.51B,     $5.91,    -3.04%,    -14.81,Nokia Corp - ADR
-26        ,NVDA      ,         7,  $672.85B,   $269.14,    -3.88%,     83.07,NVIDIA Corp
-27        ,PYPL      ,         7,  $215.93B,   $183.78,    -1.83%,     44.28,PayPal Holdings Inc
-28        ,AI        ,         7,    $2.92B,    $28.71,    -5.06%,    -29.22,C3.ai Inc - Class A
-29        ,UI        ,         7,   $18.85B,   $301.73,     1.00%,        32,Ubiquiti Inc
-30        ,SU        ,         7,   $40.79B,    $28.02,    -0.55%,     26.44,"Suncor Energy, Inc."
-31        ,GS        ,         6,  $131.31B,   $392.21,     0.49%,      6.48,"Goldman Sachs Group, Inc."
-32        ,BB        ,         6,    $5.20B,     $9.07,    -1.41%,    -11.84,BlackBerry Ltd
-33        ,R         ,         6,    $4.29B,    $79.92,     0.07%,     11.75,"Ryder System, Inc."
-34        ,AA        ,         6,   $11.51B,    $61.50,    -0.61%,      14.2,Alcoa Corp
-35        ,AQN       ,         6,    $9.46B,    $14.09,     1.04%,        NA,Algonquin Power & Utilities Corp
-36        ,C         ,         5,  $138.02B,    $68.10,     1.22%,      6.57,Citigroup Inc
-37        ,LCID      ,         5,   $70.83B,    $43.02,    -5.29%,        NA,Lucid Group Inc
-38        ,ARKK      ,         5,   $13.63B,    $81.28,    -3.88%,        NA,ARK Investment Management LLC - ARK Innovation ETF
-39        ,BABA      ,         5,  $360.92B,   $133.13,    -3.11%,     18.47,Alibaba Group Holding Ltd - ADR
-40        ,M         ,         5,    $8.23B,    $27.49,     3.27%,     10.26,Macy`s Inc
-41        ,GM        ,         5,   $90.49B,    $62.33,     2.13%,      8.33,General Motors Company
-42        ,B         ,         5,    $2.43B,    $47.91,     2.37%,     27.38,Barnes Group Inc.
-43        ,INTC      ,         5,  $224.32B,    $55.16,    -1.05%,     10.71,Intel Corp.
-44        ,IVR       ,         5,    $0.88B,     $2.83,    -0.87%,     13.19,Invesco Mortgage Capital Inc
-45        ,STAG      ,         5,    $7.52B,    $44.29,    -0.27%,     35.72,STAG Industrial Inc
-46        ,RNW       ,         5,    $1.91B,     $6.76,    -4.85%,        NA,ReNew Energy Global plc - Class A
-47        ,E         ,         5,   $53.79B,    $29.84,    -0.38%,     62.93,Eni Spa - ADR
-48        ,JPM       ,         4,  $498.70B,   $168.75,     0.18%,     10.67,JPMorgan Chase & Co.
-49        ,SMH       ,         4,    $8.27B,   $303.81,    -0.67%,        NA,VanEck ETF Trust - VanEck Semiconductor ETF
-50        ,UP        ,         4,    $1.05B,     $4.26,    -0.81%,        NA,Wheels Up Experience Inc - Class A
-51        ,DTE       ,         4,   $23.31B,   $120.34,     0.95%,     30.16,DTE Energy Co.
-52        ,DRIP      ,         4,    $0.08B,     $4.08,     1.75%,        NA,Direxion Shares ETF Trust - Direxion Daily S&P Oil & Gas Exp. & Prod. Bear 2X Shares
-53        ,ABR       ,         4,    $2.68B,    $18.71,     0.05%,      9.04,Arbor Realty Trust Inc.
-54        ,SP        ,         4,    $0.70B,    $29.98,     4.81%,      27.5,SP Plus Corp
-55        ,T         ,         3,  $192.07B,    $26.90,     1.70%,    204.87,"AT&T, Inc."
-56        ,ATVI      ,         3,   $50.27B,    $64.54,    -0.42%,     19.15,Activision Blizzard Inc
-57        ,CRM       ,         3,  $227.60B,   $231.07,    -2.84%,    127.66,Salesforce.Com Inc
-58        ,AMZN      ,         3, $1644.85B,  $3243.33,    -1.84%,     63.45,Amazon.com Inc.
-59        ,CRSR      ,         3,    $1.96B,    $20.81,     1.17%,        NA,Corsair Gaming Inc
-60        ,DIS       ,         3,  $284.12B,   $156.31,    -0.94%,      71.7,Walt Disney Co (The)
-61        ,NET       ,         3,   $31.14B,   $101.34,   -11.08%,   -143.81,Cloudflare Inc - Class A
-62        ,SE        ,         3,   $80.47B,   $184.31,    -8.12%,     -91.7,Sea Ltd - ADR
-63        ,FSD       ,         3, NA/crypto,    $15.37, NA/crypto,        NA,First Trust High Income Long Short Fund
-64        ,RIO       ,         3,  $124.08B,    $76.11,     0.06%,     12.69,Rio Tinto plc - ADR
-65        ,RBLX      ,         3,   $45.01B,    $81.76,    -8.20%,    -58.82,Roblox Corporation - Class A
-66        ,FB        ,         3,  $940.25B,   $329.45,    -1.14%,     23.57,Meta Platforms Inc - Class A
-67        ,CC        ,         3,    $5.92B,    $36.30,     0.92%,     15.51,Chemours Company
-68        ,L         ,         3,   $15.63B,    $61.63,     0.74%,     10.02,Loews Corp.
-69        ,MAIN      ,         3,    $3.11B,    $44.76,    -0.18%,      9.67,Main Street Capital Corporation
-70        ,IIPR      ,         3,    $5.10B,   $213.03,    -1.21%,     51.58,Innovative Industrial Properties Inc
-71        ,VERY      ,         3,    $0.10B,     $6.95,     0.00%,        NA,Vericity Inc
-72        ,LSPD      ,         3,    $5.71B,    $38.52,    -2.17%,        NA,Lightspeed Commerce Inc (Sub Voting)
-73        ,GP        ,         2,    $0.16B,     $7.08,    -3.01%,        NA,GreenPower Motor Company Inc
-74        ,JP        ,         2, NA/crypto,     $0.88, NA/crypto,        NA,Jupai Holdings Ltd - ADR
-75        ,RE        ,         2,   $11.32B,   $285.38,     0.83%,      11.2,Everest Re Group Ltd
-76        ,CASH      ,         2,    $1.91B,    $62.50,     1.30%,      7.13,Meta Financial Group Inc.
-77        ,V         ,         2,  $477.41B,   $216.61,     0.42%,     19.25,Visa Inc - Class A
-78        ,GOOGL     ,         2, $1884.26B,  $2786.50,    -1.49%,     27.29,Alphabet Inc - Class A
-79        ,SOFI      ,         2,   $10.81B,    $13.39,    -3.36%,        NA,SoFi Technologies Inc
-80        ,ABBV      ,         2,  $237.00B,   $134.11,    -1.30%,     32.01,Abbvie Inc
-81        ,NIO       ,         2,   $48.52B,    $31.12,    -1.75%,    -30.51,NIO Inc - ADR
-82        ,CRWD      ,         2,   $37.02B,   $177.81,    -5.41%,   -188.99,Crowdstrike Holdings Inc - Class A
-83        ,SOXL      ,         2, NA/crypto,    $61.76, NA/crypto,        NA,Direxion Shares ETF Trust - Direxion Daily Semiconductor Bull 3X Shares
-84        ,GOOG      ,         2, $1890.32B,  $2799.77,    -1.17%,        NA,Alphabet Inc - Class C
-85        ,COIN      ,         2,   $60.97B,   $233.34,    -0.58%,    148.62,Coinbase Global Inc - Class A
-86        ,TV        ,         2,    $5.96B,    $10.66,     2.06%,        NA,Grupo Televisa SAB - ADR - Level III
-87        ,JUST      ,         2, NA/crypto,    $67.57, NA/crypto,        NA,Goldman Sachs ETF Trust - Goldman Sachs Just Us Large Cap Equity ETF
-88        ,ENPH      ,         2,   $19.55B,   $144.90,    -2.93%,    129.38,Enphase Energy Inc
-89        ,TMF       ,         2,    $0.43B,    $25.77,     1.98%,        NA,Direxion Shares ETF Trust - Direxion Daily 20+ Year Treasury Bull 3X Shares
-90        ,BAM       ,         2,   $96.19B,    $58.66,    -0.51%,     27.03,Brookfield Asset Management Inc. - Class A
-91        ,J         ,         2,   $17.48B,   $135.00,     2.03%,     18.57,"Jacobs Engineering Group, Inc."
-92        ,FT        ,         2, NA/crypto,     $8.29, NA/crypto,        NA,Franklin Universal Trust
-93        ,MT        ,         2,   $36.99B,    $37.64,     1.07%,      3.61,ArcelorMittal - New York Shares - Level III
-94        ,ANY       ,         2,    $0.10B,     $2.73,    -4.54%,        NA,Sphere 3D Corp
-95        ,NEW       ,         2, NA/crypto,     $0.33, NA/crypto,        NA,Puxin Limited - ADR
-96        ,OG        ,         2, NA/crypto,     $2.45, NA/crypto,        NA,Onion Global Ltd - ADR
-97        ,UVXY      ,         2,    $0.78B,    $12.06,     4.78%,        NA,ProShares Trust - ProShares Ultra VIX Short-Term Futures ETF
-98        ,ML        ,         2,    $0.69B,     $3.04,    -2.41%,        NA,MoneyLion Inc - Class A
-99        ,INDA      ,         2,    $6.25B,    $48.48,    -0.05%,        NA,BlackRock Institutional Trust Company N.A. - BTC iShares MSCI India ETF
-100       ,ESG       ,         2, NA/crypto,   $114.74, NA/crypto,        NA,FlexShares Trust - FlexShares STOXX US ESG Select Index Fund
-101       ,EPS       ,         2, NA/crypto,    $50.59, NA/crypto,        NA,WisdomTree Trust - WisdomTree U.S. LargeCap Fund
-102       ,MUB       ,         2,   $25.01B,   $115.43,    -0.03%,        NA,BlackRock Institutional Trust Company N.A. - iShares National Muni Bond ETF
-103       ,BND       ,         2,   $81.73B,    $83.71,     0.10%,        NA,"Vanguard Group, Inc. - Vanguard Total Bond Market ETF"
-104       ,REIT      ,         2,    $0.03B,    $29.99,     0.00%,        NA,ALPS Fund Services - ALPS Active REIT ETF
-105       ,GET       ,         2,    $0.21B,     $1.33,    -0.75%,        NA,Getnet Adquirencia E Servicos Para Meios De Pagamento S.A - ADR
-106       ,GE        ,         2,  $112.90B,   $102.81,     0.56%,   -271.98,General Electric Co.
-107       ,HOLD      ,         2, NA/crypto,    $98.39, NA/crypto,        NA,Advisorshares Trust - AdvisorShares North Square McKee Core Reserves ETF
-108       ,BP        ,         2,  $103.29B,    $31.46,     0.87%,     -5.22,BP plc - ADR
-109       ,IBKR      ,         2,    $7.49B,    $76.25,    -1.42%,     22.56,Interactive Brokers Group Inc - Class A
-110       ,TA        ,         2,    $0.68B,    $46.96,     1.45%,        NA,TravelCenters of America Inc
-111       ,VALE      ,         2,   $78.94B,    $15.38,    -1.09%,       4.5,Vale S.A. - ADR
-112       ,BHP       ,         2,   $99.17B,    $67.22,     0.11%,      7.54,BHP Group Limited - ADR
-113       ,LNG       ,         2,   $28.95B,   $114.15,    -0.13%,    -22.83,Cheniere Energy Inc.
-114       ,DOGZ      ,         2,    $0.06B,     $3.01,     3.44%,        NA,Dogness (International) Corp - Class A
-115       ,KR        ,         2,   $36.48B,    $49.61,     5.24%,      37.3,Kroger Co.
-116       ,NVAX      ,         2,    $8.79B,   $116.32,   -10.64%,     -7.78,"Novavax, Inc."
-117       ,IDEX      ,         2,    $0.57B,     $1.14,    -0.87%,        NA,Ideanomics Inc
-118       ,MSM       ,         2,    $4.04B,    $85.64,     1.82%,     19.64,"MSC Industrial Direct Co., Inc. - Class A"
-119       ,HOOD      ,         2,   $11.30B,    $15.48,    -4.71%,    -32.22,Robinhood Markets Inc - Class A
-120       ,G         ,         2,    $9.87B,    $52.49,     0.07%,     27.34,Genpact Ltd
-121       ,NNDM      ,         2,    $0.92B,     $3.71,    -1.46%,        NA,Nano Dimension Ltd - ADR
-122       ,MFC       ,         2,   $40.47B,    $20.83,     0.97%,        NA,Manulife Financial Corp.
-123       ,CNQ       ,         2,   $58.86B,    $50.10,     1.48%,     13.05,Canadian Natural Resources Ltd.
-124       ,CVE       ,         2,   $28.95B,    $14.41,    -0.48%,        NA,Cenovus Energy Inc
-125       ,RY        ,         2,  $166.17B,   $116.70,     0.63%,      6.53,Royal Bank Of Canada
-126       ,SHOP      ,         2,  $129.97B,  $1078.50,    -7.72%,     40.42,Shopify Inc - Class A
-127       ,OI        ,         2,    $2.19B,    $13.97,     5.63%,        NA,O-I Glass Inc
-128       ,ASML      ,         2,  $301.60B,   $742.00,    -0.02%,     46.03,ASML Holding NV - New York Shares
-129       ,PSTH      ,         2, NA/crypto,    $19.89, NA/crypto,        NA,Pershing Square Tontine Holdings Ltd - Class A
-130       ,AIM       ,         2, NA/crypto,     $0.94, NA/crypto,        NA,AIM ImmunoTech Inc
-131       ,DRIV      ,         2,    $1.46B,    $31.15,    -0.16%,        NA,Global X Funds - Global X Autonomous & Electric Vehicles ETF
-132       ,BNY       ,         1, NA/crypto,    $14.75, NA/crypto,        NA,BlackRock New York Municipal Income Trust
-133       ,STEM      ,         1,    $2.24B,    $15.52,    -2.82%,        NA,Stem Inc - Class A
-134       ,DEI       ,         1,    $6.33B,    $36.07,     1.92%,    101.01,Douglas Emmett Inc
-135       ,MS        ,         1,  $184.52B,   $102.83,    -0.21%,     13.13,Morgan Stanley
-136       ,UPS       ,         1,  $183.05B,   $211.77,     0.26%,     28.77,"United Parcel Service, Inc. - Class B"
-137       ,VC        ,         1,    $3.45B,   $123.32,     5.84%,    124.09,Visteon Corp.
-138       ,DS        ,         1,    $0.14B,     $1.51,    -0.66%,     -7.26,Drive Shack Inc
-139       ,MAN       ,         1,    $5.77B,   $106.33,     2.35%,     17.12,ManpowerGroup
-140       ,DAX       ,         1,    $0.04B,    $32.82,     0.00%,        NA,Global X Funds - Global X DAX Germany ETF
-141       ,ADS       ,         1,    $3.74B,    $75.15,     4.46%,      4.68,Alliance Data System
-142       ,LOW       ,         1,  $169.20B,   $251.13,     0.16%,     21.91,"Lowe`s Cos., Inc."
-143       ,PAY       ,         1,    $0.51B,    $30.95,     0.27%,        NA,Paymentus Holdings Inc - Class A
-144       ,MTTR      ,         1,    $3.47B,    $14.29,    -5.11%,        NA,Matterport Inc - Class A
-145       ,BTI       ,         1,   $95.86B,    $41.77,     2.72%,     10.99,British American Tobacco Plc - ADR
-146       ,SBUX      ,         1,  $120.93B,   $103.08,    -0.76%,     14.56,Starbucks Corp.
-147       ,CSCO      ,         1,  $260.35B,    $61.73,    -0.63%,     22.95,"Cisco Systems, Inc."
-148       ,RSI       ,         1,    $2.60B,    $12.79,    -5.12%,        NA,Rush Street Interactive Inc - Class A
-149       ,PHG       ,         1,   $30.48B,    $34.48,     4.22%,     21.69,Koninklijke Philips N.V. - ADR
-150       ,SA        ,         1,    $1.27B,    $16.11,    -0.80%,        NA,"Seabridge Gold, Inc."
-151       ,CLFD      ,         1,    $0.98B,    $71.30,    -1.88%,        NA,Clearfield Inc
-152       ,ADBE      ,         1,  $248.17B,   $520.93,    -2.15%,     42.98, Adobe Inc
-153       ,KO        ,         1,  $263.03B,    $60.90,     0.59%,        30,Coca-Cola Co
-154       ,ALLY      ,         1,   $18.39B,    $53.09,     2.02%,      6.46,Ally Financial Inc
-155       ,STOR      ,         1,    $9.28B,    $34.05,     0.40%,     36.89,Store Capital Corp
-156       ,BMY       ,         1,  $143.79B,    $64.78,    -0.06%,    -26.88,Bristol-Myers Squibb Co.
-157       ,DKNG      ,         1,   $10.01B,    $24.64,    -5.61%,     -6.11,DraftKings Inc - Class A
-158       ,PINS      ,         1,   $20.73B,    $33.54,    -2.58%,     63.12,Pinterest Inc - Class A
-159       ,AVUV      ,         1,    $2.43B,    $82.65,     0.92%,        NA,American Century ETF Trust - Avantis U.S. Small Cap Value ETF
-160       ,CROX      ,         1,    $7.54B,   $128.11,    -5.04%,     11.18, Crocs Inc
-161       ,BAC       ,         1,  $400.90B,    $48.98,     0.26%,     14.67,Bank Of America Corp.
-162       ,PENN      ,         1,    $7.86B,    $46.36,    -2.28%,     19.64,"Penn National Gaming, Inc."
-163       ,CMG       ,         1,   $42.99B,  $1528.03,    -1.68%,     61.37,Chipotle Mexican Grill
-164       ,TTD       ,         1,   $33.69B,    $77.25,    -6.24%,    136.56,Trade Desk Inc - Class A
-165       ,NFLX      ,         1,  $231.30B,   $523.55,    -2.54%,     47.21,NetFlix Inc
-166       ,ILMN      ,         1,   $63.07B,   $403.53,    -2.38%,     66.26,Illumina Inc
-167       ,MVIS      ,         1,    $0.65B,     $3.98,    -3.98%,    -18.28,Microvision Inc.
-168       ,COST      ,         1,  $230.05B,   $518.79,    -1.33%,     44.65,Costco Wholesale Corp
-169       ,HL        ,         1,    $2.85B,     $5.29,     1.63%,    149.15,Hecla Mining Co.
-170       ,UPRO      ,         1,    $1.79B,    $72.46,    -2.50%,        NA,ProShares Trust - ProShares UltraPro S&P 500 ETF
-171       ,GGPI      ,         1,    $0.93B,    $11.58,    -1.36%,        NA,Gores Guggenheim Inc - Class A
-172       ,RKLB      ,         1,    $4.90B,    $10.90,    -4.76%,        NA,Rocket Lab USA Inc
-173       ,CCI       ,         1,   $81.00B,   $187.41,    -1.06%,     65.07,Crown Castle International Corp
-174       ,AMT       ,         1,  $116.60B,   $256.03,    -1.29%,     46.55,American Tower Corp.
-175       ,VHI       ,         1,    $0.85B,    $30.23,     0.75%,      8.64,"Valhi, Inc."
-176       ,GPS       ,         1,    $7.00B,    $18.75,     5.61%,     14.09," Gap, Inc."
-177       ,GLD       ,         1,   $57.20B,   $170.09,    -0.38%,        NA,SSgA Active Trust - SPDR Gold Shares ETF
-178       ,IBM       ,         1,  $121.28B,   $135.31,     1.29%,     26.79,International Business Machines Corp.
-179       ,BFLY      ,         1,    $1.15B,     $6.88,    -3.16%,        NA,Butterfly Network Inc - Class A
-180       ,DISCA     ,         1,   $14.77B,    $29.61,     2.85%,     20.71,Discovery Inc - Class A
-181       ,BX        ,         1,   $82.34B,   $119.88,    -2.01%,     13.59,Blackstone Inc
-182       ,CLF       ,         1,   $11.27B,    $22.55,    -2.28%,      5.54,Cleveland-Cliffs Inc
-183       ,AAA       ,         1, NA/crypto,    $25.00, NA/crypto,        NA,Listed Funds Trust - AAF First Priority CLO Bond ETF
-184       ,K         ,         1,   $22.80B,    $66.84,     0.69%,     18.21,Kellogg Co
-185       ,IQ        ,         1,    $3.43B,     $4.70,    -4.47%,     -1.88,iQIYI Inc - ADR
-186       ,BIT       ,         1, NA/crypto,    $17.91, NA/crypto,        NA,BlackRock Multi-Sector Income Trust
-187       ,SATS      ,         1,    $0.97B,    $25.01,     0.12%,     15.53,EchoStar Corp
-188       ,ALT       ,         1,    $0.30B,     $7.63,    -2.31%,        NA,Altimmune Inc
-189       ,DOW       ,         1,   $44.55B,    $60.23,     1.64%,      7.77,   Dow Inc
-190       ,BCH       ,         1, NA/crypto,    $18.82, NA/crypto,        NA,Banco de Chile - ADR
-191       ,HOPE      ,         1,    $2.00B,    $16.61,     2.31%,     11.38,Hope Bancorp Inc
-192       ,NYC       ,         1, NA/crypto,    $11.12, NA/crypto,        NA,New York City REIT Inc - Class A
-193       ,ID        ,         1, NA/crypto,     $2.06, NA/crypto,        NA,PARTS iD Inc - Class A
-194       ,CVNA      ,         1,    $7.82B,   $167.00,    -5.93%,   -157.55,Carvana Co. - Class A
-195       ,ACA       ,         1,    $2.52B,    $52.11,     4.43%,        NA,Arcosa Inc
-196       ,IG        ,         1, NA/crypto,    $25.91, NA/crypto,        NA,Principal Exchange-Traded Funds - Principal Investment Grade Corporate Active ETF
-197       ,EVER      ,         1,    $0.37B,    $16.12,     0.19%,        NA,EverQuote Inc - Class A
-198       ,SRV       ,         1, NA/crypto,    $33.40, NA/crypto,        NA,Cushing MLP & Infrastructure Total Return Fund
-199       ,HSBC      ,         1,  $143.04B,    $35.22,     2.74%,      23.8,HSBC Holdings plc - ADR
-200       ,FRDM      ,         1, NA/crypto,    $34.87, NA/crypto,        NA,Alpha Architect Etf Trust - Alpha Architect Freedom 100 Emerging Markets ETF
-201       ,SCHB      ,         1, NA/crypto,   $111.35, NA/crypto,        NA,Schwab Strategic Trust - Schwab U.S. Broad Market ETF
-202       ,AGI       ,         1,    $2.88B,     $7.34,    -0.95%,        NA,Alamos Gold Inc. - Class A
-203       ,STL       ,         1,    $5.69B,    $29.54,     1.23%,     15.71,Sterling Bancorp.
-204       ,HUYA      ,         1,    $1.66B,     $7.06,    -4.98%,      9.47,HUYA Inc - ADR
-205       ,SQQQ      ,         1,    $7.51B,    $33.37,     5.27%,        NA,ProShares Trust - ProShares UltraPro Short QQQ
-206       ,SPGI      ,         1,  $105.30B,   $436.92,    -2.44%,     37.67,S&P Global Inc
-207       ,FFR       ,         1, NA/crypto,    $52.49, NA/crypto,        NA,First Trust Exchange-Traded Fund II - First Trust FTSE EPRA/NAREIT Developed Markets Real Estate Index Fund
-208       ,FINX      ,         1,    $1.02B,    $36.34,    -2.96%,        NA,Global X Funds - Global X Funds Global X FinTech ETF
-209       ,BITF      ,         1,    $0.89B,     $4.58,    -7.19%,        NA,Bitfarms Ltd.
-210       ,GNUS      ,         1,    $0.33B,     $1.08,     2.36%,     -2.98,Genius Brands International Inc
-211       ,BYD       ,         1,    $7.09B,    $63.08,    -0.66%,     16.43,Boyd Gaming Corp.
-212       ,CHKP      ,         1,   $16.44B,   $119.90,    -0.41%,     19.75,Check Point Software Technolgies
-213       ,DVN       ,         1,   $33.83B,    $49.98,     0.15%,     24.86,Devon Energy Corp.
-214       ,OXY       ,         1,   $32.22B,    $34.49,    -0.73%,    -28.75,Occidental Petroleum Corp.
-215       ,COO       ,         1,   $22.54B,   $422.49,     0.43%,      3.57,"Cooper Companies, Inc."
-216       ,SD        ,         1,    $0.42B,    $11.35,    -7.04%,        NA,Sandridge Energy Inc New
-217       ,VGT       ,         1,   $53.34B,   $433.87,    -1.95%,        NA,"Vanguard Group, Inc. - Vanguard Information Technology ETF"
-218       ,REAL      ,         1,    $1.04B,    $11.29,    -2.84%,     -4.34,Therealreal Inc
-219       ,MA        ,         1,  $363.04B,   $372.46,     1.40%,     45.81,Mastercard Incorporated - Class A
-220       ,SBLK      ,         1,    $2.21B,    $21.58,    -5.39%,     10.08,Star Bulk Carriers Corp
-221       ,HYS       ,         1, NA/crypto,    $98.42, NA/crypto,        NA,Pimco Exchange Traded Fund - PIMCO 0-5 Year High Yield Corporate Bond Index Exchange-Traded Fund
-222       ,BNDW      ,         1,    $0.56B,    $77.75,     0.03%,        NA,"Vanguard Group, Inc. - Vanguard Total World Bond ETF"
-223       ,TLT       ,         1,   $17.68B,   $143.99,     0.69%,        NA,BlackRock Institutional Trust Company N.A. - BTC iShares 20+ Year Treasury Bond ETF
-224       ,HYD       ,         1,    $3.64B,    $61.77,    -0.02%,        NA,VanEck ETF Trust - VanEck High Yield Muni ETF
-225       ,NTSX      ,         1,    $0.97B,    $43.14,    -0.14%,        NA,WisdomTree Trust - WisdomTree U.S. Efficient Core Fund
-226       ,EDV       ,         1, NA/crypto,   $135.26, NA/crypto,        NA,"Vanguard Group, Inc. - Vanguard Extended Duration Treasury ETF"
-227       ,CD        ,         1,    $0.98B,     $5.61,    -9.22%,        NA,Chindata Group Holdings Ltd - ADR
-228       ,AGG       ,         1,   $91.09B,   $112.69,     0.08%,        NA,BlackRock Institutional Trust Company N.A. - iShares Core U.S. Aggregate Bond ETF
-229       ,IP        ,         1,   $19.19B,    $49.54,     2.17%,     11.55,International Paper Co.
-230       ,RMD       ,         1,   $36.85B,   $252.91,     3.58%,     74.17,Resmed Inc.
-231       ,ET        ,         1,   $30.46B,     $9.57,    -0.57%,        NA,Energy Transfer LP - Unit
-232       ,COOL      ,         1,    $0.39B,     $9.77,     0.00%,        NA,Corner Growth Acquisition Corp - Class A
-233       ,LIVE      ,         1,    $0.05B,    $29.44,     0.00%,        NA,Live Ventures Inc
-234       ,FCEL      ,         1,    $1.82B,     $4.97,    -1.87%,     -7.99,Fuelcell Energy Inc
-235       ,FUBO      ,         1,    $2.01B,    $13.91,    -5.05%,        NA,fuboTV Inc
-236       ,ABC       ,         1,   $28.19B,   $135.45,    -0.19%,      9.17,Amerisource Bergen Corp.
-237       ,NAK       ,         1, NA/crypto,     $0.34, NA/crypto,        NA,Northern Dynasty Minerals Ltd.
-238       ,CIDM      ,         1,    $0.20B,     $1.14,    -1.30%,        NA,Cinedigm Corp - Class A
-239       ,CPRI      ,         1,    $9.26B,    $61.57,     2.56%,     22.64,Capri Holdings Ltd
-240       ,ALLK      ,         1,    $0.43B,     $7.91,    -2.83%,        NA,Allakos Inc
-241       ,SPOT      ,         1,   $41.55B,   $229.55,    -0.76%,   -231.12,Spotify Technology S.A.
-242       ,AMGN      ,         1,  $130.69B,   $232.03,     0.12%,     23.92,AMGEN Inc.
-243       ,MRK       ,         1,  $206.02B,    $81.56,     0.44%,     29.44,Merck & Co Inc
-244       ,NLY       ,         1,   $11.59B,     $8.00,    -1.05%,      4.14,Annaly Capital Management Inc
-245       ,AGNC      ,         1,    $8.14B,    $15.51,    -0.35%,       5.7,AGNC Investment Corp
-246       ,JEPI      ,         1,    $6.02B,    $62.60,    -0.19%,        NA,J.P. Morgan Exchange-Traded Fund Trust - JPMorgan Equity Premium Income ETF
-247       ,DIVO      ,         1, NA/crypto,    $37.95, NA/crypto,        NA,Amplify ETF Trust - Amplify CPW Enhanced Dividend Income ETF
-248       ,NUSI      ,         1,    $0.91B,    $26.78,    -1.62%,        NA,ETF Series Solutions Trust - Nationwide Nasdaq-100 Risk-Managed Income ETF
-249       ,HNDL      ,         1,    $1.58B,    $25.55,    -0.56%,        NA,Strategy Shares - Nasdaq 7HANDL Index ETF
-250       ,PBA       ,         1,   $17.79B,    $32.32,     0.31%,        NA,Pembina Pipeline Corporation
-251       ,EPD       ,         1,   $52.52B,    $24.07,    -0.04%,     13.52,Enterprise Products Partners L P - Unit
-252       ,ERX       ,         1,    $0.61B,    $38.66,     0.47%,        NA,Direxion Shares ETF Trust - Direxion Daily Energy Bull 2X Shares
-253       ,HD        ,         1,  $405.65B,   $388.46,    -0.24%,     26.02,"Home Depot, Inc."
-254       ,ADC       ,         1,    $4.78B,    $68.51,     0.84%,     38.71,Agree Realty Corp.
-255       ,MPW       ,         1,   $14.15B,    $23.73,     0.72%,     24.52,Medical Properties Trust Inc
-256       ,GLAD      ,         1,    $0.39B,    $11.49,     0.17%,        NA,Gladstone Capital Corp.
-257       ,NRZ       ,         1,    $5.23B,    $11.21,    -0.18%,      8.18,New Residential Investment Corp
-258       ,RYLD      ,         1,    $0.86B,    $24.30,     0.06%,        NA,Global X Funds - Global X Russell 2000 Covered Call ETF
-259       ,AVCT      ,         1,    $0.16B,     $1.82,   -11.65%,        NA,American Virtual Cloud Technologies Inc
-260       ,MMAT      ,         1,    $0.61B,     $2.17,    -4.61%,        NA,Meta Materials Inc
-261       ,RKDA      ,         1,    $0.02B,     $1.08,    -3.98%,       5.7,Arcadia Biosciences Inc
-262       ,GSAT      ,         1,    $1.86B,     $1.03,    -2.36%,    -16.25,Globalstar Inc.
-263       ,MNMD      ,         1,    $0.53B,     $1.16,    -4.13%,        NA,          
-264       ,AGTC      ,         1,    $0.07B,     $1.73,    -1.70%,        NA,Applied Genetic Technologies Corp
-265       ,ALPP      ,         1,    $0.24B,     $1.64,     5.13%,        NA,Alpine 4 Holdings Inc - Class A
-266       ,PLUG      ,         1,   $14.01B,    $24.30,    -1.40%,    -16.31,Plug Power Inc
-267       ,SNOW      ,         1,   $84.53B,   $297.23,    -3.23%,    -78.01,Snowflake Inc - Class A
-268       ,MESA      ,         1,    $0.21B,     $5.88,     5.28%,        NA,Mesa Air Group Inc.
-269       ,SWKS      ,         1,   $25.43B,   $153.78,    -1.49%,      8.57,"Skyworks Solutions, Inc."
-270       ,QCOM      ,         1,  $207.88B,   $185.61,    -0.43%,     11.79,"Qualcomm, Inc."
-271       ,QRVO      ,         1,   $16.23B,   $147.25,    -3.66%,     15.24, Qorvo Inc
-272       ,DNA       ,         1,    $7.79B,     $5.94,    -5.11%,        NA,Ginkgo Bioworks Holdings Inc - Class A
-273       ,JMIA      ,         1,    $1.00B,    $10.12,    -3.71%,        NA,Jumia Technologies Ag - ADR
-274       ,CS        ,         1,   $27.97B,    $10.55,     2.73%,     94.28,Credit Suisse Group AG - ADR
-275       ,BNDX      ,         1,   $44.46B,    $54.91,     0.17%,        NA,"Vanguard Group, Inc. - Vanguard Total International Bond ETF"
-276       ,LFG       ,         1,    $0.94B,    $17.60,    -1.12%,        NA,Archaea Energy Inc - Class A
-277       ,SAVA      ,         1,    $1.83B,    $45.75,    -5.65%,        NA,Cassava Sciences Inc
-278       ,ORC       ,         1,    $0.81B,     $4.60,    -0.43%,     -5.13,Orchid Island Capital Inc
-279       ,OXSQ      ,         1,    $0.21B,     $4.32,    -0.57%,       2.7,Oxford Square Capital Corp
-280       ,NYMT      ,         1,    $1.45B,     $3.83,     0.39%,      7.38,New York Mortgage Trust Inc
-281       ,MFA       ,         1,    $2.07B,     $4.68,     0.11%,      7.01,MFA Financial Inc
-282       ,BKEP      ,         1,    $0.14B,     $3.46,     6.46%,        NA,Blueknight Energy Partners LP - Unit
-283       ,NCMI      ,         1,    $0.22B,     $2.72,    -0.73%,     -2.32,National Cinemedia Inc
-284       ,ME        ,         1,    $0.51B,     $5.49,    -5.02%,        NA,23andMe Holding Co - Class A
-285       ,CTXR      ,         1,    $0.22B,     $1.51,    -1.62%,        NA,Citius Pharmaceuticals Inc
-286       ,SARK      ,         1,    $0.15B,    $42.66,     3.87%,        NA,Collaborative Investment Series Trust - Tuttle Capital Short Innovation ETF
-287       ,BNGO      ,         1,    $0.74B,     $2.57,    -7.55%,        NA,Bionano Genomics Inc
-288       ,ESGA      ,         1, NA/crypto,    $59.41, NA/crypto,        NA,American Century ETF Trust - American Century Sustainable Equity ETF
-289       ,LULU      ,         1,   $42.16B,   $339.76,    -3.67%,     51.02,Lululemon Athletica inc.
-290       ,ENB       ,         1,   $84.90B,    $41.91,     0.52%,     18.54,Enbridge Inc
-291       ,TRP       ,         1,   $50.20B,    $51.19,     0.97%,     29.94,TC Energy Corporation
-292       ,DLR       ,         1,   $44.76B,   $157.71,    -0.78%,     66.83,Digital Realty Trust Inc
-293       ,ARC       ,         1, NA/crypto,     $3.72, NA/crypto,        NA,ARC Document Solutions Inc
-294       ,BNS       ,         1,   $89.95B,    $73.98,     0.82%,      5.98,Bank Of Nova Scotia
-295       ,NTR       ,         1,   $40.64B,    $71.47,    -1.15%,        NA,Nutrien Ltd
-296       ,CPG       ,         1,    $3.77B,     $6.48,    -4.14%,        NA,Crescent Point Energy Corp
-297       ,RESP      ,         1, NA/crypto,    $50.80, NA/crypto,        NA,WisdomTree Trust - WisdomTree U.S. ESG Fund
-298       ,CAR       ,         1,   $11.06B,   $195.86,     1.98%,     16.53,Avis Budget Group Inc
-299       ,AN        ,         1,    $7.40B,   $112.92,     0.33%,         8,Autonation Inc.
-300       ,BMO       ,         1, NA/crypto,   $118.31, NA/crypto,        NA,Bank of Montreal
-301       ,DB        ,         1,   $28.75B,    $13.91,    -0.71%,        NA,Deutsche Bank AG
-302       ,DAC       ,         1,    $1.53B,    $74.15,     0.24%,        NA,Danaos Corporation
-303       ,SPLG      ,         1,   $13.62B,    $54.90,    -0.93%,        NA,SPDR Series Trust - SPDR Portfolio S&P 500 ETF
-304       ,IVA       ,         1,    $0.52B,    $12.69,     0.00%,        NA,Inventiva - ADR
-305       ,CVM       ,         1,    $0.28B,     $6.38,     3.57%,     -7.41,Cel-Sci Corp.
-306       ,IR        ,         1,   $24.43B,    $59.95,    -0.05%,     60.01,Ingersoll-Rand Inc
-307       ,RC        ,         1,    $1.17B,    $15.43,     1.05%,      7.91,Ready Capital Corp
-308       ,CBD       ,         1,    $0.97B,     $3.62,    -2.03%,        NA,Cia Brasileira De Distr-pao De Acucar - ADR (Ordinary Shares)
-309       ,H         ,         1,    $4.81B,    $95.59,     0.71%,    -24.64,Hyatt Hotels Corporation - Class A
-310       ,D         ,         1,   $64.37B,    $79.61,     0.37%,     27.36,Dominion Energy Inc
-311       ,DCF       ,         1, NA/crypto,     $9.32, NA/crypto,        NA,BNY Mellon Alcentra Global Credit Income 2024 Target Term Fund Inc
-312       ,PEG       ,         1,   $33.56B,    $66.38,     0.51%,    -50.67,Public Service Enterprise Group Inc.
-313       ,FCF       ,         1,    $1.66B,    $17.33,     0.81%,     12.93,First Commonwealth Financial Corp.
-314       ,DOYU      ,         1,    $0.81B,     $2.49,    -6.04%,        NA,DouYu International Holdings Ltd - ADR
-315       ,CCL       ,         1,   $25.42B,    $23.03,     3.23%,     -2.71,Carnival Corp. (Paired Stock)
-316       ,RCL       ,         1,   $21.31B,    $83.63,     1.67%,     -3.88,Royal Caribbean Group
-317       ,GD        ,         1,   $59.14B,   $211.80,     0.50%,     18.18,General Dynamics Corp.
-318       ,GGT       ,         1,    $0.22B,     $8.84,     1.38%,        NA,Gabelli Multimedia Trust Inc
-319       ,BOE       ,         1, NA/crypto,    $12.32, NA/crypto,        NA,BlackRock Enhanced Global Dividend Trust
-320       ,ABB       ,         1,   $78.28B,    $38.12,    -1.26%,      42.6,ABB Ltd. - ADR
-321       ,LPI       ,         1,    $1.21B,    $70.82,    -3.01%,      -3.9,Laredo Petroleum Inc.
-322       ,DFS       ,         1,   $38.14B,   $130.15,     1.84%,      7.78,Discover Financial Services
-323       ,MFG       ,         1, NA/crypto,     $2.84, NA/crypto,        NA,"Mizuho Financial Group, Inc. - ADR"
-324       ,CMC       ,         1,    $4.64B,    $38.16,     3.22%,      8.03,Commercial Metals Co.
-325       ,EFT       ,         1, NA/crypto,    $15.36, NA/crypto,        NA,Eaton Vance Floating-Rate Income Trust
-326       ,GAME      ,         1,    $0.05B,     $3.17,    -1.25%,        NA,Engine Gaming and Media Inc
-327       ,CEF       ,         1,    $3.90B,    $17.66,     0.03%,        NA,Sprott Physical Gold and Silver Trust Units
-328       ,VICI      ,         1,   $17.86B,    $28.39,    -1.46%,     15.43,VICI Properties Inc
+1         ,AMC       ,        54,   $10.61B,    $20.66,    -9.07%,     -3.99,AMC Entertainment Holdings Inc - Class A
+2         ,GME       ,        38,    $9.35B,   $122.48,    -4.36%,    -55.93,Gamestop Corporation - Class A
+3         ,CPI       ,        30,    $0.06B,    $27.49,    -0.16%,        NA,IndexIQ ETF Trust - IQ Real Return ETF
+4         ,SPY       ,        29,  $444.48B,   $464.53,    -1.38%,        NA,SSgA Active Trust - S&P 500 ETF TRUST ETF
+5         ,MSFT      ,        23, $2288.43B,   $304.80,    -4.23%,     34.09,Microsoft Corporation
+6         ,O         ,        23,   $28.98B,    $71.70,    -0.24%,     56.46,Realty Income Corp.
+7         ,TSLA      ,        22, $1035.96B,  $1031.56,    -6.75%,    340.45, Tesla Inc
+8         ,AMD       ,        15,  $160.30B,   $132.74,    -3.44%,     40.59,Advanced Micro Devices Inc.
+9         ,QQQ       ,        14,  $203.71B,   $377.66,    -2.50%,        NA,Invesco Capital Management LLC - Invesco QQQ Trust Series 1
+10        ,TFSA      ,        13,    $0.00B,    $25.84,     1.05%,        NA,Terra Income Fund 6 Inc - 7% NT REDEEM 31/03/2026 USD 25
+11        ,TD        ,        12,  $148.47B,    $81.37,     0.28%,      6.53,Toronto Dominion Bank
+12        ,SNDL      ,        12,    $0.93B,     $0.56,    -3.41%,        NA,Sundial Growers Inc
+13        ,SCHD      ,        11,   $32.18B,    $81.79,    -0.13%,        NA,Schwab Strategic Trust - Schwab US Dividend Equity ETF
+14        ,SQ        ,        10,   $58.20B,   $136.95,    -5.86%,    132.96,Block Inc - Class A
+15        ,NVDA      ,        10,  $664.38B,   $265.75,    -5.09%,     82.02,NVIDIA Corp
+16        ,QYLD      ,        10,    $6.02B,    $21.71,    -1.81%,        NA,Global X Funds - Global X NASDAQ 100 Covered Call ETF
+17        ,F         ,         9,   $98.21B,    $25.02,     2.25%,     34.93,Ford Motor Co.
+18        ,NAKD      ,         9,    $2.37B,     $2.61,   -14.98%,      -2.9,Cenntro Electric Group Limited
+19        ,PLTR      ,         8,   $29.87B,    $16.01,    -4.25%,    -13.45,Palantir Technologies Inc - Class A
+20        ,TQQQ      ,         8,    $9.72B,    $70.80,    -7.26%,        NA,ProShares Trust - ProShares UltraPro QQQ
+21        ,AI        ,         8,    $2.87B,    $28.24,    -6.61%,    -28.74,C3.ai Inc - Class A
+22        ,SU        ,         8,   $40.56B,    $27.87,    -1.10%,     26.29,"Suncor Energy, Inc."
+23        ,NOK       ,         8,   $33.43B,     $5.89,    -3.28%,    -14.77,Nokia Corp - ADR
+24        ,AAPL      ,         7, $2812.62B,   $172.19,    -1.90%,     15.33, Apple Inc
+25        ,PYPL      ,         7,  $212.67B,   $181.01,    -3.31%,     43.62,PayPal Holdings Inc
+26        ,NET       ,         7,   $30.42B,    $98.98,   -13.15%,   -140.46,Cloudflare Inc - Class A
+27        ,AA        ,         7,   $11.32B,    $60.51,    -2.21%,     13.97,Alcoa Corp
+28        ,GS        ,         6,  $130.84B,   $390.80,     0.13%,      6.46,"Goldman Sachs Group, Inc."
+29        ,AMZN      ,         6, $1635.19B,  $3224.28,    -2.42%,     63.07,Amazon.com Inc.
+30        ,ARKK      ,         6,   $13.41B,    $79.98,    -5.42%,        NA,ARK Investment Management LLC - ARK Innovation ETF
+31        ,RNW       ,         6,    $1.94B,     $6.87,    -3.38%,        NA,ReNew Energy Global plc - Class A
+32        ,BB        ,         6,    $5.13B,     $8.94,    -2.83%,    -11.67,BlackBerry Ltd
+33        ,BABA      ,         5,  $356.13B,   $131.37,    -4.40%,     18.22,Alibaba Group Holding Ltd - ADR
+34        ,IVR       ,         5,    $0.87B,     $2.80,    -2.10%,     13.03,Invesco Mortgage Capital Inc
+35        ,AQN       ,         5,    $9.42B,    $14.02,     0.57%,        NA,Algonquin Power & Utilities Corp
+36        ,E         ,         5,   $53.43B,    $29.64,    -1.03%,     62.52,Eni Spa - ADR
+37        ,B         ,         4,    $2.44B,    $48.12,     2.82%,      27.5,Barnes Group Inc.
+38        ,TSM       ,         4,  $721.85B,   $139.19,     5.26%,     34.71,Taiwan Semiconductor Manufacturing - ADR
+39        ,M         ,         4,    $8.03B,    $26.84,     0.83%,     10.01,Macy`s Inc
+40        ,INTC      ,         4,  $223.44B,    $54.94,    -1.44%,     10.67,Intel Corp.
+41        ,DTE       ,         4,   $23.21B,   $119.83,     0.52%,     30.03,DTE Energy Co.
+42        ,LSPD      ,         4,    $5.57B,    $37.57,    -4.57%,        NA,Lightspeed Commerce Inc (Sub Voting)
+43        ,SP        ,         4,    $0.69B,    $29.77,     4.09%,     27.31,SP Plus Corp
+44        ,C         ,         3,  $137.38B,    $67.78,     0.74%,      6.54,Citigroup Inc
+45        ,T         ,         3,  $191.35B,    $26.80,     1.32%,    204.11,"AT&T, Inc."
+46        ,JPM       ,         3,  $497.16B,   $168.23,    -0.12%,     10.64,JPMorgan Chase & Co.
+47        ,LOW       ,         3,  $168.91B,   $250.70,    -0.01%,     21.88,"Lowe`s Cos., Inc."
+48        ,SOFI      ,         3,   $10.56B,    $13.09,    -5.56%,        NA,SoFi Technologies Inc
+49        ,NIO       ,         3,   $47.52B,    $30.48,    -3.79%,    -29.88,NIO Inc - ADR
+50        ,CRSR      ,         3,    $1.94B,    $20.60,     0.15%,        NA,Corsair Gaming Inc
+51        ,SOXL      ,         3,    $5.78B,    $60.20,    -6.78%,        NA,Direxion Shares ETF Trust - Direxion Daily Semiconductor Bull 3X Shares
+52        ,SPCE      ,         3,    $2.59B,    $10.03,   -18.92%,     -3.41,Virgin Galactic Holdings Inc - Class A
+53        ,DIS       ,         3,  $282.54B,   $155.44,    -1.50%,      71.3,Walt Disney Co (The)
+54        ,BAM       ,         3,   $95.62B,    $58.31,    -1.10%,     26.87,Brookfield Asset Management Inc. - Class A
+55        ,RBLX      ,         3,   $44.14B,    $80.18,    -9.97%,    -57.68,Roblox Corporation - Class A
+56        ,FB        ,         3,  $931.77B,   $326.48,    -2.03%,     23.35,Meta Platforms Inc - Class A
+57        ,DRIP      ,         3,    $0.08B,     $4.15,     3.49%,        NA,Direxion Shares ETF Trust - Direxion Daily S&P Oil & Gas Exp. & Prod. Bear 2X Shares
+58        ,MAIN      ,         3,    $3.09B,    $44.46,    -0.85%,       9.6,Main Street Capital Corporation
+59        ,STAG      ,         3,    $7.46B,    $43.95,    -1.04%,     35.44,STAG Industrial Inc
+60        ,ENB       ,         3,   $84.59B,    $41.75,     0.14%,     18.47,Enbridge Inc
+61        ,CNQ       ,         3,   $59.06B,    $50.27,     1.82%,     13.09,Canadian Natural Resources Ltd.
+62        ,SHOP      ,         3,  $128.27B,  $1064.36,    -8.93%,     39.89,Shopify Inc - Class A
+63        ,R         ,         3,    $4.27B,    $79.50,    -0.45%,     11.69,"Ryder System, Inc."
+64        ,AIM       ,         3,    $0.04B,     $0.91,    -2.56%,     -2.41,AIM ImmunoTech Inc
+65        ,STEM      ,         2,    $2.18B,    $15.07,    -5.64%,        NA,Stem Inc - Class A
+66        ,GP        ,         2,    $0.16B,     $7.03,    -3.70%,        NA,GreenPower Motor Company Inc
+67        ,JP        ,         2,    $0.03B,     $0.86,    -2.80%,        NA,Jupai Holdings Ltd - ADR
+68        ,RE        ,         2,   $11.29B,   $284.60,     0.56%,     11.17,Everest Re Group Ltd
+69        ,CASH      ,         2,    $1.90B,    $62.15,     0.73%,      7.09,Meta Financial Group Inc.
+70        ,ATVI      ,         2,   $49.98B,    $64.17,    -0.99%,     19.04,Activision Blizzard Inc
+71        ,CRM       ,         2,  $225.20B,   $228.63,    -3.87%,    126.31,Salesforce.Com Inc
+72        ,TLRY      ,         2,    $3.21B,     $6.87,    -3.92%,     -5.05,Tilray Brands Inc - Class 2
+73        ,SA        ,         2,    $1.26B,    $15.97,    -1.66%,        NA,"Seabridge Gold, Inc."
+74        ,V         ,         2,  $473.86B,   $215.00,    -0.33%,     19.11,Visa Inc - Class A
+75        ,GOOGL     ,         2, $1874.28B,  $2771.74,    -2.01%,     27.15,Alphabet Inc - Class A
+76        ,KO        ,         2,  $263.05B,    $60.90,     0.60%,        30,Coca-Cola Co
+77        ,DKNG      ,         2,    $9.85B,    $24.24,    -7.13%,     -6.01,DraftKings Inc - Class A
+78        ,CRWD      ,         2,   $36.42B,   $174.90,    -6.95%,   -185.91,Crowdstrike Holdings Inc - Class A
+79        ,BYND      ,         2,    $4.48B,    $70.83,     4.75%,    -34.55,Beyond Meat Inc
+80        ,FCF       ,         2,    $1.66B,    $17.28,     0.52%,      12.9,First Commonwealth Financial Corp.
+81        ,HOOD      ,         2,   $11.16B,    $15.30,    -5.85%,    -31.84,Robinhood Markets Inc - Class A
+82        ,QCOM      ,         2,  $205.96B,   $183.89,    -1.36%,     11.68,"Qualcomm, Inc."
+83        ,TV        ,         2,    $5.93B,    $10.60,     1.44%,        NA,Grupo Televisa SAB - ADR - Level III
+84        ,ENPH      ,         2,   $19.36B,   $143.49,    -3.88%,    128.12,Enphase Energy Inc
+85        ,TMF       ,         2,    $0.43B,    $25.98,     2.81%,        NA,Direxion Shares ETF Trust - Direxion Daily 20+ Year Treasury Bull 3X Shares
+86        ,GOOG      ,         2, $1878.74B,  $2782.62,    -1.78%,        NA,Alphabet Inc - Class C
+87        ,COIN      ,         2,   $59.64B,   $228.23,    -2.76%,    145.37,Coinbase Global Inc - Class A
+88        ,ICE       ,         2,   $72.99B,   $129.56,    -2.94%,     23.95,Intercontinental Exchange Inc
+89        ,NEW       ,         2,    $0.03B,     $0.31,    -3.79%,     -0.13,Puxin Limited - ADR
+90        ,VERY      ,         2,    $0.10B,     $6.95,     0.00%,        NA,Vericity Inc
+91        ,OG        ,         2,    $0.10B,     $2.34,    -4.49%,        NA,Onion Global Ltd - ADR
+92        ,UVXY      ,         2,    $0.81B,    $12.55,     9.04%,        NA,ProShares Trust - ProShares Ultra VIX Short-Term Futures ETF
+93        ,ML        ,         2,    $0.68B,     $3.01,    -3.21%,        NA,MoneyLion Inc - Class A
+94        ,RRR       ,         2,    $3.42B,    $49.76,     0.12%,      33.4,Red Rock Resorts Inc - Class A
+95        ,INDA      ,         2,    $6.23B,    $48.30,    -0.41%,        NA,BlackRock Institutional Trust Company N.A. - BTC iShares MSCI India ETF
+96        ,UP        ,         2,    $1.04B,     $4.24,    -1.40%,        NA,Wheels Up Experience Inc - Class A
+97        ,CS        ,         2,   $27.86B,    $10.51,     2.34%,     93.92,Credit Suisse Group AG - ADR
+98        ,ESG       ,         2,    $0.19B,   $113.94,    -1.47%,        NA,FlexShares Trust - FlexShares STOXX US ESG Select Index Fund
+99        ,SMH       ,         2,    $8.18B,   $300.54,    -1.74%,        NA,VanEck ETF Trust - VanEck Semiconductor ETF
+100       ,FSD       ,         2,    $0.51B,    $15.33,    -0.46%,        NA,First Trust High Income Long Short Fund
+101       ,EPS       ,         2,    $0.74B,    $50.02,    -1.13%,        NA,WisdomTree Trust - WisdomTree U.S. LargeCap Fund
+102       ,BND       ,         2,   $81.79B,    $83.77,     0.17%,        NA,"Vanguard Group, Inc. - Vanguard Total Bond Market ETF"
+103       ,HOLD      ,         2,    $0.04B,    $98.36,    -0.03%,        NA,Advisorshares Trust - AdvisorShares North Square McKee Core Reserves ETF
+104       ,BP        ,         2,  $102.50B,    $31.22,     0.10%,     -5.18,BP plc - ADR
+105       ,IBKR      ,         2,    $7.43B,    $75.67,    -2.17%,     22.39,Interactive Brokers Group Inc - Class A
+106       ,CC        ,         2,    $5.88B,    $36.07,     0.28%,     15.41,Chemours Company
+107       ,VALE      ,         2,   $78.53B,    $15.30,    -1.61%,      4.47,Vale S.A. - ADR
+108       ,BHP       ,         2,   $98.98B,    $67.10,    -0.07%,      7.52,BHP Group Limited - ADR
+109       ,RIO       ,         2,  $123.33B,    $75.66,    -0.54%,     12.61,Rio Tinto plc - ADR
+110       ,LNG       ,         2,   $28.58B,   $112.71,    -1.39%,    -22.54,Cheniere Energy Inc.
+111       ,DOGZ      ,         2,    $0.06B,     $3.04,     4.47%,        NA,Dogness (International) Corp - Class A
+112       ,KR        ,         2,   $36.38B,    $49.48,     4.96%,      37.2,Kroger Co.
+113       ,NVAX      ,         2,    $8.50B,   $112.38,   -13.67%,     -7.51,"Novavax, Inc."
+114       ,IDEX      ,         2,    $0.56B,     $1.12,    -2.61%,        NA,Ideanomics Inc
+115       ,ORC       ,         2,    $0.81B,     $4.58,    -0.87%,     -5.11,Orchid Island Capital Inc
+116       ,ME        ,         2,    $0.51B,     $5.41,    -6.40%,        NA,23andMe Holding Co - Class A
+117       ,NNDM      ,         2,    $0.90B,     $3.62,    -3.72%,        NA,Nano Dimension Ltd - ADR
+118       ,DCF       ,         2,    $0.14B,     $9.31,     0.32%,        NA,BNY Mellon Alcentra Global Credit Income 2024 Target Term Fund Inc
+119       ,RY        ,         2,  $165.54B,   $116.26,     0.25%,      6.51,Royal Bank Of Canada
+120       ,BNY       ,         1,    $0.19B,    $14.70,    -0.09%,        NA,BlackRock New York Municipal Income Trust
+121       ,DEI       ,         1,    $6.33B,    $36.06,     1.89%,    100.98,Douglas Emmett Inc
+122       ,MS        ,         1,  $184.02B,   $102.55,    -0.48%,      13.1,Morgan Stanley
+123       ,UPS       ,         1,  $181.93B,   $210.47,    -0.36%,      28.6,"United Parcel Service, Inc. - Class B"
+124       ,VC        ,         1,    $3.46B,   $123.50,     5.99%,    124.27,Visteon Corp.
+125       ,DS        ,         1,    $0.14B,     $1.50,    -1.32%,     -7.22,Drive Shack Inc
+126       ,MAN       ,         1,    $5.80B,   $106.97,     2.96%,     17.23,ManpowerGroup
+127       ,DAX       ,         1,    $0.04B,    $32.63,    -0.58%,        NA,Global X Funds - Global X DAX Germany ETF
+128       ,ADS       ,         1,    $3.73B,    $74.87,     4.07%,      4.66,Alliance Data System
+129       ,PAY       ,         1,    $0.49B,    $29.78,    -3.50%,        NA,Paymentus Holdings Inc - Class A
+130       ,LCID      ,         1,   $68.18B,    $41.41,    -8.85%,        NA,Lucid Group Inc
+131       ,MTTR      ,         1,    $3.42B,    $14.12,    -6.24%,        NA,Matterport Inc - Class A
+132       ,BTI       ,         1,   $95.66B,    $41.69,     2.51%,     10.97,British American Tobacco Plc - ADR
+133       ,SBUX      ,         1,  $120.14B,   $102.40,    -1.42%,     14.46,Starbucks Corp.
+134       ,CSCO      ,         1,  $259.38B,    $61.50,    -1.00%,     22.86,"Cisco Systems, Inc."
+135       ,RSI       ,         1,    $2.54B,    $12.49,    -7.34%,        NA,Rush Street Interactive Inc - Class A
+136       ,PHG       ,         1,   $30.09B,    $34.04,     2.87%,     21.41,Koninklijke Philips N.V. - ADR
+137       ,CLFD      ,         1,    $0.97B,    $70.61,    -2.83%,        NA,Clearfield Inc
+138       ,ADBE      ,         1,  $246.25B,   $516.90,    -2.91%,     42.65, Adobe Inc
+139       ,ALLY      ,         1,   $18.28B,    $52.76,     1.38%,      6.42,Ally Financial Inc
+140       ,STOR      ,         1,    $9.23B,    $33.85,    -0.18%,     36.68,Store Capital Corp
+141       ,BMY       ,         1,  $143.39B,    $64.60,    -0.34%,     -26.8,Bristol-Myers Squibb Co.
+142       ,ABBV      ,         1,  $235.95B,   $133.52,    -1.74%,     31.87,Abbvie Inc
+143       ,PINS      ,         1,   $20.38B,    $32.97,    -4.24%,     62.04,Pinterest Inc - Class A
+144       ,ROKU      ,         1,   $21.36B,   $168.30,    -5.15%,     79.76,Roku Inc - Class A
+145       ,MGM       ,         1,   $20.75B,    $44.25,    -1.23%,      35.4,MGM Resorts International
+146       ,TEAM      ,         1,   $74.68B,   $298.65,    -6.84%,    -69.62,Atlassian Corporation Plc - Class A
+147       ,IRBT      ,         1,    $1.88B,    $69.92,     4.16%,     26.59,Irobot Corp
+148       ,SWK       ,         1,   $31.86B,   $195.42,     1.25%,      17.5,Stanley Black & Decker Inc
+149       ,TDOC      ,         1,   $12.57B,    $78.50,    -4.13%,     -14.4,Teladoc Health Inc
+150       ,DISCK     ,         1,   $14.60B,    $28.40,     1.61%,        NA,Discovery Inc - Series C
+151       ,FCEL      ,         1,    $1.79B,     $4.87,    -3.94%,     -7.82,Fuelcell Energy Inc
+152       ,CHPT      ,         1,    $4.90B,    $14.79,    -7.51%,        NA,ChargePoint Holdings Inc - Class A
+153       ,AFRM      ,         1,   $15.02B,    $72.13,    -8.45%,    -26.62,Affirm Holdings Inc - Class A
+154       ,GM        ,         1,   $89.68B,    $61.77,     1.21%,      8.26,General Motors Company
+155       ,MUST      ,         1,    $0.19B,    $22.29,     0.07%,        NA,Columbia ETF Trust I - Columbia Multi-Sector Municipal Income ETF
+156       ,HUBS      ,         1,   $22.47B,   $475.47,    -6.44%,   -288.16,HubSpot Inc
+157       ,LRCX      ,         1,   $96.70B,   $686.77,     0.07%,     23.22,Lam Research Corp.
+158       ,KLAC      ,         1,   $63.91B,   $421.48,    -2.85%,     23.92, KLA Corp.
+159       ,ASML      ,         1,  $296.76B,   $730.08,    -1.63%,     45.29,ASML Holding NV - New York Shares
+160       ,BAC       ,         1,  $399.06B,    $48.76,    -0.21%,      14.6,Bank Of America Corp.
+161       ,PENN      ,         1,    $7.75B,    $45.73,    -3.60%,     19.38,"Penn National Gaming, Inc."
+162       ,CMG       ,         1,   $42.41B,  $1507.43,    -3.00%,     60.54,Chipotle Mexican Grill
+163       ,JUST      ,         1,    $0.29B,    $66.60,    -1.46%,        NA,Goldman Sachs ETF Trust - Goldman Sachs Just Us Large Cap Equity ETF
+164       ,TTD       ,         1,   $33.04B,    $75.76,    -8.05%,    133.92,Trade Desk Inc - Class A
+165       ,NFLX      ,         1,  $229.38B,   $519.20,    -3.35%,     46.82,NetFlix Inc
+166       ,ILMN      ,         1,   $62.44B,   $399.51,    -3.35%,      65.6,Illumina Inc
+167       ,SE        ,         1,   $78.83B,   $180.55,    -9.99%,    -89.83,Sea Ltd - ADR
+168       ,CROX      ,         1,    $7.41B,   $125.87,    -6.70%,     10.98, Crocs Inc
+169       ,MVIS      ,         1,    $0.64B,     $3.87,    -6.75%,    -17.75,Microvision Inc.
+170       ,COST      ,         1,  $229.20B,   $516.88,    -1.70%,     44.48,Costco Wholesale Corp
+171       ,HL        ,         1,    $2.81B,     $5.22,     0.19%,    147.04,Hecla Mining Co.
+172       ,UPRO      ,         1,    $1.76B,    $71.17,    -4.23%,        NA,ProShares Trust - ProShares UltraPro S&P 500 ETF
+173       ,GGPI      ,         1,    $0.92B,    $11.51,    -1.96%,        NA,Gores Guggenheim Inc - Class A
+174       ,RKLB      ,         1,    $4.78B,    $10.64,    -7.07%,        NA,Rocket Lab USA Inc
+175       ,CCI       ,         1,   $80.99B,   $187.38,    -1.08%,     65.06,Crown Castle International Corp
+176       ,AMT       ,         1,  $116.33B,   $255.44,    -1.52%,     46.44,American Tower Corp.
+177       ,VHI       ,         1,    $0.86B,    $30.50,     1.63%,      8.71,"Valhi, Inc."
+178       ,MP        ,         1,    $8.16B,    $45.89,    -7.18%,        NA,MP Materials Corporation - Class A
+179       ,TA        ,         1,    $0.68B,    $46.65,     0.78%,        NA,TravelCenters of America Inc
+180       ,BIT       ,         1,    $0.67B,    $17.84,    -0.78%,        NA,BlackRock Multi-Sector Income Trust
+181       ,SATS      ,         1,    $0.97B,    $24.91,    -0.28%,     15.47,EchoStar Corp
+182       ,ALT       ,         1,    $0.29B,     $7.39,    -5.38%,        NA,Altimmune Inc
+183       ,DOW       ,         1,   $44.33B,    $59.94,     1.15%,      7.73,   Dow Inc
+184       ,API       ,         1,    $1.42B,    $13.72,   -10.68%,        NA,Agora Inc - ADR
+185       ,DAO       ,         1,    $0.49B,    $13.33,    -9.44%,        NA,Youdao Inc - ADR
+186       ,STX       ,         1,   $24.68B,   $110.84,    -2.11%,     16.32,Seagate Technology Holdings Plc
+187       ,ID        ,         1,    $0.07B,     $2.04,    -2.39%,        NA,PARTS iD Inc - Class A
+188       ,CVNA      ,         1,    $7.63B,   $163.00,    -8.19%,   -153.77,Carvana Co. - Class A
+189       ,ACA       ,         1,    $2.53B,    $52.25,     4.71%,        NA,Arcosa Inc
+190       ,IG        ,         1,    $0.49B,    $25.91,     0.00%,        NA,Principal Exchange-Traded Funds - Principal Investment Grade Corporate Active ETF
+191       ,EVER      ,         1,    $0.37B,    $16.05,    -0.25%,        NA,EverQuote Inc - Class A
+192       ,SRV       ,         1,    $0.07B,    $33.23,    -0.51%,        NA,Cushing MLP & Infrastructure Total Return Fund
+193       ,HSBC      ,         1,  $142.15B,    $35.00,     2.10%,     23.65,HSBC Holdings plc - ADR
+194       ,FRDM      ,         1,    $0.11B,    $34.74,    -0.09%,        NA,Alpha Architect Etf Trust - Alpha Architect Freedom 100 Emerging Markets ETF
+195       ,SCHB      ,         1,   $23.46B,   $110.02,    -1.44%,        NA,Schwab Strategic Trust - Schwab U.S. Broad Market ETF
+196       ,AGI       ,         1,    $2.85B,     $7.28,    -1.75%,        NA,Alamos Gold Inc. - Class A
+197       ,STL       ,         1,    $5.63B,    $29.23,     0.17%,     15.55,Sterling Bancorp.
+198       ,HUYA      ,         1,    $1.65B,     $6.99,    -5.92%,      9.38,HUYA Inc - ADR
+199       ,SQQQ      ,         1,    $7.66B,    $34.06,     7.45%,        NA,ProShares Trust - ProShares UltraPro Short QQQ
+200       ,TTWO      ,         1,   $17.85B,   $154.83,    -0.79%,     32.06,"Take-Two Interactive Software, Inc."
+201       ,SPGI      ,         1,  $105.14B,   $436.27,    -2.58%,     37.61,S&P Global Inc
+202       ,FFR       ,         1,    $0.04B,    $52.74,     0.47%,        NA,First Trust Exchange-Traded Fund II - First Trust FTSE EPRA/NAREIT Developed Markets Real Estate Index Fund
+203       ,FINX      ,         1,    $1.01B,    $35.83,    -4.33%,        NA,Global X Funds - Global X Funds Global X FinTech ETF
+204       ,BITF      ,         1,    $0.87B,     $4.48,    -9.31%,        NA,Bitfarms Ltd.
+205       ,GNUS      ,         1,    $0.32B,     $1.07,     0.94%,     -2.93,Genius Brands International Inc
+206       ,BYD       ,         1,    $7.01B,    $62.40,    -1.73%,     16.25,Boyd Gaming Corp.
+207       ,CHKP      ,         1,   $16.37B,   $119.37,    -0.85%,     19.67,Check Point Software Technolgies
+208       ,DVN       ,         1,   $33.61B,    $49.64,    -0.52%,      24.7,Devon Energy Corp.
+209       ,OXY       ,         1,   $31.90B,    $34.15,    -1.73%,    -28.46,Occidental Petroleum Corp.
+210       ,COO       ,         1,   $22.20B,   $416.13,    -1.09%,      3.52,"Cooper Companies, Inc."
+211       ,SD        ,         1,    $0.41B,    $11.23,    -8.03%,        NA,Sandridge Energy Inc New
+212       ,MT        ,         1,   $36.64B,    $37.28,     0.11%,      3.58,ArcelorMittal - New York Shares - Level III
+213       ,VGT       ,         1,   $52.86B,   $430.00,    -2.83%,        NA,"Vanguard Group, Inc. - Vanguard Information Technology ETF"
+214       ,REAL      ,         1,    $1.01B,    $10.94,    -5.85%,     -4.21,Therealreal Inc
+215       ,MA        ,         1,  $360.17B,   $369.52,     0.60%,     45.45,Mastercard Incorporated - Class A
+216       ,SBLK      ,         1,    $2.18B,    $21.29,    -6.66%,      9.95,Star Bulk Carriers Corp
+217       ,MUB       ,         1,   $25.01B,   $115.42,    -0.04%,        NA,BlackRock Institutional Trust Company N.A. - iShares National Muni Bond ETF
+218       ,BNDX      ,         1,   $44.46B,    $54.91,     0.15%,        NA,"Vanguard Group, Inc. - Vanguard Total International Bond ETF"
+219       ,HYS       ,         1,    $1.79B,    $98.42,    -0.22%,        NA,Pimco Exchange Traded Fund - PIMCO 0-5 Year High Yield Corporate Bond Index Exchange-Traded Fund
+220       ,BNDW      ,         1,    $0.56B,    $77.84,     0.14%,        NA,"Vanguard Group, Inc. - Vanguard Total World Bond ETF"
+221       ,TLT       ,         1,   $17.72B,   $144.28,     0.89%,        NA,BlackRock Institutional Trust Company N.A. - BTC iShares 20+ Year Treasury Bond ETF
+222       ,NTSX      ,         1,    $0.97B,    $43.01,    -0.44%,        NA,WisdomTree Trust - WisdomTree U.S. Efficient Core Fund
+223       ,EDV       ,         1,    $1.20B,   $135.66,     0.96%,        NA,"Vanguard Group, Inc. - Vanguard Extended Duration Treasury ETF"
+224       ,CD        ,         1,    $0.95B,     $5.48,   -11.33%,        NA,Chindata Group Holdings Ltd - ADR
+225       ,AGG       ,         1,   $91.18B,   $112.80,     0.18%,        NA,BlackRock Institutional Trust Company N.A. - iShares Core U.S. Aggregate Bond ETF
+226       ,TIP       ,         1,   $37.54B,   $126.48,     0.02%,        NA,BlackRock Institutional Trust Company N.A. - iShares TIPS Bond ETF
+227       ,GET       ,         1,    $0.21B,     $1.34,     0.00%,        NA,Getnet Adquirencia E Servicos Para Meios De Pagamento S.A - ADR
+228       ,ET        ,         1,   $30.03B,     $9.44,    -1.97%,        NA,Energy Transfer LP - Unit
+229       ,COOL      ,         1,    $0.39B,     $9.76,    -0.10%,        NA,Corner Growth Acquisition Corp - Class A
+230       ,LIVE      ,         1,    $0.05B,    $28.98,    -1.56%,        NA,Live Ventures Inc
+231       ,L         ,         1,   $15.60B,    $61.49,     0.51%,        10,Loews Corp.
+232       ,FUBO      ,         1,    $1.97B,    $13.60,    -7.17%,        NA,fuboTV Inc
+233       ,ABC       ,         1,   $28.08B,   $134.89,    -0.60%,      9.13,Amerisource Bergen Corp.
+234       ,NAK       ,         1,    $0.18B,     $0.34,    -2.44%,        NA,Northern Dynasty Minerals Ltd.
+235       ,CIDM      ,         1,    $0.19B,     $1.10,    -4.35%,        NA,Cinedigm Corp - Class A
+236       ,CPRI      ,         1,    $9.18B,    $60.99,     1.60%,     22.42,Capri Holdings Ltd
+237       ,ALLK      ,         1,    $0.43B,     $7.85,    -3.56%,        NA,Allakos Inc
+238       ,SLVO      ,         1,    $0.00B,     $5.08,    -0.20%,        NA,Credit Suisse AG Nassau Branch - FR SP ETN REDEEM 21/04/2033 USD 20
+239       ,USOI      ,         1,    $0.00B,     $5.35,     0.00%,        NA,Credit Suisse AG Nassau Branch - VR SP ETN REDEEM 24/04/2037 USD 25
+240       ,SPHQ      ,         1,    $3.65B,    $52.98,    -0.94%,        NA,Invesco Capital Management LLC - Invesco S&P 500 Quality ETF
+241       ,CEF       ,         1,    $3.89B,    $17.64,    -0.11%,        NA,Sprott Physical Gold and Silver Trust Units
+242       ,VICI      ,         1,   $17.86B,    $28.40,    -1.42%,     15.43,VICI Properties Inc
+243       ,AMGN      ,         1,  $130.03B,   $230.85,    -0.39%,      23.8,AMGEN Inc.
+244       ,MRK       ,         1,  $205.41B,    $81.32,     0.15%,     29.36,Merck & Co Inc
+245       ,NLY       ,         1,   $11.59B,     $7.99,    -1.11%,      4.14,Annaly Capital Management Inc
+246       ,AGNC      ,         1,    $8.09B,    $15.41,    -0.96%,      5.67,AGNC Investment Corp
+247       ,JEPI      ,         1,    $6.00B,    $62.44,    -0.45%,        NA,J.P. Morgan Exchange-Traded Fund Trust - JPMorgan Equity Premium Income ETF
+248       ,DIVO      ,         1,    $0.96B,    $37.90,    -0.50%,        NA,Amplify ETF Trust - Amplify CPW Enhanced Dividend Income ETF
+249       ,NUSI      ,         1,    $0.90B,    $26.65,    -2.09%,        NA,ETF Series Solutions Trust - Nationwide Nasdaq-100 Risk-Managed Income ETF
+250       ,HNDL      ,         1,    $1.57B,    $25.41,    -0.51%,        NA,Strategy Shares - Nasdaq 7HANDL Index ETF
+251       ,PBA       ,         1,   $17.68B,    $32.13,    -0.28%,        NA,Pembina Pipeline Corporation
+252       ,EPD       ,         1,   $52.00B,    $23.83,    -1.04%,     13.39,Enterprise Products Partners L P - Unit
+253       ,ERX       ,         1,    $0.60B,    $38.07,    -1.06%,        NA,Direxion Shares ETF Trust - Direxion Daily Energy Bull 2X Shares
+254       ,HD        ,         1,  $404.10B,   $386.98,    -0.62%,     25.92,"Home Depot, Inc."
+255       ,AVCT      ,         1,    $0.16B,     $1.80,   -12.62%,        NA,American Virtual Cloud Technologies Inc
+256       ,MMAT      ,         1,    $0.60B,     $2.13,    -6.58%,        NA,Meta Materials Inc
+257       ,RKDA      ,         1,    $0.02B,     $1.06,    -6.19%,      5.57,Arcadia Biosciences Inc
+258       ,GSAT      ,         1,    $1.81B,     $1.01,    -4.72%,    -15.86,Globalstar Inc.
+259       ,MNMD      ,         1,    $0.52B,     $1.14,    -5.79%,        NA,          
+260       ,ALPP      ,         1,    $0.24B,     $1.60,     2.56%,        NA,Alpine 4 Holdings Inc - Class A
+261       ,PLUG      ,         1,   $13.78B,    $23.91,    -3.00%,    -16.05,Plug Power Inc
+262       ,MESA      ,         1,    $0.21B,     $5.82,     4.11%,        NA,Mesa Air Group Inc.
+263       ,SWKS      ,         1,   $25.24B,   $152.62,    -2.24%,      8.51,"Skyworks Solutions, Inc."
+264       ,QRVO      ,         1,   $16.18B,   $146.75,    -3.98%,     15.19, Qorvo Inc
+265       ,DNA       ,         1,    $8.05B,     $6.14,    -1.92%,        NA,Ginkgo Bioworks Holdings Inc - Class A
+266       ,MTCH      ,         1,   $34.88B,   $123.20,    -0.71%,     65.88,Match Group Inc. - New
+267       ,AGR       ,         1,   $18.79B,    $48.54,     0.64%,     23.22,Avangrid Inc
+268       ,GE        ,         1,  $112.52B,   $102.46,     0.21%,   -271.06,General Electric Co.
+269       ,JMIA      ,         1,    $0.97B,     $9.85,    -6.28%,        NA,Jumia Technologies Ag - ADR
+270       ,SFT       ,         1,    $0.22B,     $2.73,    -5.54%,        NA,Shift Technologies Inc - Class A
+271       ,HYD       ,         1,    $3.65B,    $61.82,     0.07%,        NA,VanEck ETF Trust - VanEck High Yield Muni ETF
+272       ,MSM       ,         1,    $4.04B,    $85.66,     1.85%,     19.65,"MSC Industrial Direct Co., Inc. - Class A"
+273       ,G         ,         1,    $9.79B,    $52.08,    -0.72%,     27.13,Genpact Ltd
+274       ,LFG       ,         1,    $0.94B,    $17.59,    -1.18%,        NA,Archaea Energy Inc - Class A
+275       ,OXSQ      ,         1,    $0.21B,     $4.29,    -1.27%,      2.68,Oxford Square Capital Corp
+276       ,NYMT      ,         1,    $1.45B,     $3.81,    -0.26%,      7.33,New York Mortgage Trust Inc
+277       ,MFA       ,         1,    $2.06B,     $4.68,     0.00%,         7,MFA Financial Inc
+278       ,BKEP      ,         1,    $0.14B,     $3.40,     4.61%,        NA,Blueknight Energy Partners LP - Unit
+279       ,NCMI      ,         1,    $0.22B,     $2.69,    -1.82%,      -2.3,National Cinemedia Inc
+280       ,CTXR      ,         1,    $0.22B,     $1.48,    -3.90%,        NA,Citius Pharmaceuticals Inc
+281       ,SARK      ,         1,    $0.15B,    $43.24,     5.28%,        NA,Collaborative Investment Series Trust - Tuttle Capital Short Innovation ETF
+282       ,BNGO      ,         1,    $0.73B,     $2.54,    -8.63%,        NA,Bionano Genomics Inc
+283       ,ESGA      ,         1,    $0.16B,    $58.44,    -1.62%,        NA,American Century ETF Trust - American Century Sustainable Equity ETF
+284       ,BC        ,         1,    $7.73B,   $100.27,     2.36%,     13.44,Brunswick Corp.
+285       ,PPL       ,         1,   $23.09B,    $30.00,     0.13%,    -17.44,  PPL Corp
+286       ,IEA       ,         1,    $0.46B,     $9.60,    -0.52%,     -1.69,Infrastructure and Energy Alternatives Inc
+287       ,HUT       ,         1,    $1.08B,     $6.46,    -6.65%,        NA,Hut 8 Mining Corp
+288       ,CWB       ,         1,    $6.21B,    $79.51,    -1.50%,        NA,SPDR Series Trust - SPDR Bloomberg Convertible Securities ETF
+289       ,BMO       ,         1,   $76.44B,   $117.91,     0.90%,      6.31,Bank of Montreal
+290       ,PYR       ,         1,    $0.47B,     $2.79,    -1.41%,        NA,Pyrogenesis Canada Inc
+291       ,POW       ,         1,    $0.27B,     $9.76,    -0.31%,        NA,Powered Brands - Class A
+292       ,DM        ,         1,    $1.35B,     $4.35,    -3.97%,        NA,Desktop Metal Inc - Class A
+293       ,CDR       ,         1,    $0.34B,    $24.69,     0.28%,     -9.35,Cedar Realty Trust Inc
+294       ,LULU      ,         1,   $41.73B,   $336.27,    -4.66%,     50.49,Lululemon Athletica inc.
+295       ,TRP       ,         1,   $49.92B,    $50.90,     0.39%,     29.77,TC Energy Corporation
+296       ,CVE       ,         1,   $28.91B,    $14.39,    -0.62%,        NA,Cenovus Energy Inc
+297       ,MFC       ,         1,   $40.17B,    $20.68,     0.24%,        NA,Manulife Financial Corp.
+298       ,DLR       ,         1,   $44.73B,   $157.62,    -0.84%,     66.79,Digital Realty Trust Inc
+299       ,ARC       ,         1,    $0.16B,     $3.70,    -1.07%,     20.24,ARC Document Solutions Inc
+300       ,BNS       ,         1,   $89.52B,    $73.63,     0.34%,      5.95,Bank Of Nova Scotia
+301       ,NTR       ,         1,   $40.39B,    $71.03,    -1.76%,        NA,Nutrien Ltd
+302       ,CPG       ,         1,    $3.74B,     $6.43,    -4.88%,        NA,Crescent Point Energy Corp
+303       ,RESP      ,         1,    $0.10B,    $50.20,    -1.18%,        NA,WisdomTree Trust - WisdomTree U.S. ESG Fund
+304       ,AWAY      ,         1,    $0.25B,    $24.01,    -1.36%,        NA,ETF Managers Trust - ETFMG Travel Tech ETF
+305       ,OI        ,         1,    $2.18B,    $13.91,     5.14%,        NA,O-I Glass Inc
+306       ,IVA       ,         1,    $0.52B,    $12.71,     0.16%,        NA,Inventiva - ADR
+307       ,CVM       ,         1,    $0.26B,     $6.10,    -0.97%,     -7.09,Cel-Sci Corp.
+308       ,IR        ,         1,   $24.26B,    $59.52,    -0.77%,     59.58,Ingersoll-Rand Inc
+309       ,LAND      ,         1,    $1.15B,    $33.54,     3.81%,        NA,Gladstone Land Corp
+310       ,RC        ,         1,    $1.17B,    $15.42,     0.98%,      7.91,Ready Capital Corp
+311       ,SAVE      ,         1,    $2.58B,    $23.78,     5.08%,     -4.51,Spirit Airlines Inc
+312       ,BBBY      ,         1,    $1.45B,    $15.10,     9.26%,     -4.08,"Bed, Bath & Beyond Inc."
+313       ,GL        ,         1,   $10.52B,   $104.16,    -0.09%,     14.08,Globe Life Inc
+314       ,FT        ,         1,    $0.21B,     $8.35,     1.09%,        NA,Franklin Universal Trust
+315       ,PEG       ,         1,   $33.52B,    $66.30,     0.39%,    -50.61,Public Service Enterprise Group Inc.
+316       ,DOYU      ,         1,    $0.79B,     $2.45,    -7.55%,        NA,DouYu International Holdings Ltd - ADR
+317       ,CCL       ,         1,   $25.28B,    $22.90,     2.65%,     -2.69,Carnival Corp. (Paired Stock)
+318       ,RCL       ,         1,   $21.27B,    $83.49,     1.49%,     -3.87,Royal Caribbean Group
+319       ,GD        ,         1,   $59.02B,   $211.37,     0.30%,     18.14,General Dynamics Corp.
+320       ,ABB       ,         1,   $77.92B,    $37.95,    -1.71%,     42.41,ABB Ltd. - ADR
+321       ,LPI       ,         1,    $1.20B,    $70.09,    -4.01%,     -3.86,Laredo Petroleum Inc.
+322       ,DFS       ,         1,   $37.92B,   $129.40,     1.25%,      7.73,Discover Financial Services
+323       ,MFG       ,         1,   $36.06B,     $2.84,     1.43%,     -0.14,"Mizuho Financial Group, Inc. - ADR"
+324       ,CMC       ,         1,    $4.60B,    $37.85,     2.38%,      7.97,Commercial Metals Co.
+325       ,ANY       ,         1,    $0.10B,     $2.66,    -6.99%,        NA,Sphere 3D Corp
+326       ,EFT       ,         1,    $0.43B,    $15.23,    -0.97%,        NA,Eaton Vance Floating-Rate Income Trust
