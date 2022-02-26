@@ -1,0 +1,45 @@
+Date and time: 01/11/2022 12:03
+Sub count: 1
+Market Cap min: 4.0 billion(s)
+upvoteRatio: 0.5 | ups: 20 | limit: 1 | upvotes: 2 | picks: 100 | picks_ayz: 100
+It took 33.03 seconds to analyze 2847 comments in 16 posts in 1 subreddits.
+number of tickers: 37
+
+Number    ,Symbols   ,  Mentions, MarketCap,     Price, PctChange,      Name,ShortFloat
+1         ,TSLA      ,        17, $1066.40B,   1061.87,    $0.00%,Tesla Inc
+2         ,SPY       ,        16,  $451.29B,   469.055,    $0.00%,SSgA Active Trust - S&P 500 ETF TRUST ETF
+3         ,GME       ,        14,    $9.98B,    130.69,   $-0.00%,Gamestop Corporation - Class A
+4         ,CPI       ,        10, NA/crypto,     27.47, NA/crypto,IndexIQ ETF Trust - IQ Real Return ETF
+5         ,BB        ,         2,    $5.32B,      9.28,    $0.00%,BlackBerry Ltd
+6         ,RC        ,         2,    $1.19B,    16.105,    $0.00%,Ready Capital Corp
+7         ,AMD       ,         2,  $166.14B,    137.58,    $0.00%,Advanced Micro Devices Inc.
+8         ,PTON      ,         1,   $10.09B,    36.785,    $0.00%,Peloton Interactive Inc - Class A
+9         ,ARKK      ,         1,   $14.52B,    87.155,    $0.00%,ARK Investment Management LLC - ARK Innovation ETF
+10        ,F         ,         1,   $95.15B,     24.24,    $0.00%,Ford Motor Co.
+11        ,QQQ       ,         1,  $208.81B,    385.43,    $0.00%,Invesco Capital Management LLC - Invesco QQQ Trust Series 1
+12        ,MSFT      ,         1, $2367.42B,    315.32,    $0.00%,Microsoft Corporation
+13        ,JP        ,         1, NA/crypto,       0.9, NA/crypto,Jupai Holdings Ltd - ADR
+14        ,DWAC      ,         1,    $1.93B,     64.34,    $0.00%,Digital World Acquisition Corp - Class A
+15        ,DASH      ,         1,   $45.36B,    142.79,    $0.00%,DoorDash Inc - Class A
+16        ,PAC       ,         1,    $5.89B,    137.53,   $-0.00%,Grupo Aeroportuario Del Pacifico SAB de CV - ADR
+17        ,GM        ,         1,   $89.23B,     61.46,    $0.00%,General Motors Company
+18        ,LCID      ,         1,   $74.32B,     45.14,    $0.00%,Lucid Group Inc
+19        ,QS        ,         1,    $6.93B,     21.26,    $0.00%,QuantumScape Corp - Class A
+20        ,AMZN      ,         1, $1675.69B,   3304.15,    $0.00%,Amazon.com Inc.
+21        ,D         ,         1,   $63.89B,     79.03,   $-0.00%,Dominion Energy Inc
+22        ,ALOT      ,         1,    $0.09B,     13.05,   $-0.00%,AstroNova Inc
+23        ,AMC       ,         1,   $11.55B,      22.5,   $-0.00%,AMC Entertainment Holdings Inc - Class A
+24        ,OG        ,         1, NA/crypto,       2.3, NA/crypto,Onion Global Ltd - ADR
+25        ,GS        ,         1,  $134.85B,    402.78,    $0.00%,"Goldman Sachs Group, Inc."
+26        ,SI        ,         1,    $3.44B,    129.47,    $0.00%,Silvergate Capital Corp - Class A
+27        ,TLRY      ,         1,    $3.39B,     7.365,    $0.00%,Tilray Inc - Class 2
+28        ,J         ,         1,   $17.28B,     133.5,   $-0.00%,"Jacobs Engineering Group, Inc."
+29        ,AAPL      ,         1, $2857.53B,    174.94,    $0.00%,Apple Inc
+30        ,UP        ,         1,    $1.05B,      4.26,    $0.00%,Wheels Up Experience Inc - Class A
+31        ,NOC       ,         1,   $63.55B,   400.845,   $-0.00%,Northrop Grumman Corp.
+32        ,ES        ,         1,   $29.86B,     86.85,   $-0.00%,Eversource Energy
+33        ,GOOG      ,         1, $1883.86B,    2790.2,    $0.00%,Alphabet Inc - Class C
+34        ,NOK       ,         1,   $35.44B,     6.245,    $0.00%,Nokia Corp - ADR
+35        ,PLTR      ,         1,   $31.72B,        17,    $0.00%,Palantir Technologies Inc - Class A
+36        ,K         ,         1,   $22.66B,     66.44,   $-0.00%,Kellogg Co
+37        ,FREE      ,         1,    $0.38B,      9.94,    $0.00%,Whole Earth Brands Inc - Class A

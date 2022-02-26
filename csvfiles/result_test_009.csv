@@ -1,0 +1,44 @@
+Date and time: 01/12/2022 15:38
+Sub count: 1
+Market Cap min: 4.0 billion(s)
+upvoteRatio: 0.5 | ups: 20 | limit: 1 | upvotes: 2 | picks: 100 | picks_ayz: 100
+It took 17.12 seconds to analyze 864 comments in 16 posts in 1 subreddits.
+number of tickers: 36
+
+Number    ,Symbols   ,  Mentions, MarketCap,     Price, PctChange,      Name,ShortFloat
+1         ,SPY       ,        12,      None,      None,      None,
+2         ,TSLA      ,        11,      None,      None,      None,
+3         ,DWAC      ,        10,      None,      None,      None,
+4         ,AMC       ,         7,      None,      None,      None,
+5         ,GME       ,         6,      None,      None,      None,
+6         ,TLRY      ,         3,      None,      None,      None,
+7         ,QQQ       ,         2,      None,      None,      None,
+8         ,CPI       ,         2,      None,      None,      None,
+9         ,R         ,         2,      None,      None,      None,
+10        ,SPHD      ,         1,      None,      None,      None,
+11        ,BABA      ,         1,      None,      None,      None,
+12        ,DKNG      ,         1,      None,      None,      None,
+13        ,ROKU      ,         1,      None,      None,      None,
+14        ,NVDA      ,         1,      None,      None,      None,
+15        ,NIO       ,         1,      None,      None,      None,
+16        ,AMD       ,         1,      None,      None,      None,
+17        ,F         ,         1,      None,      None,      None,
+18        ,J         ,         1,      None,      None,      None,
+19        ,B         ,         1,      None,      None,      None,
+20        ,G         ,         1,      None,      None,      None,
+21        ,H         ,         1,      None,      None,      None,
+22        ,O         ,         1,      None,      None,      None,
+23        ,L         ,         1,      None,      None,      None,
+24        ,D         ,         1,      None,      None,      None,
+25        ,E         ,         1,      None,      None,      None,
+26        ,FB        ,         1,      None,      None,      None,
+27        ,SBUX      ,         1,      None,      None,      None,
+28        ,IWM       ,         1,      None,      None,      None,
+29        ,CASH      ,         1,      None,      None,      None,
+30        ,GOLD      ,         1,      None,      None,      None,
+31        ,GET       ,         1,      None,      None,      None,
+32        ,GOOG      ,         1,      None,   $2974.x,      0.x%, Alphabet Inc. Class C Capital Stock
+33        ,MSFT      ,         1,      None,    $334.x,      0.x%, Microsoft Corporation Common Stock
+34        ,PTON      ,         1,      None,      None,      None,
+35        ,JNJ       ,         1,      None,      None,      None,
+36        ,UST       ,         1,      None,      None,      None,

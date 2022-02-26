@@ -1,0 +1,46 @@
+note for reddit-sentinment-analysis
+
+#run sentinment analysis 20 times and you get this...?
+C:\Users\xx\source\repos\reddit-sentiment-analysis\venv1\lib\site-packages\pandas\plotting\_matplotlib\core.py:345: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`).
+  fig = self.plt.figure(figsize=self.figsize)
+
+
+
+clean up reddit sentiment anlaysis (reduce global variables?) - ip
+-ideal solution: produce 1 spreadsheet with 10 tabs, delete oldest one if already 10 tabs, move down numbers on tab names (2-10 to 1-9), add new one - ignored for now
+-ok solution: produce 10 spreadsheets, delete oldest one if already 10 spreadsheet, move down numbers on spreadsheet names (2-10 to 1-9), add new one - implemented, testing
+-check with newnum1 (ensure that it immediate update the newnum1 immediately after running the python program) - OR only update the newnum1 if the program acctually finish - implemented, testing
+-experiment with ntlk (make it repeat every :00 hour) - implemented, testing
+-add ability to re-run main() if current time == or contains xx:00 PST - implemented, testing if program can run produce reliable results beyond 24 hours of use
+
+
+
+-fix number of tickers that's going over 100
+-automatically close and restart the program once the program is run 20 times in a row (to address the RuntimeWarning problem)
+-customize max amt/limit of output files
+
+
+-implement sql database (to replace csvfile)
+-implement api key protection
+-implement "if csvfile input used or if api input used": (csvfile vs input_api_nasdaq)
+-simplify dictionaries and lists? when implementing sql database.
+-make aws run multiple python scripts - try with sys.path.insert("") on application.py (use sys module to make this program find & import modules from another directory/folder - ignored for now
+
+
+Immediate to-do's:
+fix frontend (take out http (not https) and see if the patrickdlr.com appears secure on iphone/computer without showing mixed-http/https warning)
+-make a python script run multiple other python scripts simulataneously, then just put that on aws - in progress, testing multiprocessing module (11/24)
+
+
+
+********************************************************************
+
+--
+
+********************************************************************
+
+pip list ignore list:
+en-core-web-sm==3.0.0
+spacy==3.0.7
+spacy-legacy==3.0.8
+

@@ -1,0 +1,117 @@
+Date and time: 01/10/2022 09:00
+Sub count: 64
+Market Cap min: 4.0 billion(s)
+upvoteRatio: 0.5 | ups: 20 | limit: 1 | upvotes: 2 | picks: 100 | picks_ayz: 100
+It took 2934.53 seconds to analyze 23095 comments in 767 posts in 64 subreddits.
+number of tickers: 109
+
+Number    ,Symbols   ,  Mentions, MarketCap,     Price, PctChange,      Name,ShortFloat
+1         ,SNDL      ,        14,    $1.22B,     $0.59,    -0.60%, Sundial Growers Inc. Common Shares
+2         ,NAKD      ,         9,    $0.96B,     $3.69,    -7.29%, Cenntro Electric Group Limited Ordinary Shares
+3         ,AI        ,         8,    $3.00B,    $28.54,    -4.68%," C3.ai, Inc. Class A Common Stock"
+4         ,TLRY      ,         8,    $3.34B,     $7.49,    16.59%," Tilray, Inc. Class 2 Common Stock "
+5         ,YOU       ,         6,    $1.87B,    $24.79,    -5.31%," Clear Secure, Inc. Class A Common Stock"
+6         ,CRSR      ,         5,    $1.90B,    $20.18,    -2.84%," Corsair Gaming, Inc. Common Stock"
+7         ,B         ,         5,    $2.41B,    $47.54,    -0.83%," Barnes Group, Inc. Common Stock"
+8         ,WISH      ,         5,    $1.66B,     $2.59,    -6.25%, ContextLogic Inc. Class A Common Stock
+9         ,TA        ,         5,    $0.67B,    $46.20,    -2.74%, TravelCenters of America Inc. Common Stock
+10        ,EVER      ,         4,    $0.45B,    $15.16,     0.80%," EverQuote, Inc. Class A Common Stock"
+11        ,ML        ,         4,    $0.75B,     $3.25,    -3.41%, MoneyLion Inc. Class A Common Stock
+12        ,ABR       ,         4,    $2.81B,    $18.66,    -0.43%, Arbor Realty Trust Common Stock
+13        ,RSI       ,         3,    $0.86B,    $14.20,    -5.90%," Rush Street Interactive, Inc. Class A Common Stock"
+14        ,SLDP      ,         3,    $1.22B,     $7.31,    -5.19%," Solid Power, Inc. Class A Common Stock"
+15        ,MAIN      ,         3,    $3.05B,    $43.87,    -1.19%, Main Street Capital Corporation Common Stock
+16        ,ANY       ,         3,    $0.18B,     $2.77,    -3.65%, Sphere 3D Corp. Common Shares
+17        ,LEAP      ,         3,    $0.46B,     $9.98,    -0.10%," Ribbit LEAP, Ltd. Class A Ordinary Shares"
+18        ,SP        ,         3,    $0.63B,    $27.22,    -2.23%, SP Plus Corporation Common Stock
+19        ,BNY       ,         2,    $0.36B,    $14.74,    -0.74%, BlackRock New York Municipal Income Trust
+20        ,GP        ,         2,    $0.16B,     $7.35,    -6.01%, GreenPower Motor Company Inc. Common Shares
+21        ,ME        ,         2,    $2.70B,     $5.85,    -5.03%, 23andMe Holding Co. Class A Common Stock
+22        ,FT        ,         2,    $0.21B,     $8.24,     0.49%, Franklin Universal Trust Common Stock
+23        ,ACA       ,         2,    $2.46B,    $50.93,    -0.84%," Arcosa, Inc. Common Stock "
+24        ,NEW       ,         2,    $0.03B,     $0.32,    -8.37%," Puxin Limited American Depositary Shares, each representing two Ordinary Shares"
+25        ,FSD       ,         2,    $0.52B,    $15.41,    -0.01%, First Trust High Income Long Short Fund Common Shares of Beneficial Interest
+26        ,REAL      ,         2,    $1.01B,    $10.91,    -8.01%," The RealReal, Inc. Common Stock"
+27        ,WTI       ,         2,    $0.52B,     $3.67,     1.10%," W&T Offshore, Inc. Common Stock"
+28        ,COOL      ,         2,    $0.49B,     $9.78,    -0.04%, Corner Growth Acquisition Corp. Class A Ordinary Shares
+29        ,NAK       ,         2,    $0.17B,     $0.33,    -6.40%," Northern Dynasty Minerals, Ltd. Common Stock"
+30        ,DOGZ      ,         2,    $0.12B,     $3.67,     6.69%, Dogness (International) Corporation Class A Common Stock
+31        ,UP        ,         2,    $1.00B,     $4.07,    -5.90%, Wheels Up Experience Inc. Class A Common Stock
+32        ,OG        ,         2,    $0.20B,     $2.27,    -0.44%, Onion Global Limited American Depositary Shares (each ten (10) ADSs representing one (1) Class A Ordinary Share)
+33        ,ZOM       ,         2,    $0.31B,     $0.31,    -2.31%, Zomedica Corp. Common Shares
+34        ,IVR       ,         2,    $0.90B,     $2.88,    -3.51%, INVESCO MORTGAGE CAPITAL INC Common Stock
+35        ,IDEX      ,         2,    $0.58B,     $1.16,    -3.23%," Ideanomics, Inc. Common Stock"
+36        ,GET       ,         2,    $1.17B,     $1.25,    -7.41%, Getnet Adquirencia e Servicos para Meios de Pagamento S.A. American Depositary Shares
+37        ,VERY      ,         2,    $0.11B,     $7.12,     1.64%," Vericity, Inc. Common Stock"
+38        ,NNDM      ,         2,    $0.94B,     $3.68,    -3.41%, Nano Dimension Ltd. American Depositary Shares
+39        ,EFT       ,         2,    $0.44B,    $15.29,     1.32%, Eaton Vance Floating Rate Income Trust Common Shares of Beneficial Interest
+40        ,OI        ,         2,    $2.00B,    $12.76,    -2.00%," O-I Glass, Inc. Common Stock"
+41        ,BBQ       ,         2,    $0.14B,    $13.78,    -1.78%," BBQ Holdings, Inc. Common Stock"
+42        ,SI        ,         2,    $3.74B,   $123.06,    -4.23%, Silvergate Capital Corporation Class A Common Stock
+43        ,STEM      ,         1,    $2.21B,    $15.29,    -3.41%," Stem, Inc. Class A Common Stock"
+44        ,VC        ,         1,    $3.12B,   $111.57,    -3.02%, Visteon Corporation Common Stock
+45        ,DS        ,         1,    $0.14B,     $1.47,    -2.00%, Drive Shack Inc.
+46        ,ADS       ,         1,    $3.53B,    $70.87,     0.67%, Alliance Data Systems Corporation Common Stock
+47        ,PAY       ,         1,    $3.27B,    $27.25,    -3.61%," Paymentus Holdings, Inc. Class A Common Stock"
+48        ,GSKY      ,         1,    $1.09B,    $11.82,    -0.29%," GreenSky, Inc. Class A Common Stock"
+49        ,SA        ,         1,    $1.17B,    $14.99,    -1.45%," Seabridge Gold, Inc. Ordinary Shares (Canada)"
+50        ,CLFD      ,         1,    $0.95B,    $69.15,    -3.61%," Clearfield, Inc. Common Stock"
+51        ,MED       ,         1,    $2.39B,   $206.09,    -3.98%, MEDIFAST INC Common Stock
+52        ,MMT       ,         1,    $0.39B,     $6.38,     0.16%, MFS Multimarket Income Trust Common Stock
+53        ,SFT       ,         1,    $0.24B,     $2.90,    -4.61%," Shift Technologies, Inc. Class A Common Stock"
+54        ,MIND      ,         1,    $0.02B,     $1.64,    -2.38%," MIND Technology, Inc. Common Stock (DE)"
+55        ,NEXT      ,         1,    $0.31B,     $2.50,    -5.66%, NextDecade Corporation Common Stock
+56        ,NYC       ,         1,    $0.14B,    $10.60,    -1.49%," New York City REIT, Inc. Class A Common Stock"
+57        ,MIT       ,         1,    $0.61B,     $9.73,    -0.20%," Mason Industrial Technology, Inc. Class A Common Stock"
+58        ,AKA       ,         1,    $1.02B,     $7.95,    -6.25%, a.k.a. Brands Holding Corp. Common Stock
+59        ,VIA       ,         1,    $0.18B,    $11.28,    -0.44%," Via Renewables, Inc. Class A Common Stock"
+60        ,SRV       ,         1,    $0.07B,    $32.10,    -1.38%, Cushing MLP & Infrastructure Total Return Fund
+61        ,GNUS      ,         1,    $0.22B,     $1.02,    -6.42%," Genius Brands International, Inc. Common Stock"
+62        ,SD        ,         1,    $0.39B,    $10.69,    -1.84%," SandRidge Energy, Inc. Common Stock"
+63        ,SBLK      ,         1,    $2.28B,    $22.27,    -1.33%, Star Bulk Carriers Corp. Common Shares
+64        ,CD        ,         1,    $1.98B,     $5.46,    -3.87%, Chindata Group Holdings Limited American Depositary Shares
+65        ,IONQ      ,         1,    $2.58B,    $13.39,    -6.83%," IonQ, Inc. Common Stock"
+66        ,ASTS      ,         1,    $0.37B,     $7.12,    -4.56%," AST SpaceMobile, Inc. Class A Common Stock"
+67        ,LIVE      ,         1,    $0.05B,    $29.77,     1.86%, Live Ventures Incorporated Common Stock
+68        ,FUBO      ,         1,    $2.12B,    $13.22,    -5.37%, fuboTV Inc. Common Stock
+69        ,NG        ,         1,    $2.07B,     $6.23,    -2.20%, Novagold Resources Inc.
+70        ,CIDM      ,         1,    $0.19B,     $1.08,    -3.76%," Cinedigm Corp., Class A Common Stock"
+71        ,EQX       ,         1,    $1.94B,     $6.43,    -0.08%, Equinox Gold Corp. Common Shares
+72        ,HMY       ,         1,    $2.11B,     $3.46,    -1.57%, Harmony Gold Mining Company Limited
+73        ,GLAD      ,         1,    $0.38B,    $11.21,    -0.44%, Gladstone Capital Corporation Common Stock
+74        ,LAND      ,         1,    $1.07B,    $31.41,    -2.05%, Gladstone Land Corporation Common Stock
+75        ,MMAT      ,         1,    $0.64B,     $2.27,    -6.63%, Meta Materials Inc. Common Stock
+76        ,RKDA      ,         1,    $0.02B,     $1.05,    -7.89%," Arcadia Biosciences, Inc. Common Stock"
+77        ,GSAT      ,         1,    $1.89B,     $1.05,    -1.40%," Globalstar, Inc. Common Stock"
+78        ,MNMD      ,         1,    $0.51B,     $1.21,    -2.03%, Mind Medicine (MindMed) Inc. Subordinate Voting Shares
+79        ,ALPP      ,         1,    $0.30B,     $1.70,    -9.84%," Alpine 4 Holdings, Inc. Class A Common Stock"
+80        ,MESA      ,         1,    $0.20B,     $5.56,    -2.11%," Mesa Air Group, Inc. Common Stock"
+81        ,VVPR      ,         1,    $0.06B,     $2.87,    -7.42%, VivoPower International PLC Ordinary Shares
+82        ,JMIA      ,         1,    $0.99B,    $10.05,    -2.33%," Jumia Technologies AG American Depositary Shares, each representing two Ordinary Shares"
+83        ,VRM       ,         1,    $1.25B,     $9.10,    -6.46%," Vroom, Inc. Common Stock"
+84        ,CTXR      ,         1,    $0.23B,     $1.60,     0.47%," Citius Pharmaceuticals, Inc. Common Stock"
+85        ,TDW       ,         1,    $0.50B,    $12.07,     0.33%, Tidewater Inc. Common Stock
+86        ,GF        ,         1,    $0.23B,    $14.76,    -0.91%," New Germany Fund, Inc. (The) Common Stock"
+87        ,VET       ,         1,    $2.24B,    $13.79,    -1.29%, Vermilion Energy Inc. Common (Canada)
+88        ,CNR       ,         1,    $2.04B,    $16.14,    -2.65%," Cornerstone Building Brands, Inc. Common Stock"
+89        ,MD        ,         1,    $2.29B,    $26.50,    -0.19%," Mednax, Inc. Common Stock"
+90        ,BEST      ,         1,    $0.34B,     $0.87,    -1.34%," BEST Inc. American Depositary Shares, each representing one Class A Ordinary Share"
+91        ,HUT       ,         1,    $1.06B,     $6.36,    -3.86%, Hut 8 Mining Corp. Common Shares
+92        ,OAS       ,         1,    $2.58B,   $130.71,    -1.71%, Oasis Petroleum Inc. Common Stock
+93        ,GIC       ,         1,    $1.42B,    $37.45,    -1.73%, Global Industrial Company Common Stock
+94        ,DAC       ,         1,    $1.43B,    $69.25,    -1.16%, Danaos Corporation Common Stock
+95        ,AZZ       ,         1,    $1.34B,    $53.88,    -1.98%, AZZ Inc.
+96        ,OCC       ,         1,    $0.03B,     $4.43,    -3.28%, Optical Cable Corporation Common Stock
+97        ,LIFE      ,         1,    $0.19B,     $6.72,    -0.44%," aTyr Pharma, Inc. Common Stock"
+98        ,LFG       ,         1,    $1.02B,    $17.52,    -3.79%, Archaea Energy Inc. Class A Common Stock
+99        ,SPCE      ,         1,    $3.09B,    $11.97,    -3.85%," Virgin Galactic Holdings, Inc. Common Stock"
+100       ,CLOV      ,         1,    $1.37B,     $3.12,    -1.42%," Clover Health Investments, Corp. Class A Common Stock"
+101       ,SDC       ,         1,    $0.79B,     $2.02,    -4.03%," SmileDirectClub, Inc. Class A Common Stock"
+102       ,DCF       ,         1,    $0.14B,     $9.29,     0.16%," BNY Mellon Alcentra Global Credit Income 2024 Target Term Fund, Inc. Common Stock"
+103       ,AIM       ,         1,    $0.03B,     $0.86,    -6.13%, AIM ImmunoTech Inc. Common Stock
+104       ,FCF       ,         1,    $1.64B,    $17.25,     0.06%, First Commonwealth Financial Corporation Common Stock
+105       ,DOYU      ,         1,    $0.79B,     $2.44,    -2.21%, DouYu International Holdings Limited ADS
+106       ,GGT       ,         1,    $0.23B,     $8.42,    -0.94%," Gabelli Multi-Media Trust, Inc. (The) Common Stock"
+107       ,BOE       ,         1,    $0.78B,    $12.14,    -0.33%, Blackrock Enhanced Global Dividend Trust Common Shares of Beneficial Interest
+108       ,LPI       ,         1,    $1.16B,    $67.95,    -4.90%," Laredo Petroleum, Inc. Common Stock"
+109       ,GAME      ,         1,    $0.04B,     $2.71,   -10.27%," Engine Gaming and Media, Inc. Common Stock"
