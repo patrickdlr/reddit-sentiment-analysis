@@ -37,7 +37,6 @@ nltk.download('vader_lexicon', quiet=True)
 # print(finnhub_client.stock_symbols('US'))
 
 
-
 '''*****************************************************************************
 # variables of file paths & options & environment variables
 *****************************************************************************'''
@@ -54,6 +53,23 @@ IEX_TOKEN = os.environ.get('IEX_TOKEN')
 IEX_TOKEN = F'?token={IEX_TOKEN}' 
 IEX_TOKEN_SANDBOX = os.environ.get('IEX_TOKEN_SANDBOX')
 IEX_TOKEN_SANDBOX = F'?token={IEX_TOKEN_SANDBOX}' 
+
+
+'''*****************************************************************************
+# establish connection to mysql database
+*****************************************************************************'''
+
+import pymysql
+
+# Connect to the database
+connection = pymysql.connect(
+                        host=os.environ.get('MYSQL_HOST'),
+                        user=os.environ.get('MYSQL_USER'),
+                        password=os.environ.get('MYSQL_PASSWORD'),
+                        charset='utf8mb4',
+                        cursorclass=pymysql.cursors.DictCursor)
+
+cursor = connection.cursor()
 
 
 '''*****************************************************************************
@@ -106,10 +122,10 @@ marketcap_max5 = 4000000
 def ftn_rsa1():
     print('ftn_rsa1() on rsa.py used')
 
-def prepare_variables1(outputfilename_custom):
+def prepare_variables1(outputfilename_custom, max_output_amount):
     '''*****************************************************************************
     # Preparing latest outputfilename_custom filename
-    # Parameter: max_output_amount
+    # Parameter: outputfilename_custom
     #1 get a list of existing saved file that contains given outputfilename_custom = ok
     #2 get len = ok
     #3 get new ref number (10 if 10 files there already, 10 if 9 there already, 9 if 8 files there already, 1 if 0, 2 if 1) = ok
@@ -124,7 +140,6 @@ def prepare_variables1(outputfilename_custom):
     #print('list_savedcsvfiles', list_savedcsvfiles) #log
 
     #2,3
-    max_output_amount = 10
     if len(list_savedcsvfiles) >= max_output_amount-1:
         new_ref_number = max_output_amount
     else:
@@ -139,6 +154,57 @@ def prepare_variables1(outputfilename_custom):
     #print('path_newoutputfilename', path_newoutputfilename) #log
 
     return path_newoutputfilename, list_savedcsvfiles, max_output_amount
+
+
+def prepare_variables1_sql(outputfilename_custom, max_output_amount):
+    '''*****************************************************************************
+    # Preparing latest outputfilename_custom filename
+    # Parameter: outputfilename_custom, max_output_amount
+    #1 get a list of existing saved tables that contains given outputfilename_custom = 
+    #2 get len = 
+    #3 get new ref number (10 if 10 files there already, 10 if 9 there already, 9 if 8 files there already, 1 if 0, 2 if 1) = 
+    #4 get potential outputfilename_custom filename.. to be created if program finishes) = 
+    *****************************************************************************'''
+   
+    database_name1 = 'rsa_db'
+
+    #0 - if database doesn't exist yet, create one
+    cursor.execute(f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{database_name1}';")
+    result = cursor.fetchall()
+
+    if result == () or result == None: 
+        print(result, '= None, \nCreating Database', database_name1)
+        cursor.execute(f"CREATE DATABASE {database_name1}")
+    else:
+        print(result, '= not None, \nDatabase already exists:', database_name1)
+
+
+    #1 - get a list of existing saved tables that contains given outputfilename_custom
+    list_sqltables = []    
+        
+    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{outputfilename_custom}%';")
+
+    myresult = cursor.fetchall()
+    list_sqltables = [list(a.values())[0] for a in myresult]
+    print('list_sqltables', list_sqltables) #log
+
+    #2,3
+    if len(list_sqltables) >= max_output_amount-1:
+        new_ref_number = max_output_amount
+    else:
+        new_ref_number = len(list_sqltables) + 1
+    print('new_ref_number: ', new_ref_number) #log
+
+    #4
+    if new_ref_number <= 9:
+        path_newoutputsqltablename = outputfilename_custom + '00' + str(new_ref_number)
+    elif new_ref_number >= 10:
+        path_newoutputsqltablename = outputfilename_custom + '0' + str(new_ref_number)
+    print('path_newoutputsqltablename', path_newoutputsqltablename) #log
+    
+    return path_newoutputsqltablename, list_sqltables
+
+
 def prepare_variables2(subs, marketcap_max):
     dt_string = datetime.now().strftime("%m/%d/%Y %H:%M")
     info_subcount = 'Sub count: ' + str(len(subs))
@@ -728,8 +794,13 @@ def main(input, outputfilename_custom, parameter_subs, marketcap_min, marketcap_
     '''*****************************************************************************
     # prepare variables - (for updating output files/adding new output file)
     *****************************************************************************'''
-    path_newoutputfilename, list_savedcsvfiles, max_output_amount = prepare_variables1(outputfilename_custom)
     
+    max_output_amount = 10
+    
+    path_newoutputfilename, list_savedcsvfiles, max_output_amount = prepare_variables1(outputfilename_custom, max_output_amount)
+
+    path_newoutputsqltablename, list_sqltables = prepare_variables1_sql(outputfilename_custom, max_output_amount)
+
 
     '''*****************************************************************************
     #1 get list of subreddits (from csv file) - (for Reddit Sentinment Analysis)
@@ -772,69 +843,80 @@ def main(input, outputfilename_custom, parameter_subs, marketcap_min, marketcap_
     start_time = time.time()
     # reddit client
     
+    #####
+    ##### temporarily disabled
 
-    reddit = praw.Reddit(
-        user_agent=os.environ.get('reddit_user_agent'), 
-        client_id=os.environ.get('reddit_client_id'), 
-        client_secret=os.environ.get('reddit_client_secret'),
-        username=os.environ.get('reddit_username'), 
-        password=os.environ.get('reddit_password')
-    )
-
-    #not working??
     # reddit = praw.Reddit(
-    #     user_agent, 
-    #     client_id, 
-    #     client_secret, 
-    #     username, 
-    #     password
+    #     user_agent=os.environ.get('reddit_user_agent'), 
+    #     client_id=os.environ.get('reddit_client_id'), 
+    #     client_secret=os.environ.get('reddit_client_secret'),
+    #     username=os.environ.get('reddit_username'), 
+    #     password=os.environ.get('reddit_password')
     # )
-    
-    posts, c_analyzed, tickers, titles, a_comments, picks, subs, picks_ayz, info_parameters = data_extractor(reddit, subs, us); print('data_extractor finished')
-    symbols, times, top, info_ittookxseconds = print_helper(tickers, picks, c_analyzed, posts, subs, titles, time, start_time); print('print_helper finished')
-    #PROBLEM_3: Seems to not work on AWS's due to excessive memory usage...
-    if use_sentiment_analysis_and_visualization == True:
-        scores = sentiment_analysis(picks_ayz, a_comments, symbols, us); print('sentiment_analysis finished') 
-        visualization(picks_ayz, scores, picks, times, top); print('visualization finished') 
-        print_logs1_5(symbols, scores)
 
+    # #not working??
+    # # reddit = praw.Reddit(
+    # #     user_agent, 
+    # #     client_id, 
+    # #     client_secret, 
+    # #     username, 
+    # #     password
+    # # )
+    
+    # posts, c_analyzed, tickers, titles, a_comments, picks, subs, picks_ayz, info_parameters = data_extractor(reddit, subs, us); print('data_extractor finished')
+    # symbols, times, top, info_ittookxseconds = print_helper(tickers, picks, c_analyzed, posts, subs, titles, time, start_time); print('print_helper finished')
+    # #PROBLEM_3: Seems to not work on AWS's due to excessive memory usage...
+    # if use_sentiment_analysis_and_visualization == True:
+    #     scores = sentiment_analysis(picks_ayz, a_comments, symbols, us); print('sentiment_analysis finished') 
+    #     visualization(picks_ayz, scores, picks, times, top); print('visualization finished') 
+    #     print_logs1_5(symbols, scores)
+
+
+    # '''*****************************************************************************
+    # # update output file
+    # *****************************************************************************'''
+    # # might be causing MEMORYERROR - probably not
+    # update_previousoutputfilenames(list_savedcsvfiles, max_output_amount, outputfilename_custom)
+
+
+    # '''*****************************************************************************
+    # # fix/update symbol dictionary with more info, add new output file
+    # *****************************************************************************'''
+    # # might be causing MEMORYERROR - ?
+    # # dict_symbolmc = {'AAPL': '$3035.xB', 'MSFT': '$2514.xB', 'GOOG': '$1974.xB', 'GOOGL': '$1967.xB', 'AMZN': '$1786.xB'}
+    # # dict_symbolmc = {}
+    # # dict_symbolprice = {'AAPL': '$175.x', 'MSFT': '$334.x', 'GOOG': '$2974.x', 'GOOGL': '$2963.x', 'AMZN': '$3523.x'}
+    # # dict_symbolpctchange = {'AAPL': '2.x%', 'MSFT': '0.x%', 'GOOG': '0.x%', 'GOOGL': '0.x%', 'AMZN': '-0.x%'}
+    # # dict_name = {'AAPL': ' Apple Inc. Common Stock', 'MSFT': ' Microsoft Corporation Common Stock', 'GOOG': ' Alphabet Inc. Class C Capital Stock', 'GOOGL': ' Alphabet Inc. Class A Common Stock', 'AMZN': ' Amazon.com, Inc. Common Stock'}    
+    # # add_newoutputfile_old(path_newoutputfilename, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols, dict_symbolmc, dict_symbolprice, dict_symbolpctchange, dict_name)
+
+    # # #OR
+    # # might be causing MEMORYERROR - testing, probbably not
+    # reformatandaddinfoto_symbolsdict(symbols)
+    # print('reformatted symbols dict')
+    # # #### add ticker filter by market cap (reformat again) 
+    
+    # # num1 = 0
+    # # for k,v in symbols.items():
+    # #     print(k,v)
+    # #     num1 += 1
+    # #     if num1 > 5: break
+    # # might be causing MEMORYERROR - ?
+    
+    
+    # add_newoutputfile(path_newoutputfilename, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols)
+
+    #####
+    ##### temporarily disabled
 
     '''*****************************************************************************
-    # update output file
+    # test empty update/create files, typically done without rsa analysis - optional
     *****************************************************************************'''
-    # might be causing MEMORYERROR - probably not
+
+    # # might be causing MEMORYERROR - probably not
     update_previousoutputfilenames(list_savedcsvfiles, max_output_amount, outputfilename_custom)
-
-
-    '''*****************************************************************************
-    # fix/update symbol dictionary with more info, add new output file
-    *****************************************************************************'''
-    # might be causing MEMORYERROR - ?
-    # dict_symbolmc = {'AAPL': '$3035.xB', 'MSFT': '$2514.xB', 'GOOG': '$1974.xB', 'GOOGL': '$1967.xB', 'AMZN': '$1786.xB'}
-    # dict_symbolmc = {}
-    # dict_symbolprice = {'AAPL': '$175.x', 'MSFT': '$334.x', 'GOOG': '$2974.x', 'GOOGL': '$2963.x', 'AMZN': '$3523.x'}
-    # dict_symbolpctchange = {'AAPL': '2.x%', 'MSFT': '0.x%', 'GOOG': '0.x%', 'GOOGL': '0.x%', 'AMZN': '-0.x%'}
-    # dict_name = {'AAPL': ' Apple Inc. Common Stock', 'MSFT': ' Microsoft Corporation Common Stock', 'GOOG': ' Alphabet Inc. Class C Capital Stock', 'GOOGL': ' Alphabet Inc. Class A Common Stock', 'AMZN': ' Amazon.com, Inc. Common Stock'}    
-    # add_newoutputfile_old(path_newoutputfilename, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols, dict_symbolmc, dict_symbolprice, dict_symbolpctchange, dict_name)
-
-    # #OR
-    # might be causing MEMORYERROR - testing, probbably not
-    reformatandaddinfoto_symbolsdict(symbols)
-    print('reformatted symbols dict')
-    # #### add ticker filter by market cap (reformat again) 
-    
-    # num1 = 0
-    # for k,v in symbols.items():
-    #     print(k,v)
-    #     num1 += 1
-    #     if num1 > 5: break
-    # might be causing MEMORYERROR - ?
-    
-    
-    add_newoutputfile(path_newoutputfilename, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols)
-
     # might be causing MEMORYERROR - probbably not
-    #add_newoutputfile_empty(path_newoutputfilename, dt_string)
+    add_newoutputfile_empty(path_newoutputfilename, dt_string)
 
 
     '''*****************************************************************************
@@ -850,14 +932,14 @@ def run_batch_of_processes_1():
     # create separate process for each function 
     # should reinitialize those process variables if starting them multiple time (in while loop or schedule module)
     # way 1 - local machine
-    process_1 = Process(target=main, args=(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)) 
-    process_2 = Process(target=main, args=(input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3))
-    process_3 = Process(target=main, args=(input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4))
+    # process_1 = Process(target=main, args=(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)) 
+    # process_2 = Process(target=main, args=(input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3))
+    # process_3 = Process(target=main, args=(input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4))
 
     # way 2  - test
-    # process_1 = Process(target=main, args=(input_api_nasdaq, 'result_test1_', subs_specificlist1, marketcap_min1, marketcap_max1)) 
-    # process_2 = Process(target=main, args=(input_api_nasdaq, 'result_test2_', subs_specificlist1, marketcap_min1, marketcap_max3))
-    # process_3 = Process(target=main, args=(input_api_nasdaq, 'result_test3_', subs_specificlist1, marketcap_min1, marketcap_max4))
+    process_1 = Process(target=main, args=(input_api_nasdaq, 'result_test1_', subs_specificlist1, marketcap_min1, marketcap_max1)) 
+    process_2 = Process(target=main, args=(input_api_nasdaq, 'result_test2_', subs_specificlist1, marketcap_min1, marketcap_max3))
+    process_3 = Process(target=main, args=(input_api_nasdaq, 'result_test3_', subs_specificlist1, marketcap_min1, marketcap_max4))
 
     # starts the processes
     process_1.start(); process_2.start(); process_3.start()
@@ -885,9 +967,9 @@ if __name__ == '__main__':
     # Parameter: program_number
     *****************************************************************************'''
     #print("WAY 0 rsa.py used")
-    main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1) ##stable
+    #main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1) ##stable
     #main(input_api_nasdaq, output_filename0, subs_membercount_min1, marketcap_min1, marketcap_max1) ##linux/window test large
-    #main(input_api_nasdaq, output_filename0, subs_specificlist1, marketcap_min1, marketcap_max4) ##linux/window test small
+    main(input_api_nasdaq, output_filename0, subs_specificlist1, marketcap_min1, marketcap_max4) ##linux/window test small
     #main(input_api_nasdaq, output_filename0, subs_membercount_min2, marketcap_min1, marketcap_max4) ##linux test - testing getlist_subreddits - WORKING, needs TESTING
     #main(input_api_nasdaq, output_filename0, subs_specificlist1, marketcap_min1, marketcap_max4)
 
