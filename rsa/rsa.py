@@ -49,6 +49,10 @@ isPrint_logs = True
 use_sentiment_analysis_and_visualization = False
 
 
+max_output_amount = 10
+if max_output_amount < 1: raise ValueError('max output amount cannot be <1')
+
+
 IEX_TOKEN = os.environ.get('IEX_TOKEN')
 IEX_TOKEN = F'?token={IEX_TOKEN}' 
 IEX_TOKEN_SANDBOX = os.environ.get('IEX_TOKEN_SANDBOX')
@@ -127,6 +131,7 @@ def prepare_variables1(outputfilename_custom, max_output_amount):
     # Preparing latest outputfilename_custom filename
     # Parameter: outputfilename_custom
     #1 get a list of existing saved file that contains given outputfilename_custom = ok
+    #1.5 warn the user about max_output_amount deleting the oldest, excessive output files
     #2 get len = ok
     #3 get new ref number (10 if 10 files there already, 10 if 9 there already, 9 if 8 files there already, 1 if 0, 2 if 1) = ok
     #4 get potential outputfilename_custom filename.. to be created if program finishes) = ok
@@ -135,73 +140,120 @@ def prepare_variables1(outputfilename_custom, max_output_amount):
     list_savedcsvfiles = []    
     for a in os.listdir(path_repo_and_csvfiles):
         #print('checking', a, 'with', outputfilename_custom) #log
-        if a.startswith(outputfilename_custom + '0') or a.startswith(outputfilename_custom + '1'):
+        # if a.startswith(outputfilename_custom + '0') or a.startswith(outputfilename_custom + '1'): not needed
+        if a.startswith(outputfilename_custom):
             list_savedcsvfiles.append(a)
-    #print('list_savedcsvfiles', list_savedcsvfiles) #log
+    #print('list_savedcsvfiles (prepare_variables1) 1', list_savedcsvfiles) #log
+
+
+    #1.5 
+    if len(list_savedcsvfiles) > max_output_amount:
+        for r in range(3): #input doesn't work in multithreading mode
+            print(f"Note: output file count: {len(list_savedcsvfiles)} > max_output_amount: {max_output_amount}")
+            a = input("Max # of allowed output files is LOWER than existing output files. Proceeding will limit existing output files by deleting the oldest, excessive output files. Do you want to continue? (Y/N) ")
+        
+            if a.lower() == "y" or a.lower() == "yes":
+                break
+            elif a.lower() == "n" or a.lower() == "no" or r >= 2:
+                print("User chose to not continue.. stopping the program now. Review the 'max output amount' variable.")
+                sys.exit()
+                #os._exit() #exits the whole process i think.
+            else:
+                continue
+
+
 
     #2,3
-    if len(list_savedcsvfiles) >= max_output_amount-1:
+    if len(list_savedcsvfiles) >= max_output_amount:
         new_ref_number = max_output_amount
     else:
         new_ref_number = len(list_savedcsvfiles) + 1
     #print('new_ref_number: ', new_ref_number) #log
 
+
     #4
-    if new_ref_number <= 9:
+    if new_ref_number < 10:
         path_newoutputfilename = path_repo_and_csvfiles + "/" + outputfilename_custom + '00' + str(new_ref_number) + '.csv'
-    elif new_ref_number >= 10:
+    elif new_ref_number >= 10 and new_ref_number < 100: 
         path_newoutputfilename = path_repo_and_csvfiles + "/" + outputfilename_custom + '0' + str(new_ref_number) + '.csv'
+    elif new_ref_number >= 100 and new_ref_number < 1000:   
+        path_newoutputfilename = path_repo_and_csvfiles + "/" + outputfilename_custom + str(new_ref_number) + '.csv'
     #print('path_newoutputfilename', path_newoutputfilename) #log
 
-    return path_newoutputfilename, list_savedcsvfiles, max_output_amount
 
+    return path_newoutputfilename, list_savedcsvfiles
 
 def prepare_variables1_sql(outputfilename_custom, max_output_amount):
     '''*****************************************************************************
     # Preparing latest outputfilename_custom filename
     # Parameter: outputfilename_custom, max_output_amount
-    #1 get a list of existing saved tables that contains given outputfilename_custom = 
+    #1 get a list of existing saved tables that contains given outputfilename_custom =
+    # #1.5 warn the user about max_output_amount deleting the oldest, excessive output files = 
     #2 get len = 
     #3 get new ref number (10 if 10 files there already, 10 if 9 there already, 9 if 8 files there already, 1 if 0, 2 if 1) = 
     #4 get potential outputfilename_custom filename.. to be created if program finishes) = 
     *****************************************************************************'''
    
+    print('using:', outputfilename_custom)
     database_name1 = 'rsa_db'
+
 
     #0 - if database doesn't exist yet, create one
     cursor.execute(f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{database_name1}';")
     result = cursor.fetchall()
-
     if result == () or result == None: 
-        print(result, '= None, \nCreating Database', database_name1)
         cursor.execute(f"CREATE DATABASE {database_name1}")
-    else:
-        print(result, '= not None, \nDatabase already exists:', database_name1)
+        print(result, '= None, \nCreated Database', database_name1)
+    #else:
+        #print(result, '= not None, \nDatabase already exists:', database_name1)
+
 
 
     #1 - get a list of existing saved tables that contains given outputfilename_custom
     list_sqltables = []    
-        
     cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{outputfilename_custom}%';")
+    result = cursor.fetchall()
+    list_sqltables = [list(a.values())[0] for a in result]
+    print('list_sqltables (prepare_variables1_sql) 1', list_sqltables) #log
 
-    myresult = cursor.fetchall()
-    list_sqltables = [list(a.values())[0] for a in myresult]
-    print('list_sqltables', list_sqltables) #log
+
+    #1.5 
+    # if len(list_sqltables) > max_output_amount:
+    #     for r in range(3): #input doesn't work in multithreading mode
+    #         print(f"Note: output file count: {len(list_sqltables)} > max_output_amount: {max_output_amount}")
+    #         a = input("Max # of allowed output files is LOWER than existing output files. Proceeding will limit existing output files by deleting the oldest, excessive output files. Do you want to continue? (Y/N) ")
+            
+    #         if a.lower() == "y" or a.lower() == "yes":
+    #             break
+    #         elif a.lower() == "n" or a.lower() == "no" or r >= 2:
+    #             print("User chose to not continue.. stopping the program now. Review the 'max output amount' variable.")
+    #             sys.exit()
+    #             #os._exit() #exits the whole process i think.
+    #         else:
+    #             continue
+
+
 
     #2,3
-    if len(list_sqltables) >= max_output_amount-1:
+    if len(list_sqltables) >= max_output_amount:
         new_ref_number = max_output_amount
     else:
         new_ref_number = len(list_sqltables) + 1
     print('new_ref_number: ', new_ref_number) #log
 
+
+
     #4
-    if new_ref_number <= 9:
+    if new_ref_number < 10:
         path_newoutputsqltablename = outputfilename_custom + '00' + str(new_ref_number)
-    elif new_ref_number >= 10:
+    elif new_ref_number >= 10 and new_ref_number < 100: 
         path_newoutputsqltablename = outputfilename_custom + '0' + str(new_ref_number)
-    print('path_newoutputsqltablename', path_newoutputsqltablename) #log
-    
+    elif new_ref_number >= 100 and new_ref_number < 1000:   
+        path_newoutputsqltablename = outputfilename_custom + str(new_ref_number)  
+    print('path_newoutputsqltablename:', path_newoutputsqltablename) #log
+
+
+
     return path_newoutputsqltablename, list_sqltables
 
 
@@ -513,61 +565,151 @@ def print_logs1_5(symbols, scores):
 def update_previousoutputfilenames(list_savedcsvfiles, max_output_amount, outputfilename_custom):
     '''*****************************************************************************
     # Manage result files for proper numbering and up-to-date content
-    #1 Delete first result file (if result files exceed maximum allowed)
-    #2 Adjust other result files' numbers (ex: 2-10 to 1-9)
+    #1 Delete first result file (if result files exceed maximum allowed) = 
+    #2 Adjust other result files' numbers (ex: 2-10 to 1-9) = 
     *****************************************************************************'''
 
-    if len(list_savedcsvfiles) >= max_output_amount:
-        for a in list_savedcsvfiles:
-            num_file = list_savedcsvfiles.index(a) + 1 #adjust from 0 to 1
-            try:
-                #delete if any
-                if num_file == 1:
-                    delete_file = path_repo_and_csvfiles + "/" + outputfilename_custom + '001'+'.csv'
+    #1-2 (old)
+    # if len(list_savedcsvfiles) >= max_output_amount:
+    #     for a in list_savedcsvfiles:
+    #         num_file = list_savedcsvfiles.index(a) + 1 #adjust from 0 to 1
+    #         try:
+    #             #delete if any (need to trim excessive file, not just first file only)
+    #             if num_file == 1:
+    #                 delete_file = path_repo_and_csvfiles + "/" + outputfilename_custom + '001'+'.csv'
 
-                    os.remove(delete_file)
-                    #print('deleted ' + delete_file) #log
+    #                 os.remove(delete_file)
+    #                 #print('deleted ' + delete_file) #log
 
-                #rename 2-9 to 1-8
-                if num_file <= 9 and num_file >= 2: 
-                    old_filename = path_repo_and_csvfiles + "/" + outputfilename_custom + '00'+str(num_file)+'.csv'
-                    new_filename = path_repo_and_csvfiles + "/" + outputfilename_custom + '00'+str(num_file-1)+'.csv'
+    #             #rename 2-9 to 1-8
+    #             if num_file <= 9 and num_file >= 2: 
+    #                 old_filename = path_repo_and_csvfiles + "/" + outputfilename_custom + '00'+str(num_file)+'.csv'
+    #                 new_filename = path_repo_and_csvfiles + "/" + outputfilename_custom + '00'+str(num_file-1)+'.csv'
 
-                    os.rename(old_filename, new_filename)
-                    #print('renamed ' + old_filename + ' to ' + new_filename) #log
+    #                 os.rename(old_filename, new_filename)
+    #                 #print('renamed ' + old_filename + ' to ' + new_filename) #log
             
-                #rename 10 to 9
-                elif num_file == 10:
-                    old_filename = path_repo_and_csvfiles + "/" + outputfilename_custom + '0'+str(num_file)+'.csv'
-                    new_filename = path_repo_and_csvfiles + "/" + outputfilename_custom + '00'+str(num_file-1)+'.csv'
+    #             #rename 10 to 9
+    #             elif num_file == 10:
+    #                 old_filename = path_repo_and_csvfiles + "/" + outputfilename_custom + '0'+str(num_file)+'.csv'
+    #                 new_filename = path_repo_and_csvfiles + "/" + outputfilename_custom + '00'+str(num_file-1)+'.csv'
 
-                    os.rename(old_filename, new_filename)
-                    #print('renamed ' + old_filename + ' to ' + new_filename) #log
+    #                 os.rename(old_filename, new_filename)
+    #                 #print('renamed ' + old_filename + ' to ' + new_filename) #log
 
-                #rename 11-.. to 10-..
-                elif num_file >= 11:
-                    old_filename = path_repo_and_csvfiles + "/" + outputfilename_custom + '0'+str(num_file)+'.csv'
-                    new_filename = path_repo_and_csvfiles + "/" + outputfilename_custom + '0'+str(num_file-1)+'.csv'
+    #             #rename 11-.. to 10-..
+    #             elif num_file >= 11:
+    #                 old_filename = path_repo_and_csvfiles + "/" + outputfilename_custom + '0'+str(num_file)+'.csv'
+    #                 new_filename = path_repo_and_csvfiles + "/" + outputfilename_custom + '0'+str(num_file-1)+'.csv'
 
-                    os.rename(old_filename, new_filename)
-                    #print('renamed ' + old_filename + ' to ' + new_filename) #log
+    #                 os.rename(old_filename, new_filename)
+    #                 #print('renamed ' + old_filename + ' to ' + new_filename) #log
 
-            except FileNotFoundError:
-                continue
+    #         except FileNotFoundError:
+    #             continue
 
-    elif len(list_savedcsvfiles) < max_output_amount: 
+    #if len(list_savedcsvfiles) < max_output_amount: 
         #correct naming
-    
-        for a in list_savedcsvfiles:
-            try:
-                num_file = list_savedcsvfiles.index(a) + 1 #adjust from 0 to 1
-                old_filename = pathlib.Path(path_repo_and_csvfiles + "/" + a)
-                new_filename = pathlib.Path(path_repo_and_csvfiles + "/" + outputfilename_custom + '00'+str(num_file)+'.csv')
-                
-                os.rename(old_filename, new_filename)
 
-            except FileNotFoundError:
-                continue
+
+    #1 new
+    while True:
+        if len(list_savedcsvfiles) >= max_output_amount:            
+            #delete first table
+            delete_file = path_repo_and_csvfiles + "/" + list_savedcsvfiles[0]
+            os.remove(delete_file)
+
+            #refresh list of tables
+            list_savedcsvfiles = []    
+            for a in os.listdir(path_repo_and_csvfiles):
+                #print('checking', a, 'with', outputfilename_custom) #log
+                if a.startswith(outputfilename_custom):
+                    list_savedcsvfiles.append(a)
+            print('list_savedcsvfiles', list_savedcsvfiles) #log
+        else:
+            break
+
+    
+
+    
+    #2 new
+    for a in list_savedcsvfiles:
+        try:
+            num_file = list_savedcsvfiles.index(a) + 1 #adjust from 0 to 1
+            old_filename = pathlib.Path(path_repo_and_csvfiles + "/" + a)
+
+            if num_file < 10:
+                new_filename = pathlib.Path(path_repo_and_csvfiles + "/" + outputfilename_custom + '00'+str(num_file)+'.csv')
+            elif num_file >= 10 and num_file < 100:
+                new_filename = pathlib.Path(path_repo_and_csvfiles + "/" + outputfilename_custom + '0'+str(num_file)+'.csv')
+            elif num_file >= 100 and num_file < 1000:
+                new_filename = pathlib.Path(path_repo_and_csvfiles + "/" + outputfilename_custom +str(num_file)+'.csv')
+            
+            os.rename(old_filename, new_filename)
+        except FileNotFoundError:
+            continue
+
+
+def update_previousoutputfilenames_sql(list_sqltables, max_output_amount, outputfilename_custom):
+    '''*****************************************************************************
+    # Manage result files for proper numbering and up-to-date content
+    #1 Delete first excessive result files (if result files exceed maximum allowed) = ok
+    #2 Adjust other result files' numbers (ex: 2-10 to 1-9.. up to max_output_amount) = ok
+    *****************************************************************************'''
+    table_name1 = "result_test_"
+    database_name1 = "rsa_db"
+    
+
+
+    print("before: ") #log
+    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{table_name1}%';")
+    myresult = cursor.fetchall()
+    previewlist_sqltables = [list(a.values())[0] for a in myresult]
+    print('list_sqltables', previewlist_sqltables) #log
+
+
+    #1 new
+    while True:
+        if len(list_sqltables) >= max_output_amount:
+            #delete first table - sql
+            cursor.execute(f"DROP TABLE {database_name1}.{list_sqltables[0]};")
+
+            #refresh list of tables - sql
+            list_sqltables = []
+            cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{table_name1}%';")
+            myresult = cursor.fetchall()
+            list_sqltables = [list(a.values())[0] for a in myresult]
+            # print('list_sqltables', list_sqltables) #log
+        else:
+            break
+
+
+    #2 new
+    for a in list_sqltables:
+        try:
+            num_file = list_sqltables.index(a) + 1 #adjust from 0 to 1
+            old_filename = f"{database_name1}.{a}"
+
+            if num_file < 10:
+                new_filename = f"{database_name1}.{table_name1}00{num_file}"
+            elif num_file >= 10 and num_file < 100:
+                new_filename = f"{database_name1}.{table_name1}0{num_file}"
+            elif num_file >= 100 and num_file < 1000:
+                new_filename = f"{database_name1}.{table_name1}{num_file}"
+            
+            cursor.execute(f"RENAME TABLE {old_filename} TO {new_filename};")
+        except:
+            continue #skip error about filename already existing
+    
+
+    print("after: ") #log
+    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{table_name1}%';")
+    myresult = cursor.fetchall()
+    previewlist_sqltables = [list(a.values())[0] for a in myresult]
+    print('list_sqltables', previewlist_sqltables) #log
+
+
+
 def reformatandaddinfoto_symbolsdict(symbols):
     #print(symbols)
     #add function that adds details for list of found symbols
@@ -644,6 +786,13 @@ def add_newoutputfile_empty(path_newoutputfilename, dt_string):
         writer = csv.writer(f)
         writer.writerow(['Date and time: ' + dt_string])
         writer.writerow(['Empty file'])
+
+def add_newsqltable_empty(outputfilename_custom, dt_string):
+
+    database_name1 = "rsa_db"
+
+    cursor.execute(f"CREATE TABLE {database_name1}.{outputfilename_custom} (ticker TEXT, date DATE, ticker_id INT AUTO_INCREMENT, PRIMARY KEY (ticker_id));")
+
 
 def add_newoutputfile_old(path_newoutputfilename, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols, dict_symbolmc, dict_symbolprice, dict_symbolpctchange, dict_name):
     '''*****************************************************************************
@@ -795,9 +944,9 @@ def main(input, outputfilename_custom, parameter_subs, marketcap_min, marketcap_
     # prepare variables - (for updating output files/adding new output file)
     *****************************************************************************'''
     
-    max_output_amount = 10
     
-    path_newoutputfilename, list_savedcsvfiles, max_output_amount = prepare_variables1(outputfilename_custom, max_output_amount)
+
+    #path_newoutputfilename, list_savedcsvfiles = prepare_variables1(outputfilename_custom, max_output_amount)
 
     path_newoutputsqltablename, list_sqltables = prepare_variables1_sql(outputfilename_custom, max_output_amount)
 
@@ -834,7 +983,7 @@ def main(input, outputfilename_custom, parameter_subs, marketcap_min, marketcap_
     # prepare variables - (for adding content to new output file), print logs
     *****************************************************************************'''
     dt_string, info_subcount, info_marketCap_limit = prepare_variables2(subs, marketcap_max)
-    print_logs1(dt_string, input, path_newoutputfilename, info_subcount, info_marketCap_limit, us)
+    # print_logs1(dt_string, input, path_newoutputfilename, info_subcount, info_marketCap_limit, us) #only for csv files
     
 
     '''*****************************************************************************
@@ -914,15 +1063,19 @@ def main(input, outputfilename_custom, parameter_subs, marketcap_min, marketcap_
     *****************************************************************************'''
 
     # # might be causing MEMORYERROR - probably not
-    update_previousoutputfilenames(list_savedcsvfiles, max_output_amount, outputfilename_custom)
+    # update_previousoutputfilenames(list_savedcsvfiles, max_output_amount, outputfilename_custom)
     # might be causing MEMORYERROR - probbably not
-    add_newoutputfile_empty(path_newoutputfilename, dt_string)
+    # add_newoutputfile_empty(path_newoutputfilename, dt_string)
 
 
+    update_previousoutputfilenames_sql(list_sqltables, max_output_amount, outputfilename_custom)
+    add_newsqltable_empty(path_newoutputsqltablename, dt_string)
+    
     '''*****************************************************************************
     # print logs
     *****************************************************************************'''
-    print_logs2(path_newoutputfilename)
+    # print_logs2(path_newoutputfilename)
+    print_logs2(path_newoutputsqltablename)
 
 
 def run_batch_of_processes_1():
@@ -1091,10 +1244,10 @@ if __name__ == '__main__':
     # schedule.every().day.at("18:00").do(run_batch_of_processes_1)
     # schedule.every().day.at("21:00").do(run_batch_of_processes_1)
     
-    # run_batch_of_processes_1() ##immediate, test
+    # # run_batch_of_processes_1() ##immediate, test
 
     # while True:   
-    #   schedule.run_pending()
+    #    schedule.run_pending()
 
     endingvar = None
 

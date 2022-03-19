@@ -132,3 +132,6 @@ WHERE SCHEMA_NAME = 'helloworld';
 # if result == () or result == None: 
 #     print(result, '= None')
 
+
+
+#create tables (result001 - result010)

@@ -19,7 +19,7 @@ connection = pymysql.connect(
                         cursorclass=pymysql.cursors.DictCursor)
 # print(connection)
 
-
+cursor = connection.cursor()
 
 # try:
 #     cursor = connection.cursor()
@@ -323,18 +323,18 @@ connection = pymysql.connect(
 #         newnum1 = count_tables + 1
 #         print(newnum1)
 
-cursor = connection.cursor()
 
 
-def function_sql1():
-    cursor.execute("show databases;")
-    result = cursor.fetchall()
-    pprint.pprint(result)
 
-def function_sql2():
-    cursor.execute("select * from helloworld.table1;")
-    result = cursor.fetchall()
-    pprint.pprint(result)
+# def function_sql1():
+#     cursor.execute("show databases;")
+#     result = cursor.fetchall()
+#     pprint.pprint(result)
+
+# def function_sql2():
+#     cursor.execute("select * from helloworld.table1;")
+#     result = cursor.fetchall()
+#     pprint.pprint(result)
 
 
 # function_sql1()
@@ -343,20 +343,80 @@ def function_sql2():
 
 
 # # # check if database exists, create one if doesnt exist
-# database_name1 = 'helloworld2'
-# cursor.execute(f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{database_name1}';")
+database_name1 = 'sampledb'
+cursor.execute(f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{database_name1}';")
 
-# result = cursor.fetchall()
-# pprint.pprint(result)
+result = cursor.fetchall()
+pprint.pprint(result)
 
-# if result == () or result == None: 
-#     print(result, '= None')
-#     cursor.execute(f"CREATE DATABASE {database_name1}")
-# else:
-#     print(result, '= not None')
+if result == () or result == None: 
+    print(result, '= None')
+    cursor.execute(f"CREATE DATABASE {database_name1}")
+else:
+    print(result, '= not None')
 
 ### connection.commit() # no need..
 
 #### delete database
 # database_name1 = 'helloworld2'
 # cursor.execute(f"DROP DATABASE {database_name1};")
+
+
+table_name1 = "result_test_"
+database_name1 = "rsa_db"
+
+
+
+
+#create multiple tables in for loops
+for a in range(20):
+    
+    a += 1
+    try:
+
+        #create tables
+        if a < 10:
+            cursor.execute(f"CREATE TABLE {database_name1}.{table_name1}00{str(a)}(tutorial_id INT NOT NULL AUTO_INCREMENT,tutorial_title VARCHAR(100) NOT NULL, tutorial_author VARCHAR(40) NOT NULL, submission_date DATE, PRIMARY KEY ( tutorial_id ));")
+        elif a >= 10 and a < 100:
+            cursor.execute(f"CREATE TABLE {database_name1}.{table_name1}0{str(a)}(tutorial_id INT NOT NULL AUTO_INCREMENT,tutorial_title VARCHAR(100) NOT NULL, tutorial_author VARCHAR(40) NOT NULL, submission_date DATE, PRIMARY KEY ( tutorial_id ));")
+        elif a >= 100 and a < 1000:
+            cursor.execute(f"CREATE TABLE {database_name1}.{table_name1}{str(a)}(tutorial_id INT NOT NULL AUTO_INCREMENT,tutorial_title VARCHAR(100) NOT NULL, tutorial_author VARCHAR(40) NOT NULL, submission_date DATE, PRIMARY KEY ( tutorial_id ));")
+
+
+    
+    except:
+        continue #ignore existing table, and keep creating new tables
+
+
+
+# #delete multiple tables in for loops
+# for a in range(5):
+#     a += 1
+#     cursor.execute(f"DROP TABLE {database_name1}.sample{a};")
+
+
+
+
+# #get list of tables with like name, loop thru the list and change the name numbers
+cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{table_name1}%';")
+myresult = cursor.fetchall()
+list_sqltables = [list(a.values())[0] for a in myresult]
+print('list_sqltables', list_sqltables) #log
+
+
+
+# #then drop tables like table_name1/essentially clear tables in database;
+# for a in list_sqltables:
+#     cursor.execute(f"DROP TABLE {database_name1}.{a};")
+
+#test: drop first table
+# cursor.execute(f"DROP TABLE {database_name1}.{list_sqltables[0]};")
+# print("dropped:", f"{database_name1}.{list_sqltables[0]}")
+
+# for a in list_sqltables:
+#     num_file = list_sqltables.index(a)+1
+#     try:
+#         cursor.execute(f"RENAME TABLE {database_name1}.{a} TO {database_name1}.{table_name1}{num_file};")
+#     except:
+#         continue
+    
