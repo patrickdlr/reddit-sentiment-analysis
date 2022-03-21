@@ -53,7 +53,7 @@ max_output_amount = 7
 if max_output_amount < 1: raise ValueError('max output amount cannot be <1')
 
 
-database_name1 = 'rsa_db2'
+database_name1 = 'rsa_db'
 
 
 IEX_TOKEN = os.environ.get('IEX_TOKEN')
@@ -785,20 +785,10 @@ def reformatandaddinfoto_symbolsdict(symbols):
 
     endingvar = None
 
-def add_newoutputfile_empty(path_newoutputfilename, dt_string):
-    with open(path_newoutputfilename, 'w', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow(['Date and time: ' + dt_string])
-        writer.writerow(['Empty file'])
-
-def add_newsqltable_empty(path_newoutputfilename, dt_string):
 
 
-    cursor.execute(f"CREATE TABLE {database_name1}.{path_newoutputfilename} (ticker TEXT, date DATE, ticker_id INT AUTO_INCREMENT, PRIMARY KEY (ticker_id));")
 
     
-    
-
 
 def add_newoutputfile_old(path_newoutputfilename, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols, dict_symbolmc, dict_symbolprice, dict_symbolpctchange, dict_name):
     '''*****************************************************************************
@@ -867,6 +857,13 @@ def add_newoutputfile_old(path_newoutputfilename, dt_string, info_subcount, info
                 continue
 
         #csv.writer(...).writerows(my_dict.items())
+        endingvar = None
+
+def add_newoutputfile_empty(path_newoutputfilename, dt_string):
+    with open(path_newoutputfilename, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['Date and time: ' + dt_string])
+        writer.writerow(['Empty file'])
 
 def add_newoutputfile(path_newoutputfilename, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols):
     '''*****************************************************************************
@@ -938,6 +935,38 @@ def add_newoutputfile(path_newoutputfilename, dt_string, info_subcount, info_mar
                 continue
 
         #csv.writer(...).writerows(my_dict.items())
+        endingvar = None
+
+
+
+def add_newsqltable_empty(path_newoutputsqltablename, dt_string):
+    cursor.execute(f"CREATE TABLE {database_name1}.{path_newoutputsqltablename} (Number INT, Symbols TEXT, Mentions INT, marketCap TEXT, latestPric TEXT, changePerc TEXT, peRatio TEXT, companyNam TEXT, PRIMARY KEY (Number));")
+
+def add_newsqltable(path_newoutputsqltablename, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols):
+    
+    cursor.execute(f"CREATE TABLE {database_name1}.{path_newoutputsqltablename} (Number INT, Symbols TEXT, Mentions INT, marketCap TEXT, latestPric TEXT, changePerc TEXT, peRatio TEXT, companyNam TEXT, PRIMARY KEY (Number));")
+
+    info_tickernumber = 1
+    for k,v in symbols.items():
+        coldata_00 = '%-10s' % info_tickernumber
+        coldata_01 = "%-10s" % k
+        coldata_02 = "%10s" % v.get('mentions')
+        # coldata_03 = "%10s" % senti.get('neg')
+        # coldata_04 = "%10s" % senti.get('neu')
+        # coldata_05 = "%10s" % senti.get('pos')
+        # coldata_06 = "%10s" % senti.get('compound')
+        coldata_07 = "%10s" % v.get('marketCap')
+        coldata_08 = "%10s" % v.get('latestPrice')
+        coldata_09 = "%10s" % v.get('changePercent')
+        coldata_10 = "%10s" % v.get('peRatio')
+        coldata_11 = "%10s" % v.get('companyName')
+
+        cursor.execute(f"INSERT INTO {database_name1}.{path_newoutputsqltablename} (Number, Symbols, Mentions, marketCap, latestPric, changePerc, peRatio, companyNam) VALUES ('{coldata_00}', '{coldata_01}', '{coldata_02}', '{coldata_07}', '{coldata_08}', '{coldata_09}', '{coldata_10}', '{coldata_11}');" )
+
+        info_tickernumber += 1
+        
+    connection.commit()
+
 def print_logs2(path_newoutputfilename):
     dt_string = datetime.now().strftime("%m/%d/%Y %H:%M")
     print("Date and Time: " + dt_string + " (End main)")
@@ -949,9 +978,6 @@ def main(input, outputfilename_custom, parameter_subs, marketcap_min, marketcap_
     '''*****************************************************************************
     # prepare variables - (for updating output files/adding new output file)
     *****************************************************************************'''
-    
-    
-
     #path_newoutputfilename, list_savedcsvfiles = prepare_variables1(outputfilename_custom, max_output_amount)
 
     path_newoutputsqltablename, list_sqltables = prepare_variables1_sql(outputfilename_custom, max_output_amount)
@@ -997,98 +1023,99 @@ def main(input, outputfilename_custom, parameter_subs, marketcap_min, marketcap_
     *****************************************************************************'''
     start_time = time.time()
     # reddit client
-    
-    #####
-    ##### temporarily disabled
 
+    reddit = praw.Reddit(
+        user_agent=os.environ.get('reddit_user_agent'), 
+        client_id=os.environ.get('reddit_client_id'), 
+        client_secret=os.environ.get('reddit_client_secret'),
+        username=os.environ.get('reddit_username'), 
+        password=os.environ.get('reddit_password')
+    )
+
+    #not working??
     # reddit = praw.Reddit(
-    #     user_agent=os.environ.get('reddit_user_agent'), 
-    #     client_id=os.environ.get('reddit_client_id'), 
-    #     client_secret=os.environ.get('reddit_client_secret'),
-    #     username=os.environ.get('reddit_username'), 
-    #     password=os.environ.get('reddit_password')
+    #     user_agent, 
+    #     client_id, 
+    #     client_secret, 
+    #     username, 
+    #     password
     # )
-
-    # #not working??
-    # # reddit = praw.Reddit(
-    # #     user_agent, 
-    # #     client_id, 
-    # #     client_secret, 
-    # #     username, 
-    # #     password
-    # # )
     
-    # posts, c_analyzed, tickers, titles, a_comments, picks, subs, picks_ayz, info_parameters = data_extractor(reddit, subs, us); print('data_extractor finished')
-    # symbols, times, top, info_ittookxseconds = print_helper(tickers, picks, c_analyzed, posts, subs, titles, time, start_time); print('print_helper finished')
-    # #PROBLEM_3: Seems to not work on AWS's due to excessive memory usage...
-    # if use_sentiment_analysis_and_visualization == True:
-    #     scores = sentiment_analysis(picks_ayz, a_comments, symbols, us); print('sentiment_analysis finished') 
-    #     visualization(picks_ayz, scores, picks, times, top); print('visualization finished') 
-    #     print_logs1_5(symbols, scores)
+    posts, c_analyzed, tickers, titles, a_comments, picks, subs, picks_ayz, info_parameters = data_extractor(reddit, subs, us); print('data_extractor finished')
+    symbols, times, top, info_ittookxseconds = print_helper(tickers, picks, c_analyzed, posts, subs, titles, time, start_time); print('print_helper finished')
+    #PROBLEM_3: Seems to not work on AWS's due to excessive memory usage...
+    if use_sentiment_analysis_and_visualization == True:
+        scores = sentiment_analysis(picks_ayz, a_comments, symbols, us); print('sentiment_analysis finished') 
+        visualization(picks_ayz, scores, picks, times, top); print('visualization finished') 
+        print_logs1_5(symbols, scores)
 
 
-    # '''*****************************************************************************
-    # # update output file
-    # *****************************************************************************'''
-    # # might be causing MEMORYERROR - probably not
+    '''*****************************************************************************
+    # update output file
+    *****************************************************************************'''
+    # might be causing MEMORYERROR - probably not
     # update_previousoutputfilenames(list_savedcsvfiles, max_output_amount, outputfilename_custom)
+    update_previousoutputfilenames_sql(list_sqltables, max_output_amount, outputfilename_custom)
 
 
-    # '''*****************************************************************************
-    # # fix/update symbol dictionary with more info, add new output file
-    # *****************************************************************************'''
-    # # might be causing MEMORYERROR - ?
-    # # dict_symbolmc = {'AAPL': '$3035.xB', 'MSFT': '$2514.xB', 'GOOG': '$1974.xB', 'GOOGL': '$1967.xB', 'AMZN': '$1786.xB'}
-    # # dict_symbolmc = {}
-    # # dict_symbolprice = {'AAPL': '$175.x', 'MSFT': '$334.x', 'GOOG': '$2974.x', 'GOOGL': '$2963.x', 'AMZN': '$3523.x'}
-    # # dict_symbolpctchange = {'AAPL': '2.x%', 'MSFT': '0.x%', 'GOOG': '0.x%', 'GOOGL': '0.x%', 'AMZN': '-0.x%'}
-    # # dict_name = {'AAPL': ' Apple Inc. Common Stock', 'MSFT': ' Microsoft Corporation Common Stock', 'GOOG': ' Alphabet Inc. Class C Capital Stock', 'GOOGL': ' Alphabet Inc. Class A Common Stock', 'AMZN': ' Amazon.com, Inc. Common Stock'}    
-    # # add_newoutputfile_old(path_newoutputfilename, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols, dict_symbolmc, dict_symbolprice, dict_symbolpctchange, dict_name)
+    '''*****************************************************************************
+    # fix/update symbol dictionary with more info
+    *****************************************************************************'''
+    # might be causing MEMORYERROR - ?
+    # dict_symbolmc = {'AAPL': '$3035.xB', 'MSFT': '$2514.xB', 'GOOG': '$1974.xB', 'GOOGL': '$1967.xB', 'AMZN': '$1786.xB'}
+    # dict_symbolmc = {}
+    # dict_symbolprice = {'AAPL': '$175.x', 'MSFT': '$334.x', 'GOOG': '$2974.x', 'GOOGL': '$2963.x', 'AMZN': '$3523.x'}
+    # dict_symbolpctchange = {'AAPL': '2.x%', 'MSFT': '0.x%', 'GOOG': '0.x%', 'GOOGL': '0.x%', 'AMZN': '-0.x%'}
+    # dict_name = {'AAPL': ' Apple Inc. Common Stock', 'MSFT': ' Microsoft Corporation Common Stock', 'GOOG': ' Alphabet Inc. Class C Capital Stock', 'GOOGL': ' Alphabet Inc. Class A Common Stock', 'AMZN': ' Amazon.com, Inc. Common Stock'}    
+    # add_newoutputfile_old(path_newoutputfilename, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols, dict_symbolmc, dict_symbolprice, dict_symbolpctchange, dict_name)
 
-    # # #OR
-    # # might be causing MEMORYERROR - testing, probbably not
-    # reformatandaddinfoto_symbolsdict(symbols)
-    # print('reformatted symbols dict')
-    # # #### add ticker filter by market cap (reformat again) 
+    # #OR
+    # might be causing MEMORYERROR - testing, probbably not
+    reformatandaddinfoto_symbolsdict(symbols)
+    print('reformatted symbols dict')
+    # #### add ticker filter by market cap (reformat again) 
     
-    # # num1 = 0
-    # # for k,v in symbols.items():
-    # #     print(k,v)
-    # #     num1 += 1
-    # #     if num1 > 5: break
-    # # might be causing MEMORYERROR - ?
+    # num1 = 0
+    # for k,v in symbols.items():
+    #     print(k,v)
+    #     num1 += 1
+    #     if num1 > 5: break
+    # might be causing MEMORYERROR - ?
     
-    
+
+    '''*****************************************************************************
+    # add new output file
+    *****************************************************************************'''
     # add_newoutputfile(path_newoutputfilename, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols)
+    
+    add_newsqltable(path_newoutputsqltablename, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols)
 
-    #####
-    ##### temporarily disabled
 
     '''*****************************************************************************
     # test empty update/create files, typically done without rsa analysis - optional
     *****************************************************************************'''
-
-    # # might be causing MEMORYERROR - probably not
-    # update_previousoutputfilenames(list_savedcsvfiles, max_output_amount, outputfilename_custom)
     # might be causing MEMORYERROR - probbably not
     # add_newoutputfile_empty(path_newoutputfilename, dt_string)
 
-
-    update_previousoutputfilenames_sql(list_sqltables, max_output_amount, outputfilename_custom)
-    add_newsqltable_empty(path_newoutputsqltablename, dt_string)
+    # add_newsqltable_empty(path_newoutputsqltablename, dt_string)
 
     
+    '''*****************************************************************************
+    # print logs
+    *****************************************************************************'''
+    #log
+    #log
     table_name1 = outputfilename_custom
     cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{table_name1}%';")
     myresult = cursor.fetchall()
     previewlist_sqltables = [list(a.values())[0] for a in myresult]
     print('list_sqltables (after writing new file)'.ljust(45), previewlist_sqltables) #log
+    #log
+    #log
     
-    '''*****************************************************************************
-    # print logs
-    *****************************************************************************'''
     # print_logs2(path_newoutputfilename)
     print_logs2(path_newoutputsqltablename)
+
 
 
 def run_batch_of_processes_1():

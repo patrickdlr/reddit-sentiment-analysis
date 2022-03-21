@@ -369,23 +369,23 @@ database_name1 = "rsa_db"
 
 
 #create multiple tables in for loops
-for a in range(20):
+# for a in range(20):
     
-    a += 1
-    try:
+#     a += 1
+#     try:
 
-        #create tables
-        if a < 10:
-            cursor.execute(f"CREATE TABLE {database_name1}.{table_name1}00{str(a)}(tutorial_id INT NOT NULL AUTO_INCREMENT,tutorial_title VARCHAR(100) NOT NULL, tutorial_author VARCHAR(40) NOT NULL, submission_date DATE, PRIMARY KEY ( tutorial_id ));")
-        elif a >= 10 and a < 100:
-            cursor.execute(f"CREATE TABLE {database_name1}.{table_name1}0{str(a)}(tutorial_id INT NOT NULL AUTO_INCREMENT,tutorial_title VARCHAR(100) NOT NULL, tutorial_author VARCHAR(40) NOT NULL, submission_date DATE, PRIMARY KEY ( tutorial_id ));")
-        elif a >= 100 and a < 1000:
-            cursor.execute(f"CREATE TABLE {database_name1}.{table_name1}{str(a)}(tutorial_id INT NOT NULL AUTO_INCREMENT,tutorial_title VARCHAR(100) NOT NULL, tutorial_author VARCHAR(40) NOT NULL, submission_date DATE, PRIMARY KEY ( tutorial_id ));")
+#         #create tables
+#         if a < 10:
+#             cursor.execute(f"CREATE TABLE {database_name1}.{table_name1}00{str(a)}(tutorial_id INT NOT NULL AUTO_INCREMENT,tutorial_title VARCHAR(100) NOT NULL, tutorial_author VARCHAR(40) NOT NULL, submission_date DATE, PRIMARY KEY ( tutorial_id ));")
+#         elif a >= 10 and a < 100:
+#             cursor.execute(f"CREATE TABLE {database_name1}.{table_name1}0{str(a)}(tutorial_id INT NOT NULL AUTO_INCREMENT,tutorial_title VARCHAR(100) NOT NULL, tutorial_author VARCHAR(40) NOT NULL, submission_date DATE, PRIMARY KEY ( tutorial_id ));")
+#         elif a >= 100 and a < 1000:
+#             cursor.execute(f"CREATE TABLE {database_name1}.{table_name1}{str(a)}(tutorial_id INT NOT NULL AUTO_INCREMENT,tutorial_title VARCHAR(100) NOT NULL, tutorial_author VARCHAR(40) NOT NULL, submission_date DATE, PRIMARY KEY ( tutorial_id ));")
 
 
     
-    except:
-        continue #ignore existing table, and keep creating new tables
+#     except:
+#         continue #ignore existing table, and keep creating new tables
 
 
 
