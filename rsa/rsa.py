@@ -49,8 +49,11 @@ isPrint_logs = True
 use_sentiment_analysis_and_visualization = False
 
 
-max_output_amount = 10
+max_output_amount = 7
 if max_output_amount < 1: raise ValueError('max output amount cannot be <1')
+
+
+database_name1 = 'rsa_db2'
 
 
 IEX_TOKEN = os.environ.get('IEX_TOKEN')
@@ -129,9 +132,9 @@ def ftn_rsa1():
 def prepare_variables1(outputfilename_custom, max_output_amount):
     '''*****************************************************************************
     # Preparing latest outputfilename_custom filename
-    # Parameter: outputfilename_custom
-    #1 get a list of existing saved file that contains given outputfilename_custom = ok
-    #1.5 warn the user about max_output_amount deleting the oldest, excessive output files
+    # Parameter: outputfilename_custom, max_output_amount
+    #1 get a list of existing saved output file/table that contains given outputfilename_custom = ok
+    #1.5 warn the user about max_output_amount deleting the oldest, excessive output files = ok
     #2 get len = ok
     #3 get new ref number (10 if 10 files there already, 10 if 9 there already, 9 if 8 files there already, 1 if 0, 2 if 1) = ok
     #4 get potential outputfilename_custom filename.. to be created if program finishes) = ok
@@ -187,15 +190,12 @@ def prepare_variables1_sql(outputfilename_custom, max_output_amount):
     '''*****************************************************************************
     # Preparing latest outputfilename_custom filename
     # Parameter: outputfilename_custom, max_output_amount
-    #1 get a list of existing saved tables that contains given outputfilename_custom =
-    # #1.5 warn the user about max_output_amount deleting the oldest, excessive output files = 
-    #2 get len = 
-    #3 get new ref number (10 if 10 files there already, 10 if 9 there already, 9 if 8 files there already, 1 if 0, 2 if 1) = 
-    #4 get potential outputfilename_custom filename.. to be created if program finishes) = 
+    #1 get a list of existing saved output file/table that contains given outputfilename_custom = ok
+    #1.5 warn the user about max_output_amount deleting the oldest, excessive output files = ok
+    #2 get len = ok
+    #3 get new ref number (10 if 10 files there already, 10 if 9 there already, 9 if 8 files there already, 1 if 0, 2 if 1) = ok
+    #4 get potential outputfilename_custom filename.. to be created if program finishes) = ok
     *****************************************************************************'''
-   
-    print('using:', outputfilename_custom)
-    database_name1 = 'rsa_db'
 
 
     #0 - if database doesn't exist yet, create one
@@ -214,7 +214,7 @@ def prepare_variables1_sql(outputfilename_custom, max_output_amount):
     cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{outputfilename_custom}%';")
     result = cursor.fetchall()
     list_sqltables = [list(a.values())[0] for a in result]
-    print('list_sqltables (prepare_variables1_sql) 1', list_sqltables) #log
+    print('list_sqltables (prepare_variables1_sql)'.ljust(45), list_sqltables) #log
 
 
     #1.5 
@@ -657,15 +657,13 @@ def update_previousoutputfilenames_sql(list_sqltables, max_output_amount, output
     #2 Adjust other result files' numbers (ex: 2-10 to 1-9.. up to max_output_amount) = ok
     *****************************************************************************'''
     table_name1 = "result_test_"
-    database_name1 = "rsa_db"
     
 
 
-    print("before: ") #log
     cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{table_name1}%';")
     myresult = cursor.fetchall()
     previewlist_sqltables = [list(a.values())[0] for a in myresult]
-    print('list_sqltables', previewlist_sqltables) #log
+    print('list_sqltables (...)'.ljust(45), previewlist_sqltables) #log
 
 
     #1 new
@@ -682,6 +680,13 @@ def update_previousoutputfilenames_sql(list_sqltables, max_output_amount, output
             # print('list_sqltables', list_sqltables) #log
         else:
             break
+
+
+    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{table_name1}%';")
+    myresult = cursor.fetchall()
+    previewlist_sqltables = [list(a.values())[0] for a in myresult]
+    print('list_sqltables (after del excess)  '.ljust(45), previewlist_sqltables) #log
+
 
 
     #2 new
@@ -702,11 +707,10 @@ def update_previousoutputfilenames_sql(list_sqltables, max_output_amount, output
             continue #skip error about filename already existing
     
 
-    print("after: ") #log
     cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{table_name1}%';")
     myresult = cursor.fetchall()
     previewlist_sqltables = [list(a.values())[0] for a in myresult]
-    print('list_sqltables', previewlist_sqltables) #log
+    print('list_sqltables (after num correction)'.ljust(45), previewlist_sqltables) #log
 
 
 
@@ -787,11 +791,13 @@ def add_newoutputfile_empty(path_newoutputfilename, dt_string):
         writer.writerow(['Date and time: ' + dt_string])
         writer.writerow(['Empty file'])
 
-def add_newsqltable_empty(outputfilename_custom, dt_string):
+def add_newsqltable_empty(path_newoutputfilename, dt_string):
 
-    database_name1 = "rsa_db"
 
-    cursor.execute(f"CREATE TABLE {database_name1}.{outputfilename_custom} (ticker TEXT, date DATE, ticker_id INT AUTO_INCREMENT, PRIMARY KEY (ticker_id));")
+    cursor.execute(f"CREATE TABLE {database_name1}.{path_newoutputfilename} (ticker TEXT, date DATE, ticker_id INT AUTO_INCREMENT, PRIMARY KEY (ticker_id));")
+
+    
+    
 
 
 def add_newoutputfile_old(path_newoutputfilename, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols, dict_symbolmc, dict_symbolprice, dict_symbolpctchange, dict_name):
@@ -1070,6 +1076,13 @@ def main(input, outputfilename_custom, parameter_subs, marketcap_min, marketcap_
 
     update_previousoutputfilenames_sql(list_sqltables, max_output_amount, outputfilename_custom)
     add_newsqltable_empty(path_newoutputsqltablename, dt_string)
+
+    
+    table_name1 = outputfilename_custom
+    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{table_name1}%';")
+    myresult = cursor.fetchall()
+    previewlist_sqltables = [list(a.values())[0] for a in myresult]
+    print('list_sqltables (after writing new file)'.ljust(45), previewlist_sqltables) #log
     
     '''*****************************************************************************
     # print logs
