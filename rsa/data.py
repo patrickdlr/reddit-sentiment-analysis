@@ -332,9 +332,9 @@ def getlist_nasdaq_api(marketcap_min, marketcap_max):
     #### obtain data from api.nasdaq.com
 
     return us_local, mc_local, price_local, pctchange_local, name_local
-def getlist_from_api_temporarysolution():
+def getlist_from_textfile():
      # #TEMPORARY SOLUTION:
-    #print('getlist_from_api_temporarysolution() started')
+    #print('getlist_from_textfile() started')
     
     # way 1, 2
     # us_local = {'AAPL', 'GOOG', 'GOOGL', 'a', 'AMZN', 'MSFT'}
@@ -478,6 +478,10 @@ def getlist_nasdaq_api_chunk(marketcap_min, marketcap_max):
 
     print("empty us_local, etc. variables received and..")
     return us_local, mc_local, price_local, pctchange_local, name_local
+
+
+
+
 
 
 ## includes common words and words used on wsb that are also stock names

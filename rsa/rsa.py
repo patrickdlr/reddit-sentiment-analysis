@@ -28,33 +28,15 @@ nltk.download('wordnet', quiet=True) #what does this do?
 nltk.download('vader_lexicon', quiet=True)
 
 
-# don't use, try polygon instead, try IEX cloud api instead
-# import finnhub
-# # Setup client
-# finnhub_client = finnhub.Client(api_key="f")
-# # Stock candles
-# print('stock symbosl')
-# print(finnhub_client.stock_symbols('US'))
-
 
 '''*****************************************************************************
-# variables of file paths & options & environment variables
+# program options & environment variables
 *****************************************************************************'''
-path_repo = str(pathlib.Path(os.path.dirname(os.path.realpath(__file__)) + '/..'))
-path_csvfiles = '/csvfiles'
-path_repo_and_csvfiles = str(pathlib.Path(path_repo + path_csvfiles))
-
-
 isPrint_logs = True
 use_sentiment_analysis_and_visualization = False
 
-
 max_output_amount = 7
 if max_output_amount < 1: raise ValueError('max output amount cannot be <1')
-
-
-database_name1 = 'rsa_db'
-
 
 IEX_TOKEN = os.environ.get('IEX_TOKEN')
 IEX_TOKEN = F'?token={IEX_TOKEN}' 
@@ -62,21 +44,36 @@ IEX_TOKEN_SANDBOX = os.environ.get('IEX_TOKEN_SANDBOX')
 IEX_TOKEN_SANDBOX = F'?token={IEX_TOKEN_SANDBOX}' 
 
 
+
 '''*****************************************************************************
-# establish connection to mysql database
+# csv (for data storage):
+# variables of csv file paths 
 *****************************************************************************'''
+path_repo = str(pathlib.Path(os.path.dirname(os.path.realpath(__file__)) + '/..'))
+path_csvfiles = '/csvfiles'
+path_repo_and_csvfiles = str(pathlib.Path(path_repo + path_csvfiles))
 
+
+
+'''*****************************************************************************
+# mysql (for data storage):
+# establish connection to mysql database (can't do initialization idk why)
+# program options
+*****************************************************************************'''
 import pymysql
+def connect_to_mysql():
+    connection = pymysql.connect(
+                                host=os.environ.get('MYSQL_HOST'),
+                                user=os.environ.get('MYSQL_USER'),
+                                password=os.environ.get('MYSQL_PASSWORD'),
+                                charset='utf8mb4',
+                                cursorclass=pymysql.cursors.DictCursor)
+    cursor = connection.cursor()
+    return connection, cursor
 
-# Connect to the database
-connection = pymysql.connect(
-                        host=os.environ.get('MYSQL_HOST'),
-                        user=os.environ.get('MYSQL_USER'),
-                        password=os.environ.get('MYSQL_PASSWORD'),
-                        charset='utf8mb4',
-                        cursorclass=pymysql.cursors.DictCursor)
+connection, cursor = connect_to_mysql()
+database_name1 = 'rsa_db'
 
-cursor = connection.cursor()
 
 
 '''*****************************************************************************
@@ -94,8 +91,8 @@ output_filename5 = 'result_4m_'
 
 subs_specificlist1 = ['wallstreetbets']
 subs_specificlist2 = ['Stocks', 'Bitcoin', 'Wallstreetbetsnew', 'PennyStocks', 'algotrading', 'Economics', 'investing', 'Pennystocks', 'StockMarket', 'stocks', 'Investing', 'pennystocks', 'Options', 'AlgoTrading', 'wallstreetbets', 'Cryptocurrency', 'WallStreetBets']
-subs_specificlist3 = ['Finance', 'Stocks', 'Bitcoin', 'SecurityAnalysis', 'Wallstreetbetsnew', 'StocksAndTrading', 'PennystocksDD', 'PennyStocks', 'algotrading', 'babystreetbets', 'Economics', 'ASX_Bets', 'antstreetbets', 'quant', 'weedstocks', 'investing', 'Economy', 'shortinterestbets', 'thetagang', 'Pennystocks', 'InvestingRetards', 'wallstreetbet', 'wallstreetbetsoptions', 'econmonitor', 'Wallstreetwarrior', 'StockMarket', 'Dividends', 'wallstreetbets2', 'Trading', 'WSBAfterHours', 'smallstreetbets', 'retardbets', 'finance', 'InvestmentClub', 'stocks', 'IndianStreetBets', 'wallstreetsidebets', 'Stock_Picks', 'baystreetbets', 'ameisenstrassenwetten', 'wallstreetbets_', 'ISKbets', 'quantfinance', 'stonks', 'GlobalMarkets', 'Investing', 'Daytrading', 'WallStreetbetsELITE', 'RobinHoodPennyStocks', 'DayTrading', 'CanadianInvestor', 'pennystocks', 'Options', 'AlgoTrading', 'MoonBets', 'algorithmictrading', 'farialimabets', 'Wallstreetsilver', 'wallstreetbets', 'Cryptocurrency', 'UKInvesting', 'ausstocks', 'WallStreetBets', 'dividends']
-subs_specificlist4 = ['Bitcoin', 'Cryptocurrency', 'DayTrading']
+subs_specificlist3 = ['Bitcoin', 'Cryptocurrency', 'DayTrading']
+
 subs_membercount_min1 = 0
 subs_membercount_min2 = 600000
 subs_membercount_min3 = 1000000
@@ -112,46 +109,38 @@ marketcap_max5 = 4000000
                   # if top_picks.index(i) >= picks: #testing
                   #     break
 
-# # import resource #linux only
-# # def memory_limit():
-# #     soft, hard = resource.getrlimit(resource.RLIMIT_AS)
-# #     resource.setrlimit(resource.RLIMIT_AS, (int(get_memory() * 1024 / 8), hard))
-# # def get_memory():
-# #     with open('/proc/meminfo', 'r') as mem:
-# #         free_memory = 0
-# #         for i in mem:
-# #             sline = i.split()
-# #             if str(sline[0]) in ('MemFree:', 'Buffers:', 'Cached:'):
-# #                 free_memory += int(sline[1])
-# #     return free_memory
 
 
+'''*****************************************************************************
+# functions
+*****************************************************************************'''
 def ftn_rsa1():
     print('ftn_rsa1() on rsa.py used')
 
-def prepare_variables1(outputfilename_custom, max_output_amount):
+
+def prepare_variables1(outputname_userinput, max_output_amount):
     '''*****************************************************************************
-    # Preparing latest outputfilename_custom filename
-    # Parameter: outputfilename_custom, max_output_amount
-    #1 get a list of existing saved output file/table that contains given outputfilename_custom = ok
+    # Preparing latest outputname_userinput filename
+    # Parameter: outputname_userinput, max_output_amount
+    #1 get a list of existing saved output file/table that contains given outputname_userinput = ok
     #1.5 warn the user about max_output_amount deleting the oldest, excessive output files = ok
     #2 get len = ok
     #3 get new ref number (10 if 10 files there already, 10 if 9 there already, 9 if 8 files there already, 1 if 0, 2 if 1) = ok
-    #4 get potential outputfilename_custom filename.. to be created if program finishes) = ok
+    #4 get potential outputname_userinput filename.. to be created if program finishes) = ok
     *****************************************************************************'''
     # #1
     list_savedcsvfiles = []    
     for a in os.listdir(path_repo_and_csvfiles):
-        #print('checking', a, 'with', outputfilename_custom) #log
-        # if a.startswith(outputfilename_custom + '0') or a.startswith(outputfilename_custom + '1'): not needed
-        if a.startswith(outputfilename_custom):
+        #print('checking', a, 'with', outputname_userinput) #log
+        # if a.startswith(outputname_userinput + '0') or a.startswith(outputname_userinput + '1'): not needed
+        if a.startswith(outputname_userinput):
             list_savedcsvfiles.append(a)
     #print('list_savedcsvfiles (prepare_variables1) 1', list_savedcsvfiles) #log
 
 
     #1.5 
     if len(list_savedcsvfiles) > max_output_amount:
-        for r in range(3): #input doesn't work in multithreading mode
+        for r in range(3): #input() doesn't work in multithreading mode
             print(f"Note: output file count: {len(list_savedcsvfiles)} > max_output_amount: {max_output_amount}")
             a = input("Max # of allowed output files is LOWER than existing output files. Proceeding will limit existing output files by deleting the oldest, excessive output files. Do you want to continue? (Y/N) ")
         
@@ -176,27 +165,29 @@ def prepare_variables1(outputfilename_custom, max_output_amount):
 
     #4
     if new_ref_number < 10:
-        path_newoutputfilename = path_repo_and_csvfiles + "/" + outputfilename_custom + '00' + str(new_ref_number) + '.csv'
+        outputname_generated = path_repo_and_csvfiles + "/" + outputname_userinput + '00' + str(new_ref_number) + '.csv'
     elif new_ref_number >= 10 and new_ref_number < 100: 
-        path_newoutputfilename = path_repo_and_csvfiles + "/" + outputfilename_custom + '0' + str(new_ref_number) + '.csv'
+        outputname_generated = path_repo_and_csvfiles + "/" + outputname_userinput + '0' + str(new_ref_number) + '.csv'
     elif new_ref_number >= 100 and new_ref_number < 1000:   
-        path_newoutputfilename = path_repo_and_csvfiles + "/" + outputfilename_custom + str(new_ref_number) + '.csv'
-    #print('path_newoutputfilename', path_newoutputfilename) #log
+        outputname_generated = path_repo_and_csvfiles + "/" + outputname_userinput + str(new_ref_number) + '.csv'
+    #print('outputname_generated', outputname_generated) #log
 
 
-    return path_newoutputfilename, list_savedcsvfiles
+    return outputname_generated, list_savedcsvfiles
 
-def prepare_variables1_sql(outputfilename_custom, max_output_amount):
+
+def prepare_variables1_sql(outputname_userinput, max_output_amount):
     '''*****************************************************************************
-    # Preparing latest outputfilename_custom filename
-    # Parameter: outputfilename_custom, max_output_amount
-    #1 get a list of existing saved output file/table that contains given outputfilename_custom = ok
+    # Preparing latest outputname_userinput filename
+    # Parameter: outputname_userinput, max_output_amount
+    #1 get a list of existing saved output file/table that contains given outputname_userinput = ok
     #1.5 warn the user about max_output_amount deleting the oldest, excessive output files = ok
     #2 get len = ok
     #3 get new ref number (10 if 10 files there already, 10 if 9 there already, 9 if 8 files there already, 1 if 0, 2 if 1) = ok
-    #4 get potential outputfilename_custom filename.. to be created if program finishes) = ok
+    #4 get potential outputname_userinput filename.. to be created if program finishes) = ok
     *****************************************************************************'''
 
+    
 
     #0 - if database doesn't exist yet, create one
     cursor.execute(f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{database_name1}';")
@@ -209,9 +200,9 @@ def prepare_variables1_sql(outputfilename_custom, max_output_amount):
 
 
 
-    #1 - get a list of existing saved tables that contains given outputfilename_custom
+    #1 - get a list of existing saved tables that contains given outputname_userinput
     list_sqltables = []    
-    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{outputfilename_custom}%';")
+    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{outputname_userinput}%';")
     result = cursor.fetchall()
     list_sqltables = [list(a.values())[0] for a in result]
     print('list_sqltables (prepare_variables1_sql)'.ljust(45), list_sqltables) #log
@@ -219,7 +210,7 @@ def prepare_variables1_sql(outputfilename_custom, max_output_amount):
 
     #1.5 
     # if len(list_sqltables) > max_output_amount:
-    #     for r in range(3): #input doesn't work in multithreading mode
+    #     for r in range(3): #input() doesn't work in multithreading mode
     #         print(f"Note: output file count: {len(list_sqltables)} > max_output_amount: {max_output_amount}")
     #         a = input("Max # of allowed output files is LOWER than existing output files. Proceeding will limit existing output files by deleting the oldest, excessive output files. Do you want to continue? (Y/N) ")
             
@@ -245,16 +236,16 @@ def prepare_variables1_sql(outputfilename_custom, max_output_amount):
 
     #4
     if new_ref_number < 10:
-        path_newoutputsqltablename = outputfilename_custom + '00' + str(new_ref_number)
+        outputname_generated = outputname_userinput + '00' + str(new_ref_number)
     elif new_ref_number >= 10 and new_ref_number < 100: 
-        path_newoutputsqltablename = outputfilename_custom + '0' + str(new_ref_number)
+        outputname_generated = outputname_userinput + '0' + str(new_ref_number)
     elif new_ref_number >= 100 and new_ref_number < 1000:   
-        path_newoutputsqltablename = outputfilename_custom + str(new_ref_number)  
-    print('path_newoutputsqltablename:', path_newoutputsqltablename) #log
+        outputname_generated = outputname_userinput + str(new_ref_number)  
+    print('outputname_generated:', outputname_generated) #log
 
 
 
-    return path_newoutputsqltablename, list_sqltables
+    return outputname_generated, list_sqltables
 
 
 def prepare_variables2(subs, marketcap_max):
@@ -267,15 +258,17 @@ def prepare_variables2(subs, marketcap_max):
         info_marketCap_limit = 'Market Cap min: ' + str(marketcap_max/1000000000) + ' billion(s)'
 
     return dt_string, info_subcount, info_marketCap_limit
-def print_logs1(dt_string, input, path_newoutputfilename, info_subcount, info_marketCap_limit, us):
+
+
+def print_logs1(dt_string, outputname_generated, info_subcount, info_marketCap_limit, us):
     if isPrint_logs == True:
         print("------------------------------------------------------")
         print("Date and Time: " + dt_string + " (Beg main)")
-        print('Input: ' + input)
-        print('Path outputfilename_custom: ' + path_newoutputfilename)
+        print('Path outputname_userinput: ' + outputname_generated)
         print(info_subcount)
         print(info_marketCap_limit)
         print('Number of tickers found (from input): ' + str(len(us)))
+
 
 def data_extractor(reddit, subs, us):
     ##def data_extractor(reddit):
@@ -390,6 +383,8 @@ def data_extractor(reddit, subs, us):
             continue #SKIP SUBreddit that gives off 403 error>..?
 
     return posts, c_analyzed, tickers, titles, a_comments, picks, subs, picks_ayz, info_parameters
+
+
 def print_helper(tickers, picks, c_analyzed, posts, subs, titles, time, start_time):
     '''prints out top tickers, and most mentioned tickers
     
@@ -440,6 +435,8 @@ def print_helper(tickers, picks, c_analyzed, posts, subs, titles, time, start_ti
         top.append("{}: {}".format(i,symbols[i]))
 
     return symbols, times, top, info_ittookxseconds
+
+
 def sentiment_analysis(picks_ayz, a_comments, symbols, us):
     ##def sentiment_analysis(picks_ayz, a_comments, symbols)
     '''analyzes sentiment anaylsis of top tickers
@@ -512,6 +509,8 @@ def sentiment_analysis(picks_ayz, a_comments, symbols, us):
             scores[symbol][key]  = "{pol:.3f}".format(pol=scores[symbol][key])
             
     return scores
+
+
 def visualization(picks_ayz, scores, picks, times, top):
 
     '''prints sentiment analysis
@@ -553,6 +552,8 @@ def visualization(picks_ayz, scores, picks, times, top):
     #plt.show()
 
     uselessvariable1 = 'this is a useless variable to force-hide show plt.show() above when minimizing this function'
+
+
 def print_logs1_5(symbols, scores):
     '''*****************************************************************************
     # Info logs for console program - additional info, optional
@@ -562,7 +563,8 @@ def print_logs1_5(symbols, scores):
         #print("print2: ", scores)
     endingvar = None
 
-def update_previousoutputfilenames(list_savedcsvfiles, max_output_amount, outputfilename_custom):
+
+def update_previousoutputfilenames(list_savedcsvfiles, max_output_amount, outputname_userinput):
     '''*****************************************************************************
     # Manage result files for proper numbering and up-to-date content
     #1 Delete first result file (if result files exceed maximum allowed) = 
@@ -576,31 +578,31 @@ def update_previousoutputfilenames(list_savedcsvfiles, max_output_amount, output
     #         try:
     #             #delete if any (need to trim excessive file, not just first file only)
     #             if num_file == 1:
-    #                 delete_file = path_repo_and_csvfiles + "/" + outputfilename_custom + '001'+'.csv'
+    #                 delete_file = path_repo_and_csvfiles + "/" + outputname_userinput + '001'+'.csv'
 
     #                 os.remove(delete_file)
     #                 #print('deleted ' + delete_file) #log
 
     #             #rename 2-9 to 1-8
     #             if num_file <= 9 and num_file >= 2: 
-    #                 old_filename = path_repo_and_csvfiles + "/" + outputfilename_custom + '00'+str(num_file)+'.csv'
-    #                 new_filename = path_repo_and_csvfiles + "/" + outputfilename_custom + '00'+str(num_file-1)+'.csv'
+    #                 old_filename = path_repo_and_csvfiles + "/" + outputname_userinput + '00'+str(num_file)+'.csv'
+    #                 new_filename = path_repo_and_csvfiles + "/" + outputname_userinput + '00'+str(num_file-1)+'.csv'
 
     #                 os.rename(old_filename, new_filename)
     #                 #print('renamed ' + old_filename + ' to ' + new_filename) #log
             
     #             #rename 10 to 9
     #             elif num_file == 10:
-    #                 old_filename = path_repo_and_csvfiles + "/" + outputfilename_custom + '0'+str(num_file)+'.csv'
-    #                 new_filename = path_repo_and_csvfiles + "/" + outputfilename_custom + '00'+str(num_file-1)+'.csv'
+    #                 old_filename = path_repo_and_csvfiles + "/" + outputname_userinput + '0'+str(num_file)+'.csv'
+    #                 new_filename = path_repo_and_csvfiles + "/" + outputname_userinput + '00'+str(num_file-1)+'.csv'
 
     #                 os.rename(old_filename, new_filename)
     #                 #print('renamed ' + old_filename + ' to ' + new_filename) #log
 
     #             #rename 11-.. to 10-..
     #             elif num_file >= 11:
-    #                 old_filename = path_repo_and_csvfiles + "/" + outputfilename_custom + '0'+str(num_file)+'.csv'
-    #                 new_filename = path_repo_and_csvfiles + "/" + outputfilename_custom + '0'+str(num_file-1)+'.csv'
+    #                 old_filename = path_repo_and_csvfiles + "/" + outputname_userinput + '0'+str(num_file)+'.csv'
+    #                 new_filename = path_repo_and_csvfiles + "/" + outputname_userinput + '0'+str(num_file-1)+'.csv'
 
     #                 os.rename(old_filename, new_filename)
     #                 #print('renamed ' + old_filename + ' to ' + new_filename) #log
@@ -622,8 +624,8 @@ def update_previousoutputfilenames(list_savedcsvfiles, max_output_amount, output
             #refresh list of tables
             list_savedcsvfiles = []    
             for a in os.listdir(path_repo_and_csvfiles):
-                #print('checking', a, 'with', outputfilename_custom) #log
-                if a.startswith(outputfilename_custom):
+                #print('checking', a, 'with', outputname_userinput) #log
+                if a.startswith(outputname_userinput):
                     list_savedcsvfiles.append(a)
             print('list_savedcsvfiles', list_savedcsvfiles) #log
         else:
@@ -639,18 +641,18 @@ def update_previousoutputfilenames(list_savedcsvfiles, max_output_amount, output
             old_filename = pathlib.Path(path_repo_and_csvfiles + "/" + a)
 
             if num_file < 10:
-                new_filename = pathlib.Path(path_repo_and_csvfiles + "/" + outputfilename_custom + '00'+str(num_file)+'.csv')
+                new_filename = pathlib.Path(path_repo_and_csvfiles + "/" + outputname_userinput + '00'+str(num_file)+'.csv')
             elif num_file >= 10 and num_file < 100:
-                new_filename = pathlib.Path(path_repo_and_csvfiles + "/" + outputfilename_custom + '0'+str(num_file)+'.csv')
+                new_filename = pathlib.Path(path_repo_and_csvfiles + "/" + outputname_userinput + '0'+str(num_file)+'.csv')
             elif num_file >= 100 and num_file < 1000:
-                new_filename = pathlib.Path(path_repo_and_csvfiles + "/" + outputfilename_custom +str(num_file)+'.csv')
+                new_filename = pathlib.Path(path_repo_and_csvfiles + "/" + outputname_userinput +str(num_file)+'.csv')
             
             os.rename(old_filename, new_filename)
         except FileNotFoundError:
             continue
 
 
-def update_previousoutputfilenames_sql(list_sqltables, max_output_amount, outputfilename_custom):
+def update_previousoutputfilenames_sql(list_sqltables, max_output_amount, outputname_userinput):
     '''*****************************************************************************
     # Manage result files for proper numbering and up-to-date content
     #1 Delete first excessive result files (if result files exceed maximum allowed) = ok
@@ -711,7 +713,6 @@ def update_previousoutputfilenames_sql(list_sqltables, max_output_amount, output
     myresult = cursor.fetchall()
     previewlist_sqltables = [list(a.values())[0] for a in myresult]
     print('list_sqltables (after num correction)'.ljust(45), previewlist_sqltables) #log
-
 
 
 def reformatandaddinfoto_symbolsdict(symbols):
@@ -784,19 +785,15 @@ def reformatandaddinfoto_symbolsdict(symbols):
     # return symbols
 
     endingvar = None
-
-
-
-
     
 
-def add_newoutputfile_old(path_newoutputfilename, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols, dict_symbolmc, dict_symbolprice, dict_symbolpctchange, dict_name):
+def add_newoutputfile_old(outputname_generated, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols, dict_symbolmc, dict_symbolprice, dict_symbolpctchange, dict_name):
     '''*****************************************************************************
-    #1 Take the latest outputfilename_custom filename
+    #1 Take the latest outputname_userinput filename
     #2 Write Reddit Sentinment Analysis result onto it
     *****************************************************************************'''
-    #print('writing to ' + path_newoutputfilename) #log
-    with open(path_newoutputfilename, 'w', newline='') as f:
+    #print('writing to ' + outputname_generated) #log
+    with open(outputname_generated, 'w', newline='') as f:
         writer = csv.writer(f)
 
         writer.writerow(['Date and time: ' + dt_string])
@@ -859,19 +856,21 @@ def add_newoutputfile_old(path_newoutputfilename, dt_string, info_subcount, info
         #csv.writer(...).writerows(my_dict.items())
         endingvar = None
 
-def add_newoutputfile_empty(path_newoutputfilename, dt_string):
-    with open(path_newoutputfilename, 'w', newline='') as f:
+
+def add_newoutputfile_empty(outputname_generated, dt_string):
+    with open(outputname_generated, 'w', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(['Date and time: ' + dt_string])
         writer.writerow(['Empty file'])
 
-def add_newoutputfile(path_newoutputfilename, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols):
+
+def add_newoutputfile(outputname_generated, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols):
     '''*****************************************************************************
-    #1 Take the latest outputfilename_custom filename
+    #1 Take the latest outputname_userinput filename
     #2 Write Reddit Sentinment Analysis result onto it
     *****************************************************************************'''
-    #print('writing to ' + path_newoutputfilename) #log
-    with open(path_newoutputfilename, 'w', newline='') as f:
+    #print('writing to ' + outputname_generated) #log
+    with open(outputname_generated, 'w', newline='') as f:
         writer = csv.writer(f)
 
         writer.writerow(['Date and time: ' + dt_string])
@@ -938,13 +937,13 @@ def add_newoutputfile(path_newoutputfilename, dt_string, info_subcount, info_mar
         endingvar = None
 
 
+def add_newsqltable_empty(outputname_generated, dt_string):
+    cursor.execute(f"CREATE TABLE {database_name1}.{outputname_generated} (Number INT, Symbols TEXT, Mentions INT, marketCap TEXT, latestPric TEXT, changePerc TEXT, peRatio TEXT, companyNam TEXT, PRIMARY KEY (Number));")
 
-def add_newsqltable_empty(path_newoutputsqltablename, dt_string):
-    cursor.execute(f"CREATE TABLE {database_name1}.{path_newoutputsqltablename} (Number INT, Symbols TEXT, Mentions INT, marketCap TEXT, latestPric TEXT, changePerc TEXT, peRatio TEXT, companyNam TEXT, PRIMARY KEY (Number));")
 
-def add_newsqltable(path_newoutputsqltablename, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols):
+def add_newsqltable(outputname_generated, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols):
     
-    cursor.execute(f"CREATE TABLE {database_name1}.{path_newoutputsqltablename} (Number INT, Symbols TEXT, Mentions INT, marketCap TEXT, latestPric TEXT, changePerc TEXT, peRatio TEXT, companyNam TEXT, PRIMARY KEY (Number));")
+    cursor.execute(f"CREATE TABLE {database_name1}.{outputname_generated} (Number INT, Symbols TEXT, Mentions INT, marketCap TEXT, latestPric TEXT, changePerc TEXT, peRatio TEXT, companyNam TEXT, PRIMARY KEY (Number));")
 
     info_tickernumber = 1
     for k,v in symbols.items():
@@ -961,50 +960,59 @@ def add_newsqltable(path_newoutputsqltablename, dt_string, info_subcount, info_m
         coldata_10 = "%10s" % v.get('peRatio')
         coldata_11 = "%10s" % v.get('companyName')
 
-        cursor.execute(f"INSERT INTO {database_name1}.{path_newoutputsqltablename} (Number, Symbols, Mentions, marketCap, latestPric, changePerc, peRatio, companyNam) VALUES ('{coldata_00}', '{coldata_01}', '{coldata_02}', '{coldata_07}', '{coldata_08}', '{coldata_09}', '{coldata_10}', '{coldata_11}');" )
+        cursor.execute(f"INSERT INTO {database_name1}.{outputname_generated} (Number, Symbols, Mentions, marketCap, latestPric, changePerc, peRatio, companyNam) VALUES ('{coldata_00}', '{coldata_01}', '{coldata_02}', '{coldata_07}', '{coldata_08}', '{coldata_09}', '{coldata_10}', '{coldata_11}');" )
 
         info_tickernumber += 1
         
     connection.commit()
 
-def print_logs2(path_newoutputfilename):
+
+def print_logs2(outputname_generated):
     dt_string = datetime.now().strftime("%m/%d/%Y %H:%M")
     print("Date and Time: " + dt_string + " (End main)")
-    print('Created and wrote ' + path_newoutputfilename)
+    print('Created and wrote ' + outputname_generated)
     print()
 
 
-def main(input, outputfilename_custom, parameter_subs, marketcap_min, marketcap_max):
+def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_max):
+    '''*****************************************************************************
+    # refresh/reestablish connection to mysql database
+    *****************************************************************************'''
+    connection, cursor = connect_to_mysql()
+
+
     '''*****************************************************************************
     # prepare variables - (for updating output files/adding new output file)
     *****************************************************************************'''
-    #path_newoutputfilename, list_savedcsvfiles = prepare_variables1(outputfilename_custom, max_output_amount)
+    #outputname_generated, list_savedcsvfiles = prepare_variables1(outputname_userinput, max_output_amount)
 
-    path_newoutputsqltablename, list_sqltables = prepare_variables1_sql(outputfilename_custom, max_output_amount)
+    outputname_generated, list_sqltables = prepare_variables1_sql(outputname_userinput, max_output_amount)
 
 
     '''*****************************************************************************
     #1 get list of subreddits (from csv file) - (for Reddit Sentinment Analysis)
     *****************************************************************************'''
-    #1 
-    # ####way 2 - just use custom sub list
-    # PROBLEM_1: CAUSES MEMORY ISSUE ON AWS unless avoiding reading/extracting a csv file - SEEMS TO WORK NOW
     subs = getlist_subreddits(parameter_subs)
-    # #TEMPORARY SOLUTION:
-    #subs = ['wallstreetbets']
-
 
     '''*****************************************************************************
     #2 get list of tickers and detailed info from an api - (for Reddit Sentinment Analysis)
     *****************************************************************************'''
-    # us = getlist_nasdaq_csvfile(input) # or
+    # us = getlist_nasdaq_csvfile(input)
+
+
     # #PROBLEM_2: CAUSES MEMORY ISSUE ON AWS..
     # us, dict_symbolmc, dict_symbolprice, dict_symbolpctchange, dict_name = getlist_nasdaq_api(marketcap_min, marketcap_max) 
+
+
     # #TEMPORARY SOLUTION 1
-    #us, dict_symbolmc, dict_symbolprice, dict_symbolpctchange, dict_name = getlist_from_api_temporarysolution() 
-    us = getlist_from_api_temporarysolution()
+    #us, dict_symbolmc, dict_symbolprice, dict_symbolpctchange, dict_name = getlist_from_textfile() 
+    us = getlist_from_textfile()
+
+
     # #TEMPORARY SOLUTION 2
     #us, dict_symbolmc, dict_symbolprice, dict_symbolpctchange, dict_name = getlist_nasdaq_api_chunk(marketcap_min, marketcap_max)  
+
+    
     # #TEMPORARY SOLUTION 3 (abandoned)
     #url = "https://api.nasdaq.com/api/screener/stocks?tableonly=true&limit=10"
     #download_file_separate(url) 
@@ -1015,15 +1023,16 @@ def main(input, outputfilename_custom, parameter_subs, marketcap_min, marketcap_
     # prepare variables - (for adding content to new output file), print logs
     *****************************************************************************'''
     dt_string, info_subcount, info_marketCap_limit = prepare_variables2(subs, marketcap_max)
-    # print_logs1(dt_string, input, path_newoutputfilename, info_subcount, info_marketCap_limit, us) #only for csv files
+
+    print_logs1(dt_string, outputname_generated, info_subcount, info_marketCap_limit, us) #only for csv files
     
 
     '''*****************************************************************************
     # Reddit Sentiment Analysis
     *****************************************************************************'''
     start_time = time.time()
-    # reddit client
 
+    # open reddit client
     reddit = praw.Reddit(
         user_agent=os.environ.get('reddit_user_agent'), 
         client_id=os.environ.get('reddit_client_id'), 
@@ -1032,7 +1041,7 @@ def main(input, outputfilename_custom, parameter_subs, marketcap_min, marketcap_
         password=os.environ.get('reddit_password')
     )
 
-    #not working??
+    #not working..
     # reddit = praw.Reddit(
     #     user_agent, 
     #     client_id, 
@@ -1041,12 +1050,21 @@ def main(input, outputfilename_custom, parameter_subs, marketcap_min, marketcap_
     #     password
     # )
     
-    posts, c_analyzed, tickers, titles, a_comments, picks, subs, picks_ayz, info_parameters = data_extractor(reddit, subs, us); print('data_extractor finished')
-    symbols, times, top, info_ittookxseconds = print_helper(tickers, picks, c_analyzed, posts, subs, titles, time, start_time); print('print_helper finished')
+
+    posts, c_analyzed, tickers, titles, a_comments, picks, subs, picks_ayz, info_parameters = data_extractor(reddit, subs, us)
+    print('data_extractor finished')
+
+    symbols, times, top, info_ittookxseconds = print_helper(tickers, picks, c_analyzed, posts, subs, titles, time, start_time)
+    print('print_helper finished')
+
     #PROBLEM_3: Seems to not work on AWS's due to excessive memory usage...
     if use_sentiment_analysis_and_visualization == True:
-        scores = sentiment_analysis(picks_ayz, a_comments, symbols, us); print('sentiment_analysis finished') 
-        visualization(picks_ayz, scores, picks, times, top); print('visualization finished') 
+        scores = sentiment_analysis(picks_ayz, a_comments, symbols, us)
+        print('sentiment_analysis finished') 
+
+        visualization(picks_ayz, scores, picks, times, top)
+        print('visualization finished') 
+
         print_logs1_5(symbols, scores)
 
 
@@ -1054,8 +1072,8 @@ def main(input, outputfilename_custom, parameter_subs, marketcap_min, marketcap_
     # update output file
     *****************************************************************************'''
     # might be causing MEMORYERROR - probably not
-    # update_previousoutputfilenames(list_savedcsvfiles, max_output_amount, outputfilename_custom)
-    update_previousoutputfilenames_sql(list_sqltables, max_output_amount, outputfilename_custom)
+    # update_previousoutputfilenames(list_savedcsvfiles, max_output_amount, outputname_userinput)
+    update_previousoutputfilenames_sql(list_sqltables, max_output_amount, outputname_userinput)
 
 
     '''*****************************************************************************
@@ -1067,37 +1085,27 @@ def main(input, outputfilename_custom, parameter_subs, marketcap_min, marketcap_
     # dict_symbolprice = {'AAPL': '$175.x', 'MSFT': '$334.x', 'GOOG': '$2974.x', 'GOOGL': '$2963.x', 'AMZN': '$3523.x'}
     # dict_symbolpctchange = {'AAPL': '2.x%', 'MSFT': '0.x%', 'GOOG': '0.x%', 'GOOGL': '0.x%', 'AMZN': '-0.x%'}
     # dict_name = {'AAPL': ' Apple Inc. Common Stock', 'MSFT': ' Microsoft Corporation Common Stock', 'GOOG': ' Alphabet Inc. Class C Capital Stock', 'GOOGL': ' Alphabet Inc. Class A Common Stock', 'AMZN': ' Amazon.com, Inc. Common Stock'}    
-    # add_newoutputfile_old(path_newoutputfilename, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols, dict_symbolmc, dict_symbolprice, dict_symbolpctchange, dict_name)
+    # add_newoutputfile_old(outputname_generated, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols, dict_symbolmc, dict_symbolprice, dict_symbolpctchange, dict_name)
 
     # #OR
     # might be causing MEMORYERROR - testing, probbably not
     reformatandaddinfoto_symbolsdict(symbols)
-    print('reformatted symbols dict')
-    # #### add ticker filter by market cap (reformat again) 
-    
-    # num1 = 0
-    # for k,v in symbols.items():
-    #     print(k,v)
-    #     num1 += 1
-    #     if num1 > 5: break
-    # might be causing MEMORYERROR - ?
-    
+        
 
     '''*****************************************************************************
     # add new output file
     *****************************************************************************'''
-    # add_newoutputfile(path_newoutputfilename, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols)
+    # add_newoutputfile(outputname_generated, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols)
     
-    add_newsqltable(path_newoutputsqltablename, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols)
+    add_newsqltable(outputname_generated, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols)
 
 
     '''*****************************************************************************
     # test empty update/create files, typically done without rsa analysis - optional
     *****************************************************************************'''
-    # might be causing MEMORYERROR - probbably not
-    # add_newoutputfile_empty(path_newoutputfilename, dt_string)
+    # add_newoutputfile_empty(outputname_generated, dt_string)
 
-    # add_newsqltable_empty(path_newoutputsqltablename, dt_string)
+    # add_newsqltable_empty(outputname_generated, dt_string)
 
     
     '''*****************************************************************************
@@ -1105,7 +1113,7 @@ def main(input, outputfilename_custom, parameter_subs, marketcap_min, marketcap_
     *****************************************************************************'''
     #log
     #log
-    table_name1 = outputfilename_custom
+    table_name1 = outputname_userinput
     cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{table_name1}%';")
     myresult = cursor.fetchall()
     previewlist_sqltables = [list(a.values())[0] for a in myresult]
@@ -1113,17 +1121,23 @@ def main(input, outputfilename_custom, parameter_subs, marketcap_min, marketcap_
     #log
     #log
     
-    # print_logs2(path_newoutputfilename)
-    print_logs2(path_newoutputsqltablename)
+    # print_logs2(outputname_generated)
+    print_logs2(outputname_generated)
+
+    '''*****************************************************************************
+    # close connection mysql
+    *****************************************************************************'''
+    connection.close()
 
 
 
 def run_batch_of_processes_1():
-    #TO-DO: simplify run_batch_of.. and see if it still supports scheduling.. not important!
     start_time = time.time()
-
+    
+    '''*****************************************************************************
     # create separate process for each function 
     # should reinitialize those process variables if starting them multiple time (in while loop or schedule module)
+    *****************************************************************************'''
     # way 1 - local machine
     # process_1 = Process(target=main, args=(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)) 
     # process_2 = Process(target=main, args=(input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3))
@@ -1134,19 +1148,24 @@ def run_batch_of_processes_1():
     process_2 = Process(target=main, args=(input_api_nasdaq, 'result_test2_', subs_specificlist1, marketcap_min1, marketcap_max3))
     process_3 = Process(target=main, args=(input_api_nasdaq, 'result_test3_', subs_specificlist1, marketcap_min1, marketcap_max4))
 
+
+    '''*****************************************************************************
     # starts the processes
+    *****************************************************************************'''
     process_1.start(); process_2.start(); process_3.start()
 
+
+    '''*****************************************************************************
     # wait till they all finish and close them
+    *****************************************************************************'''
     process_1.join(); process_2.join(); process_3.join()
+
 
     print("--- %s seconds ---" % (time.time() - start_time));print()
 
 
 
 if __name__ == '__main__':    
-    print('main program started')
-
 
     '''*****************************************************************************
     # WAY 4 - run program by multiprocessing once (for aws with cron jobs i guess)
@@ -1160,24 +1179,12 @@ if __name__ == '__main__':
     # Parameter: program_number
     *****************************************************************************'''
     #print("WAY 0 rsa.py used")
+    
     #main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1) ##stable
     #main(input_api_nasdaq, output_filename0, subs_membercount_min1, marketcap_min1, marketcap_max1) ##linux/window test large
-    main(input_api_nasdaq, output_filename0, subs_specificlist1, marketcap_min1, marketcap_max4) ##linux/window test small
+    #main(input_api_nasdaq, output_filename0, subs_specificlist1, marketcap_min1, marketcap_max4) ##linux/window test small
     #main(input_api_nasdaq, output_filename0, subs_membercount_min2, marketcap_min1, marketcap_max4) ##linux test - testing getlist_subreddits - WORKING, needs TESTING
     #main(input_api_nasdaq, output_filename0, subs_specificlist1, marketcap_min1, marketcap_max4)
-
-    '''*****************************************************************************
-    # WAY 0.1 - run program normally with "memory limiter" which only work in Linux
-    # Parameter: program_number
-    *****************************************************************************'''
-    #"memory limiter"
-    # memory_limit() # Limitates maximun memory usage to half
-    # try:
-    #     main(input_api_nasdaq, output_filename0, subs_specificlist1, marketcap_min1, marketcap_max1) ##test
-    #     print('memory_limitoooo, main() finished')
-    # except MemoryError:
-    #     sys.stderr.write('\n\nERROR: Memory Exception\n')
-    #     sys.exit(1)
 
 
     '''*****************************************************************************
@@ -1186,51 +1193,51 @@ if __name__ == '__main__':
     *****************************************************************************'''
     #####schedule.every().day.at("01:00")
     #####schedule.every().minute.at(":08").do(main, csvfile6)
-    ###idea = main(input, outputfilename_custom, marketcap, 0, subreddit members, etc.)
+    ###idea = main(input, outputname_userinput, marketcap, 0, subreddit members, etc.)
     ###idea = main(input_csvfile, savedtickers4b, subs_membercount_min1, 4,000,000,000, member counts)
     ###idea = main(input_csvfile, savedtickers200b, subs_membercount_min1, 200,000,000,000, 200,000)
 
-    #program_number = 1
-    #schedule.every().day.at("23:55").do(nltk.download, 'wordnet')
+    program_number = 3
+    schedule.every().day.at("23:55").do(nltk.download, 'wordnet')
 
-    #if program_number == 1:
-    #    #program one
-    #    #main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_max1) ##
-    #    schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_max1)
-    #    #schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_max1)
-    #    schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_max1)
-    #    schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_max1)
-    #    schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_max1)
-    #    schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_max1)
-    #    schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_max1)
-    #    #schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_max1)
+    if program_number == 1:
+       #program one
+       main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1) ##
+       schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+       schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+       schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+       schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+       schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+       schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+       schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+       schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
 
-    #if program_number == 2:
-    #    #program two
-    #    #main(input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_max3)
-    #    schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_max3)
-    #    #schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_max3)
-    #    schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_max3)
-    #    schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_max3)
-    #    schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_max3)
-    #    #schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_max3)
-    #    schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_max3)
-    #    #schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_max3)
+    if program_number == 2:
+       #program two
+       #main(input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+       schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+       #schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+       schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+       schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+       schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+       #schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+       schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+       #schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
        
-    #if program_number == 3:
-    #    #program three
-    #    #main(input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_max4)
-    #    schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_max4)
-    #    #schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_max4)
-    #    schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_max4)
-    #    schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_max4)
-    #    schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_max4)
-    #    #schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_max4)
-    #    schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_max4)
-    #    #schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_max4)
+    if program_number == 3:
+       #program three
+       main(input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
+       schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
+       #schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
+       schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
+       schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
+       schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
+       #schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
+       schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
+       #schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
 
-    ##while True:
-    # #   schedule.run_pending()
+    while True:
+      schedule.run_pending()
     
 
     '''*****************************************************************************
@@ -1259,15 +1266,15 @@ if __name__ == '__main__':
     '''*****************************************************************************
     # WAY 2 - run program by fixed interval (old)
     *****************************************************************************'''
-    #for n in range(20):
-    #    ##main(csvfile1)
-    #    main(csvfile6, 'savedtickerstest')
-    #    time.sleep(3600)
+    # print("using way 2 - run program by fixed intervals (old)")
+    # for n in range(20):
+    #     main(input_api_nasdaq, output_filename0, subs_specificlist1, marketcap_min1, marketcap_max4) ##linux/window test small
+    #     time.sleep(60)
 
-    #input("Press any key to continue . . . (1) ")
-    #input("Press any key to continue . . . (2) ")
-    #input("Press any key to continue . . . (3) ")
-    #input("Press any key to continue . . . (4) ")
+    # input("Press any key to continue . . . (1) ")
+    # input("Press any key to continue . . . (2) ")
+    # input("Press any key to continue . . . (3) ")
+    # input("Press any key to continue . . . (4) ")
 
 
     '''*****************************************************************************
@@ -1289,9 +1296,8 @@ if __name__ == '__main__':
     # while True:   
     #    schedule.run_pending()
 
+    
     endingvar = None
 
-    
-    
     
     

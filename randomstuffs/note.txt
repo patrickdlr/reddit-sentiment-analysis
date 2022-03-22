@@ -25,6 +25,7 @@ clean up reddit sentiment anlaysis (reduce global variables?) - ip
 -implement "if csvfile input used or if api input used": (csvfile vs input_api_nasdaq)
 -simplify dictionaries and lists? when implementing sql database.
 -make aws run multiple python scripts - try with sys.path.insert("") on application.py (use sys module to make this program find & import modules from another directory/folder - ignored for now
+-#TO-DO: simplify run_batch_of.. and see if it still supports scheduling.. not important!
 
 
 Immediate to-do's:
