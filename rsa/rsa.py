@@ -11,21 +11,32 @@ the most mentioned ticker is heavily downvoted, but you can change that in upvot
 Author: github:asad70
 ****************************************************************************'''
 #!/usr/bin/python
+
+#imports by asad70
+import praw
 from data import *
-import os, sys, csv, praw, requests, time, pandas as pd, string, schedule, pathlib, pprint, urllib.request, en_core_web_sm, matplotlib.pyplot as plt, squarify, ast
-import emoji    # removes emojis
-import re   # removes links
-from multiprocessing import Process
-from threading import Thread
-from prawcore.exceptions import Forbidden
-from datetime import datetime
-import nltk
+import time
+import pandas as pd
+import matplotlib.pyplot as plt
+import squarify
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from nltk.corpus import stopwords
 from nltk.tokenize import RegexpTokenizer
 from nltk.stem import WordNetLemmatizer
+import emoji    # removes emojis
+import re   # removes links
+import en_core_web_sm
+import string
+
+#imports (to build flask app with csv/mysql database, api data collection, schedules, threading, multiprocessing) by me
+import nltk
 nltk.download('wordnet', quiet=True) #what does this do?
 nltk.download('vader_lexicon', quiet=True)
+from prawcore.exceptions import Forbidden
+from multiprocessing import Process
+from threading import Thread
+from datetime import datetime
+import os, sys, csv, requests, schedule, pathlib, pprint, urllib.request, ast
 
 
 
@@ -35,7 +46,7 @@ nltk.download('vader_lexicon', quiet=True)
 isPrint_logs = True
 use_sentiment_analysis_and_visualization = False
 
-max_output_amount = 7
+max_output_amount = 3
 if max_output_amount < 1: raise ValueError('max output amount cannot be <1')
 
 IEX_TOKEN = os.environ.get('IEX_TOKEN')
@@ -43,6 +54,8 @@ IEX_TOKEN = F'?token={IEX_TOKEN}'
 IEX_TOKEN_SANDBOX = os.environ.get('IEX_TOKEN_SANDBOX')
 IEX_TOKEN_SANDBOX = F'?token={IEX_TOKEN_SANDBOX}' 
 
+storagetype = "csv"
+write_empty_newoutputfile = True
 
 
 '''*****************************************************************************
@@ -54,13 +67,13 @@ path_csvfiles = '/csvfiles'
 path_repo_and_csvfiles = str(pathlib.Path(path_repo + path_csvfiles))
 
 
-
 '''*****************************************************************************
 # mysql (for data storage):
 # establish connection to mysql database (can't do initialization idk why)
 # program options
 *****************************************************************************'''
 import pymysql
+
 def connect_to_mysql():
     connection = pymysql.connect(
                                 host=os.environ.get('MYSQL_HOST'),
@@ -71,8 +84,9 @@ def connect_to_mysql():
     cursor = connection.cursor()
     return connection, cursor
 
-connection, cursor = connect_to_mysql()
-database_name1 = 'rsa_db'
+if storagetype == "mysql":
+    connection, cursor = connect_to_mysql()
+    database_name1 = 'rsa_db'
 
 
 
@@ -80,7 +94,6 @@ database_name1 = 'rsa_db'
 # Parameters for main function
 *****************************************************************************'''
 input_api_nasdaq = 'api.nasdaq.com'
-# input_csvfile2 = path_csvfiles + '/nasdaq_screener_1631232074452_all1.csv'
 
 output_filename0 = 'result_test_'
 output_filename1 = 'result_all_'
@@ -110,7 +123,6 @@ marketcap_max5 = 4000000
                   #     break
 
 
-
 '''*****************************************************************************
 # functions
 *****************************************************************************'''
@@ -118,7 +130,7 @@ def ftn_rsa1():
     print('ftn_rsa1() on rsa.py used')
 
 
-def prepare_variables1(outputname_userinput, max_output_amount):
+def prepare_variables1_csv_and_sql(storagetype, outputname_userinput, max_output_amount):
     '''*****************************************************************************
     # Preparing latest outputname_userinput filename
     # Parameter: outputname_userinput, max_output_amount
@@ -128,22 +140,43 @@ def prepare_variables1(outputname_userinput, max_output_amount):
     #3 get new ref number (10 if 10 files there already, 10 if 9 there already, 9 if 8 files there already, 1 if 0, 2 if 1) = ok
     #4 get potential outputname_userinput filename.. to be created if program finishes) = ok
     *****************************************************************************'''
-    # #1
-    list_savedcsvfiles = []    
-    for a in os.listdir(path_repo_and_csvfiles):
-        #print('checking', a, 'with', outputname_userinput) #log
-        # if a.startswith(outputname_userinput + '0') or a.startswith(outputname_userinput + '1'): not needed
-        if a.startswith(outputname_userinput):
-            list_savedcsvfiles.append(a)
-    #print('list_savedcsvfiles (prepare_variables1) 1', list_savedcsvfiles) #log
+
+    #1
+    if storagetype == "mysql":
+        # 0 - if database doesn't exist yet, create one
+        cursor.execute(f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{database_name1}';")
+        result = cursor.fetchall()
+        if result == () or result == None: 
+            print(f"No such database exists. Creating database {database_name1}...")
+            cursor.execute(f"CREATE DATABASE {database_name1}")
+            print(f"Successfully created {database_name1}")
+
+        # 1 - get a list of existing saved tables that contains given outputname_userinput
+        list_existingoutputfiles1 = []    
+        cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '{outputname_userinput}%';")
+        result = cursor.fetchall()
+        list_existingoutputfiles1 = [list(a.values())[0] for a in result]
+        #print('list_existingoutputfiles1 (prepare_variables1_csv_and_sql)'.ljust(55), list_existingoutputfiles1) #log
+
+    if storagetype == "csv":
+        # 1
+        list_existingoutputfiles1 = []
+          
+        for a in os.listdir(path_repo_and_csvfiles):
+            #print('checking', a, 'with', outputname_userinput) #log
+            # if a.startswith(outputname_userinput + '0') or a.startswith(outputname_userinput + '1'): not needed
+            if a.startswith(outputname_userinput):
+                list_existingoutputfiles1.append(a)
+
+        #print('list_existingoutputfiles1 (prepare_variables1_csv) 1', list_existingoutputfiles1) #log
 
 
-    #1.5 
-    if len(list_savedcsvfiles) > max_output_amount:
+    # 1.5 
+    if len(list_existingoutputfiles1) > max_output_amount:
         for r in range(3): #input() doesn't work in multithreading mode
-            print(f"Note: output file count: {len(list_savedcsvfiles)} > max_output_amount: {max_output_amount}")
+            print(f"Note: output file count: {len(list_existingoutputfiles1)} > max_output_amount: {max_output_amount}")
             a = input("Max # of allowed output files is LOWER than existing output files. Proceeding will limit existing output files by deleting the oldest, excessive output files. Do you want to continue? (Y/N) ")
-        
+            
             if a.lower() == "y" or a.lower() == "yes":
                 break
             elif a.lower() == "n" or a.lower() == "no" or r >= 2:
@@ -154,98 +187,35 @@ def prepare_variables1(outputname_userinput, max_output_amount):
                 continue
 
 
-
-    #2,3
-    if len(list_savedcsvfiles) >= max_output_amount:
+    # 2,3
+    if len(list_existingoutputfiles1) >= max_output_amount:
         new_ref_number = max_output_amount
     else:
-        new_ref_number = len(list_savedcsvfiles) + 1
+        new_ref_number = len(list_existingoutputfiles1) + 1
     #print('new_ref_number: ', new_ref_number) #log
-
-
-    #4
-    if new_ref_number < 10:
-        outputname_generated = path_repo_and_csvfiles + "/" + outputname_userinput + '00' + str(new_ref_number) + '.csv'
-    elif new_ref_number >= 10 and new_ref_number < 100: 
-        outputname_generated = path_repo_and_csvfiles + "/" + outputname_userinput + '0' + str(new_ref_number) + '.csv'
-    elif new_ref_number >= 100 and new_ref_number < 1000:   
-        outputname_generated = path_repo_and_csvfiles + "/" + outputname_userinput + str(new_ref_number) + '.csv'
-    #print('outputname_generated', outputname_generated) #log
-
-
-    return outputname_generated, list_savedcsvfiles
-
-
-def prepare_variables1_sql(outputname_userinput, max_output_amount):
-    '''*****************************************************************************
-    # Preparing latest outputname_userinput filename
-    # Parameter: outputname_userinput, max_output_amount
-    #1 get a list of existing saved output file/table that contains given outputname_userinput = ok
-    #1.5 warn the user about max_output_amount deleting the oldest, excessive output files = ok
-    #2 get len = ok
-    #3 get new ref number (10 if 10 files there already, 10 if 9 there already, 9 if 8 files there already, 1 if 0, 2 if 1) = ok
-    #4 get potential outputname_userinput filename.. to be created if program finishes) = ok
-    *****************************************************************************'''
-
     
 
-    #0 - if database doesn't exist yet, create one
-    cursor.execute(f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{database_name1}';")
-    result = cursor.fetchall()
-    if result == () or result == None: 
-        cursor.execute(f"CREATE DATABASE {database_name1}")
-        print(result, '= None, \nCreated Database', database_name1)
-    #else:
-        #print(result, '= not None, \nDatabase already exists:', database_name1)
+    # 4
+    if storagetype == "mysql":
+        if new_ref_number < 10:
+            outputname_generated = outputname_userinput + '00' + str(new_ref_number)
+        elif new_ref_number >= 10 and new_ref_number < 100: 
+            outputname_generated = outputname_userinput + '0' + str(new_ref_number)
+        elif new_ref_number >= 100 and new_ref_number < 1000:   
+            outputname_generated = outputname_userinput + str(new_ref_number)  
+        #print('outputname_generated:', outputname_generated) #log
 
+    if storagetype == "csv":
+        if new_ref_number < 10:
+            outputname_generated = path_repo_and_csvfiles + "/" + outputname_userinput + '00' + str(new_ref_number) + '.csv'
+        elif new_ref_number >= 10 and new_ref_number < 100: 
+            outputname_generated = path_repo_and_csvfiles + "/" + outputname_userinput + '0' + str(new_ref_number) + '.csv'
+        elif new_ref_number >= 100 and new_ref_number < 1000:   
+            outputname_generated = path_repo_and_csvfiles + "/" + outputname_userinput + str(new_ref_number) + '.csv'
+        #print('outputname_generated', outputname_generated) #log
+    
 
-
-    #1 - get a list of existing saved tables that contains given outputname_userinput
-    list_sqltables = []    
-    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{outputname_userinput}%';")
-    result = cursor.fetchall()
-    list_sqltables = [list(a.values())[0] for a in result]
-    print('list_sqltables (prepare_variables1_sql)'.ljust(45), list_sqltables) #log
-
-
-    #1.5 
-    # if len(list_sqltables) > max_output_amount:
-    #     for r in range(3): #input() doesn't work in multithreading mode
-    #         print(f"Note: output file count: {len(list_sqltables)} > max_output_amount: {max_output_amount}")
-    #         a = input("Max # of allowed output files is LOWER than existing output files. Proceeding will limit existing output files by deleting the oldest, excessive output files. Do you want to continue? (Y/N) ")
-            
-    #         if a.lower() == "y" or a.lower() == "yes":
-    #             break
-    #         elif a.lower() == "n" or a.lower() == "no" or r >= 2:
-    #             print("User chose to not continue.. stopping the program now. Review the 'max output amount' variable.")
-    #             sys.exit()
-    #             #os._exit() #exits the whole process i think.
-    #         else:
-    #             continue
-
-
-
-    #2,3
-    if len(list_sqltables) >= max_output_amount:
-        new_ref_number = max_output_amount
-    else:
-        new_ref_number = len(list_sqltables) + 1
-    print('new_ref_number: ', new_ref_number) #log
-
-
-
-    #4
-    if new_ref_number < 10:
-        outputname_generated = outputname_userinput + '00' + str(new_ref_number)
-    elif new_ref_number >= 10 and new_ref_number < 100: 
-        outputname_generated = outputname_userinput + '0' + str(new_ref_number)
-    elif new_ref_number >= 100 and new_ref_number < 1000:   
-        outputname_generated = outputname_userinput + str(new_ref_number)  
-    print('outputname_generated:', outputname_generated) #log
-
-
-
-    return outputname_generated, list_sqltables
+    return outputname_generated, list_existingoutputfiles1
 
 
 def prepare_variables2(subs, marketcap_max):
@@ -558,162 +528,132 @@ def print_logs1_5(symbols, scores):
     '''*****************************************************************************
     # Info logs for console program - additional info, optional
     *****************************************************************************'''
-    #if isPrint_logs == True:
-        #print("print1.1: ", symbols, "n\\") #aka tickers, mention count, dict pair of tickers and mentions
-        #print("print2: ", scores)
+    if isPrint_logs == True:
+        print("print1.1: ", symbols, "n\\") #aka tickers, mention count, dict pair of tickers and mentions
+        print("print2: ", scores)
     endingvar = None
 
 
-def update_previousoutputfilenames(list_savedcsvfiles, max_output_amount, outputname_userinput):
-    '''*****************************************************************************
-    # Manage result files for proper numbering and up-to-date content
-    #1 Delete first result file (if result files exceed maximum allowed) = 
-    #2 Adjust other result files' numbers (ex: 2-10 to 1-9) = 
-    *****************************************************************************'''
-
-    #1-2 (old)
-    # if len(list_savedcsvfiles) >= max_output_amount:
-    #     for a in list_savedcsvfiles:
-    #         num_file = list_savedcsvfiles.index(a) + 1 #adjust from 0 to 1
-    #         try:
-    #             #delete if any (need to trim excessive file, not just first file only)
-    #             if num_file == 1:
-    #                 delete_file = path_repo_and_csvfiles + "/" + outputname_userinput + '001'+'.csv'
-
-    #                 os.remove(delete_file)
-    #                 #print('deleted ' + delete_file) #log
-
-    #             #rename 2-9 to 1-8
-    #             if num_file <= 9 and num_file >= 2: 
-    #                 old_filename = path_repo_and_csvfiles + "/" + outputname_userinput + '00'+str(num_file)+'.csv'
-    #                 new_filename = path_repo_and_csvfiles + "/" + outputname_userinput + '00'+str(num_file-1)+'.csv'
-
-    #                 os.rename(old_filename, new_filename)
-    #                 #print('renamed ' + old_filename + ' to ' + new_filename) #log
-            
-    #             #rename 10 to 9
-    #             elif num_file == 10:
-    #                 old_filename = path_repo_and_csvfiles + "/" + outputname_userinput + '0'+str(num_file)+'.csv'
-    #                 new_filename = path_repo_and_csvfiles + "/" + outputname_userinput + '00'+str(num_file-1)+'.csv'
-
-    #                 os.rename(old_filename, new_filename)
-    #                 #print('renamed ' + old_filename + ' to ' + new_filename) #log
-
-    #             #rename 11-.. to 10-..
-    #             elif num_file >= 11:
-    #                 old_filename = path_repo_and_csvfiles + "/" + outputname_userinput + '0'+str(num_file)+'.csv'
-    #                 new_filename = path_repo_and_csvfiles + "/" + outputname_userinput + '0'+str(num_file-1)+'.csv'
-
-    #                 os.rename(old_filename, new_filename)
-    #                 #print('renamed ' + old_filename + ' to ' + new_filename) #log
-
-    #         except FileNotFoundError:
-    #             continue
-
-    #if len(list_savedcsvfiles) < max_output_amount: 
-        #correct naming
-
-
-    #1 new
-    while True:
-        if len(list_savedcsvfiles) >= max_output_amount:            
-            #delete first table
-            delete_file = path_repo_and_csvfiles + "/" + list_savedcsvfiles[0]
-            os.remove(delete_file)
-
-            #refresh list of tables
-            list_savedcsvfiles = []    
-            for a in os.listdir(path_repo_and_csvfiles):
-                #print('checking', a, 'with', outputname_userinput) #log
-                if a.startswith(outputname_userinput):
-                    list_savedcsvfiles.append(a)
-            print('list_savedcsvfiles', list_savedcsvfiles) #log
-        else:
-            break
-
-    
-
-    
-    #2 new
-    for a in list_savedcsvfiles:
-        try:
-            num_file = list_savedcsvfiles.index(a) + 1 #adjust from 0 to 1
-            old_filename = pathlib.Path(path_repo_and_csvfiles + "/" + a)
-
-            if num_file < 10:
-                new_filename = pathlib.Path(path_repo_and_csvfiles + "/" + outputname_userinput + '00'+str(num_file)+'.csv')
-            elif num_file >= 10 and num_file < 100:
-                new_filename = pathlib.Path(path_repo_and_csvfiles + "/" + outputname_userinput + '0'+str(num_file)+'.csv')
-            elif num_file >= 100 and num_file < 1000:
-                new_filename = pathlib.Path(path_repo_and_csvfiles + "/" + outputname_userinput +str(num_file)+'.csv')
-            
-            os.rename(old_filename, new_filename)
-        except FileNotFoundError:
-            continue
-
-
-def update_previousoutputfilenames_sql(list_sqltables, max_output_amount, outputname_userinput):
+def deleteandrename_existingoutputfiles_csv_and_sql(storagetype, list_existingoutputfiles1, max_output_amount, outputname_userinput):
     '''*****************************************************************************
     # Manage result files for proper numbering and up-to-date content
     #1 Delete first excessive result files (if result files exceed maximum allowed) = ok
     #2 Adjust other result files' numbers (ex: 2-10 to 1-9.. up to max_output_amount) = ok
     *****************************************************************************'''
-    table_name1 = "result_test_"
+    # log
+    if storagetype == "mysql":
+        cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{outputname_userinput}%';")
+        myresult = cursor.fetchall()
+        previewlist_existingoutputfiles1 = [list(a.values())[0] for a in myresult]
+        print('list_existingoutputfiles1 (...)'.ljust(55), previewlist_existingoutputfiles1) #log
+
+    if storagetype == "csv":
+        previewlist_existingoutputfiles1 = []    
+        for a in os.listdir(path_repo_and_csvfiles):
+            if a.startswith(outputname_userinput):
+                previewlist_existingoutputfiles1.append(a)
+        print('list_existingoutputfiles1 (...)'.ljust(55), previewlist_existingoutputfiles1) #log
     
+    
+    #1
+    if storagetype == "mysql": 
+        while True:
+            if len(list_existingoutputfiles1) >= max_output_amount:           
+                #delete first table - sql
+                cursor.execute(f"DROP TABLE {database_name1}.{list_existingoutputfiles1[0]};")
+
+                #refresh list of tables - sql
+                list_existingoutputfiles1 = []
+                cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{outputname_userinput}%';")
+                myresult = cursor.fetchall()
+                list_existingoutputfiles1 = [list(a.values())[0] for a in myresult]
+                    
+            else:
+                break
+
+    if storagetype == "csv": 
+        while True:
+            if len(list_existingoutputfiles1) >= max_output_amount:
+                #delete first table - csv
+                delete_file = path_repo_and_csvfiles + "/" + list_existingoutputfiles1[0]
+                os.remove(delete_file)
+
+                #refresh list of tables - csv
+                list_existingoutputfiles1 = []    
+                for a in os.listdir(path_repo_and_csvfiles):
+                    #print('checking', a, 'with', outputname_userinput) #log
+                    if a.startswith(outputname_userinput):
+                        list_existingoutputfiles1.append(a)
+                
+            else:
+                break
 
 
-    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{table_name1}%';")
-    myresult = cursor.fetchall()
-    previewlist_sqltables = [list(a.values())[0] for a in myresult]
-    print('list_sqltables (...)'.ljust(45), previewlist_sqltables) #log
+    #log
+    if storagetype == "mysql":
+        cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{outputname_userinput}%';")
+        myresult = cursor.fetchall()
+        previewlist_existingoutputfiles1 = [list(a.values())[0] for a in myresult]
+        print('list_existingoutputfiles1 (after del excess)  '.ljust(55), previewlist_existingoutputfiles1) #log
+
+    if storagetype == "csv":
+        previewlist_existingoutputfiles1 = []    
+        for a in os.listdir(path_repo_and_csvfiles):
+            if a.startswith(outputname_userinput):
+                previewlist_existingoutputfiles1.append(a)
+        print('list_existingoutputfiles1 (after del excess)  '.ljust(55), previewlist_existingoutputfiles1) #log
 
 
-    #1 new
-    while True:
-        if len(list_sqltables) >= max_output_amount:
-            #delete first table - sql
-            cursor.execute(f"DROP TABLE {database_name1}.{list_sqltables[0]};")
+     #2
+    if storagetype == "mysql":
+        for a in list_existingoutputfiles1:
+            try:
+                num_file = list_existingoutputfiles1.index(a) + 1 #adjust from 0 to 1
+                old_filename = f"{database_name1}.{a}"
 
-            #refresh list of tables - sql
-            list_sqltables = []
-            cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{table_name1}%';")
-            myresult = cursor.fetchall()
-            list_sqltables = [list(a.values())[0] for a in myresult]
-            # print('list_sqltables', list_sqltables) #log
-        else:
-            break
-
-
-    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{table_name1}%';")
-    myresult = cursor.fetchall()
-    previewlist_sqltables = [list(a.values())[0] for a in myresult]
-    print('list_sqltables (after del excess)  '.ljust(45), previewlist_sqltables) #log
-
-
-
-    #2 new
-    for a in list_sqltables:
-        try:
-            num_file = list_sqltables.index(a) + 1 #adjust from 0 to 1
-            old_filename = f"{database_name1}.{a}"
-
-            if num_file < 10:
-                new_filename = f"{database_name1}.{table_name1}00{num_file}"
-            elif num_file >= 10 and num_file < 100:
-                new_filename = f"{database_name1}.{table_name1}0{num_file}"
-            elif num_file >= 100 and num_file < 1000:
-                new_filename = f"{database_name1}.{table_name1}{num_file}"
+                if num_file < 10:
+                    new_filename = f"{database_name1}.{outputname_userinput}00{num_file}"
+                elif num_file >= 10 and num_file < 100:
+                    new_filename = f"{database_name1}.{outputname_userinput}0{num_file}"
+                elif num_file >= 100 and num_file < 1000:
+                    new_filename = f"{database_name1}.{outputname_userinput}{num_file}"
             
-            cursor.execute(f"RENAME TABLE {old_filename} TO {new_filename};")
-        except:
-            continue #skip error about filename already existing
+                cursor.execute(f"RENAME TABLE {old_filename} TO {new_filename};")
+            except:
+                continue #skip FileNotFoundError (csv) or error about filename already existing (sql)
     
+    if storagetype == "csv":
+        for a in list_existingoutputfiles1:
+            try:            
+                num_file = list_existingoutputfiles1.index(a) + 1 #adjust from 0 to 1
+                old_filename = pathlib.Path(path_repo_and_csvfiles + "/" + a)
 
-    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{table_name1}%';")
-    myresult = cursor.fetchall()
-    previewlist_sqltables = [list(a.values())[0] for a in myresult]
-    print('list_sqltables (after num correction)'.ljust(45), previewlist_sqltables) #log
+                if num_file < 10:
+                    new_filename = pathlib.Path(path_repo_and_csvfiles + "/" + outputname_userinput + '00'+str(num_file)+'.csv')
+                elif num_file >= 10 and num_file < 100:
+                    new_filename = pathlib.Path(path_repo_and_csvfiles + "/" + outputname_userinput + '0'+str(num_file)+'.csv')
+                elif num_file >= 100 and num_file < 1000:
+                    new_filename = pathlib.Path(path_repo_and_csvfiles + "/" + outputname_userinput +str(num_file)+'.csv')
 
+                os.rename(old_filename, new_filename)
+            except:
+                continue #skip FileNotFoundError (csv) or error about filename already existing (sql)
+
+
+    #log
+    if storagetype == "mysql":
+        cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{outputname_userinput}%';")
+        myresult = cursor.fetchall()
+        previewlist_existingoutputfiles1 = [list(a.values())[0] for a in myresult]
+        print('list_existingoutputfiles1 (after num correction)'.ljust(55), previewlist_existingoutputfiles1) #log
+    
+    if storagetype == "csv":
+        previewlist_existingoutputfiles1 = []    
+        for a in os.listdir(path_repo_and_csvfiles):
+            if a.startswith(outputname_userinput):
+                previewlist_existingoutputfiles1.append(a)
+        print('list_existingoutputfiles1 (after num correction)'.ljust(55), previewlist_existingoutputfiles1) #log
+            
 
 def reformatandaddinfoto_symbolsdict(symbols):
     #print(symbols)
@@ -785,208 +725,157 @@ def reformatandaddinfoto_symbolsdict(symbols):
     # return symbols
 
     endingvar = None
-    
 
-def add_newoutputfile_old(outputname_generated, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols, dict_symbolmc, dict_symbolprice, dict_symbolpctchange, dict_name):
+
+def add_newoutputfile_csv_and_sql_empty(storagetype, outputname_generated, dt_string):
     '''*****************************************************************************
-    #1 Take the latest outputname_userinput filename
-    #2 Write Reddit Sentinment Analysis result onto it
+    #1 Create new output file, using outputname_generated
+    #2 Insert result and additional info
     *****************************************************************************'''
-    #print('writing to ' + outputname_generated) #log
-    with open(outputname_generated, 'w', newline='') as f:
-        writer = csv.writer(f)
+    if storagetype == "mysql":
+        #1
+        cursor.execute(f"CREATE TABLE {database_name1}.{outputname_generated} (Number INT, Symbols TEXT, Mentions INT, marketCap TEXT, latestPric TEXT, changePerc TEXT, peRatio TEXT, companyNam TEXT, PRIMARY KEY (Number));")
+   
+    
+    if storagetype == "csv":
+        #1
+        if write_empty_newoutputfile == True:
+            with open(outputname_generated, 'w', newline='') as f:
+                writer = csv.writer(f)
+                writer.writerow(['Date and time: ' + dt_string])
+                writer.writerow(['Empty file'])
 
-        writer.writerow(['Date and time: ' + dt_string])
-        writer.writerow([info_subcount])
-        writer.writerow([info_marketCap_limit])
-        writer.writerow([info_parameters])
-        writer.writerow([info_ittookxseconds])
-        writer.writerow(['number of tickers: ' + str(len(symbols))])
-        writer.writerow([])
+def add_newoutputfile_csv_and_sql(storagetype, outputname_generated, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols):
+    '''*****************************************************************************
+    #1 Create new output file, using outputname_generated
+    #2 Insert result and additional info
+    *****************************************************************************'''
+    if storagetype == "mysql":
+        #1
+        cursor.execute(f"CREATE TABLE {database_name1}.{outputname_generated} (Number INT, Symbols TEXT, Mentions INT, marketCap TEXT, latestPric TEXT, changePerc TEXT, peRatio TEXT, companyNam TEXT, PRIMARY KEY (Number));")
 
-        col_00 = '%-10s' % 'Number'
-        col_01 = "%-10s" % 'Symbols'
-        col_02 = "%10s" % 'Mentions'
-        # col_03 = "%10s" % 'Bearish'
-        # col_04 = "%10s" % 'Neutral'
-        # col_05 = "%10s" % 'Bullish'
-        # col_06 = "%10s" % 'Total/Comp'
-        col_07 = "%10s" % 'MarketCap'
-        col_08 = "%10s" % 'Price'
-        col_09 = "%10s" % 'PctChange'
-        col_10 = "%10s" % 'Name'
-        col_11 = "%10s" % 'ShortFloat'
-        #writer.writerow([col_00,col_01,col_02,col_03,col_04,col_05,col_06,col_07,col_08,col_09,col_10,col_11])
-        writer.writerow([col_00,col_01,col_02,col_07,col_08,col_09,col_10,col_11])
-
-
+        #2
         info_tickernumber = 1
         for k,v in symbols.items():
-            try:
-                colx_00 = '%-10s' % info_tickernumber
-                k_ = "%-10s" % k
-                v_ = "%10s" % v
-                # senti = scores.get(k)
-                # neg_ = "%10s" % senti.get('neg')
-                # neu_ = "%10s" % senti.get('neu')
-                # pos_ = "%10s" % senti.get('pos')
-                # compound_ = "%10s" % senti.get('compound')
-                mc_ = "%10s" % dict_symbolmc.get(k)
-                price_ = "%10s" % dict_symbolprice.get(k)
-                pctchange_ = "%10s" % dict_symbolpctchange.get(k)
-                name_ = dict_name.get(k)
+            coldata_00 = '%-10s' % info_tickernumber
+            coldata_01 = "%-10s" % k
+            coldata_02 = "%10s" % v.get('mentions')
+            # coldata_03 = "%10s" % senti.get('neg')
+            # coldata_04 = "%10s" % senti.get('neu')
+            # coldata_05 = "%10s" % senti.get('pos')
+            # coldata_06 = "%10s" % senti.get('compound')
+            coldata_07 = "%10s" % v.get('marketCap')
+            coldata_08 = "%10s" % v.get('latestPrice')
+            coldata_09 = "%10s" % v.get('changePercent')
+            coldata_10 = "%10s" % v.get('peRatio')
+            coldata_11 = "%10s" % v.get('companyName')
 
-                #writer.writerow([colx_00, k_, v_, neg_, neu_, pos_, compound_,mc_, price_, pctchange_, name_])
-                writer.writerow([colx_00, k_, v_,mc_, price_, pctchange_, name_])
+            cursor.execute(f"INSERT INTO {database_name1}.{outputname_generated} (Number, Symbols, Mentions, marketCap, latestPric, changePerc, peRatio, companyNam) VALUES ('{coldata_00}', '{coldata_01}', '{coldata_02}', '{coldata_07}', '{coldata_08}', '{coldata_09}', '{coldata_10}', '{coldata_11}');" )
 
-                info_tickernumber += 1
-
-            except AttributeError:
-                #colx_00 = '%-10s' % info_tickernumber
-                #k_ = "%-10s" % k
-                #v_ = "%10s" % v
-                #neg_ = "%10s" % 'X'
-                #neu_ = "%10s" % 'X'
-                #pos_ = "%10s" % 'X'
-                #compound_ = "%10s" % 'X'
-                #writer.writerow([colx_00, k_, v_, neg_, neu_, pos_, compound_,mc_, price_, pctchange_, name_])
-                #writer.writerow([colx_00, k_, v_,mc_, price_, pctchange_, name_])
-                continue
-
-        #csv.writer(...).writerows(my_dict.items())
-        endingvar = None
-
-
-def add_newoutputfile_empty(outputname_generated, dt_string):
-    with open(outputname_generated, 'w', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow(['Date and time: ' + dt_string])
-        writer.writerow(['Empty file'])
-
-
-def add_newoutputfile(outputname_generated, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols):
-    '''*****************************************************************************
-    #1 Take the latest outputname_userinput filename
-    #2 Write Reddit Sentinment Analysis result onto it
-    *****************************************************************************'''
-    #print('writing to ' + outputname_generated) #log
-    with open(outputname_generated, 'w', newline='') as f:
-        writer = csv.writer(f)
-
-        writer.writerow(['Date and time: ' + dt_string])
-        writer.writerow([info_subcount])
-        writer.writerow([info_marketCap_limit])
-        writer.writerow([info_parameters])
-        writer.writerow([info_ittookxseconds])
-        writer.writerow(['number of tickers: ' + str(len(symbols))])
-        writer.writerow([])
-
-        maxlength_string = 10
-        col_00 = '%-10s' % 'Number'[:maxlength_string]
-        col_01 = "%-10s" % 'Symbols'[:maxlength_string]
-        col_02 = "%10s" % 'Mentions'[:maxlength_string]
-        # col_03 = "%10s" % 'Bearish'[:maxlength_string]
-        # col_04 = "%10s" % 'Neutral'[:maxlength_string]
-        # col_05 = "%10s" % 'Bullish'[:maxlength_string]
-        # col_06 = "%10s" % 'Total/Comp'[:maxlength_string]
-        col_07 = "%10s" % 'marketCap'[:maxlength_string]
-        col_08 = "%10s" % 'latestPrice'[:maxlength_string]
-        col_09 = "%10s" % 'changePercent'[:maxlength_string]
-        col_10 = "%10s" % 'peRatio'[:maxlength_string]
-        col_11 = "%10s" % 'companyName'[:maxlength_string]
-        
-        #writer.writerow([col_00,col_01,col_02,col_03,col_04,col_05,col_06,col_07,col_08,col_09,col_10,col_11])
-        writer.writerow([col_00,col_01,col_02,
-                         col_07,col_08,col_09,col_10,col_11])
-        
-
-        info_tickernumber = 1
-        for k,v in symbols.items():
-            try:
-                coldata_00 = '%-10s' % info_tickernumber
-                coldata_01 = "%-10s" % k
-                coldata_02 = "%10s" % v.get('mentions')
-                # coldata_03 = "%10s" % senti.get('neg')
-                # coldata_04 = "%10s" % senti.get('neu')
-                # coldata_05 = "%10s" % senti.get('pos')
-                # coldata_06 = "%10s" % senti.get('compound')
-                coldata_07 = "%10s" % v.get('marketCap')
-                coldata_08 = "%10s" % v.get('latestPrice')
-                coldata_09 = "%10s" % v.get('changePercent')
-                coldata_10 = "%10s" % v.get('peRatio')
-                coldata_11 = "%10s" % v.get('companyName')
-
-                writer.writerow([coldata_00, coldata_01, coldata_02,
-                                 coldata_07, coldata_08, coldata_09, coldata_10, coldata_11])
-
-                info_tickernumber += 1
-
-            except AttributeError:
-                #colx_00 = '%-10s' % info_tickernumber
-                #k_ = "%-10s" % k
-                #v_ = "%10s" % v
-                #neg_ = "%10s" % 'X'
-                #neu_ = "%10s" % 'X'
-                #pos_ = "%10s" % 'X'
-                #compound_ = "%10s" % 'X'
-                #writer.writerow([colx_00, k_, v_, neg_, neu_, pos_, compound_,mc_, price_, pctchange_, name_])
-                #writer.writerow([colx_00, k_, v_,mc_, price_, pctchange_, name_])
-                continue
-
-        #csv.writer(...).writerows(my_dict.items())
-        endingvar = None
-
-
-def add_newsqltable_empty(outputname_generated, dt_string):
-    cursor.execute(f"CREATE TABLE {database_name1}.{outputname_generated} (Number INT, Symbols TEXT, Mentions INT, marketCap TEXT, latestPric TEXT, changePerc TEXT, peRatio TEXT, companyNam TEXT, PRIMARY KEY (Number));")
-
-
-def add_newsqltable(outputname_generated, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols):
+            info_tickernumber += 1
+        connection.commit()
     
-    cursor.execute(f"CREATE TABLE {database_name1}.{outputname_generated} (Number INT, Symbols TEXT, Mentions INT, marketCap TEXT, latestPric TEXT, changePerc TEXT, peRatio TEXT, companyNam TEXT, PRIMARY KEY (Number));")
+    
+    if storagetype == "csv":
+        #1 and 2 (should try separating into 1 and 2)
+        with open(outputname_generated, 'w', newline='') as f:
+            writer = csv.writer(f)
 
-    info_tickernumber = 1
-    for k,v in symbols.items():
-        coldata_00 = '%-10s' % info_tickernumber
-        coldata_01 = "%-10s" % k
-        coldata_02 = "%10s" % v.get('mentions')
-        # coldata_03 = "%10s" % senti.get('neg')
-        # coldata_04 = "%10s" % senti.get('neu')
-        # coldata_05 = "%10s" % senti.get('pos')
-        # coldata_06 = "%10s" % senti.get('compound')
-        coldata_07 = "%10s" % v.get('marketCap')
-        coldata_08 = "%10s" % v.get('latestPrice')
-        coldata_09 = "%10s" % v.get('changePercent')
-        coldata_10 = "%10s" % v.get('peRatio')
-        coldata_11 = "%10s" % v.get('companyName')
+            writer.writerow(['Date and time: ' + dt_string])
+            writer.writerow([info_subcount])
+            writer.writerow([info_marketCap_limit])
+            writer.writerow([info_parameters])
+            writer.writerow([info_ittookxseconds])
+            writer.writerow(['number of tickers: ' + str(len(symbols))])
+            writer.writerow([])
 
-        cursor.execute(f"INSERT INTO {database_name1}.{outputname_generated} (Number, Symbols, Mentions, marketCap, latestPric, changePerc, peRatio, companyNam) VALUES ('{coldata_00}', '{coldata_01}', '{coldata_02}', '{coldata_07}', '{coldata_08}', '{coldata_09}', '{coldata_10}', '{coldata_11}');" )
+            maxlength_string = 10
+            col_00 = '%-10s' % 'Number'[:maxlength_string]
+            col_01 = "%-10s" % 'Symbols'[:maxlength_string]
+            col_02 = "%10s" % 'Mentions'[:maxlength_string]
+            # col_03 = "%10s" % 'Bearish'[:maxlength_string]
+            # col_04 = "%10s" % 'Neutral'[:maxlength_string]
+            # col_05 = "%10s" % 'Bullish'[:maxlength_string]
+            # col_06 = "%10s" % 'Total/Comp'[:maxlength_string]
+            col_07 = "%10s" % 'marketCap'[:maxlength_string]
+            col_08 = "%10s" % 'latestPrice'[:maxlength_string]
+            col_09 = "%10s" % 'changePercent'[:maxlength_string]
+            col_10 = "%10s" % 'peRatio'[:maxlength_string]
+            col_11 = "%10s" % 'companyName'[:maxlength_string]
+            
+            #writer.writerow([col_00,col_01,col_02,col_03,col_04,col_05,col_06,col_07,col_08,col_09,col_10,col_11])
+            writer.writerow([col_00,col_01,col_02,
+                            col_07,col_08,col_09,col_10,col_11])
+            
 
-        info_tickernumber += 1
-        
-    connection.commit()
+            info_tickernumber = 1
+            for k,v in symbols.items():
+                try:
+                    coldata_00 = '%-10s' % info_tickernumber
+                    coldata_01 = "%-10s" % k
+                    coldata_02 = "%10s" % v.get('mentions')
+                    # coldata_03 = "%10s" % senti.get('neg')
+                    # coldata_04 = "%10s" % senti.get('neu')
+                    # coldata_05 = "%10s" % senti.get('pos')
+                    # coldata_06 = "%10s" % senti.get('compound')
+                    coldata_07 = "%10s" % v.get('marketCap')
+                    coldata_08 = "%10s" % v.get('latestPrice')
+                    coldata_09 = "%10s" % v.get('changePercent')
+                    coldata_10 = "%10s" % v.get('peRatio')
+                    coldata_11 = "%10s" % v.get('companyName')
+
+                    writer.writerow([coldata_00, coldata_01, coldata_02,
+                                    coldata_07, coldata_08, coldata_09, coldata_10, coldata_11])
+
+                    info_tickernumber += 1
+
+                except AttributeError:
+                    #colx_00 = '%-10s' % info_tickernumber
+                    #k_ = "%-10s" % k
+                    #v_ = "%10s" % v
+                    #neg_ = "%10s" % 'X'
+                    #neu_ = "%10s" % 'X'
+                    #pos_ = "%10s" % 'X'
+                    #compound_ = "%10s" % 'X'
+                    #writer.writerow([colx_00, k_, v_, neg_, neu_, pos_, compound_,mc_, price_, pctchange_, name_])
+                    #writer.writerow([colx_00, k_, v_,mc_, price_, pctchange_, name_])
+                    continue
 
 
-def print_logs2(outputname_generated):
+def print_logs2(outputname_userinput, outputname_generated):
+    if storagetype == "mysql":
+        cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{outputname_userinput}%';")
+        myresult = cursor.fetchall()
+        previewlist_existingoutputfiles1 = [list(a.values())[0] for a in myresult]
+        print('list_existingoutputfiles1 (after writing new file)'.ljust(55), previewlist_existingoutputfiles1) #log
+
+    if storagetype == "csv":
+        previewlist_existingoutputfiles1 = []    
+        for a in os.listdir(path_repo_and_csvfiles):
+            if a.startswith(outputname_userinput):
+                previewlist_existingoutputfiles1.append(a)
+        print('list_existingoutputfiles1 (after writing new file)'.ljust(55), previewlist_existingoutputfiles1) #log
+
+
     dt_string = datetime.now().strftime("%m/%d/%Y %H:%M")
     print("Date and Time: " + dt_string + " (End main)")
     print('Created and wrote ' + outputname_generated)
     print()
 
 
+
 def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_max):
     '''*****************************************************************************
-    # refresh/reestablish connection to mysql database
+    # refresh/reestablish connection to mysql database = ok
     *****************************************************************************'''
-    connection, cursor = connect_to_mysql()
+    if storagetype == "mysql":
+        connection, cursor = connect_to_mysql()
 
 
     '''*****************************************************************************
-    # prepare variables - (for updating output files/adding new output file)
+    # prepare variables - (for deleting/renaming existing output files/adding new output file)
     *****************************************************************************'''
-    #outputname_generated, list_savedcsvfiles = prepare_variables1(outputname_userinput, max_output_amount)
-
-    outputname_generated, list_sqltables = prepare_variables1_sql(outputname_userinput, max_output_amount)
+    outputname_generated, list_existingoutputfiles1 = prepare_variables1_csv_and_sql(storagetype, outputname_userinput, max_output_amount)
 
 
     '''*****************************************************************************
@@ -1020,8 +909,10 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
 
 
     '''*****************************************************************************
-    # prepare variables - (for adding content to new output file), print logs
+    # prepare additional-info variables - (put additional-info into new output file)
+    # print logs
     *****************************************************************************'''
+
     dt_string, info_subcount, info_marketCap_limit = prepare_variables2(subs, marketcap_max)
 
     print_logs1(dt_string, outputname_generated, info_subcount, info_marketCap_limit, us) #only for csv files
@@ -1032,102 +923,85 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
     *****************************************************************************'''
     start_time = time.time()
 
-    # open reddit client
-    reddit = praw.Reddit(
-        user_agent=os.environ.get('reddit_user_agent'), 
-        client_id=os.environ.get('reddit_client_id'), 
-        client_secret=os.environ.get('reddit_client_secret'),
-        username=os.environ.get('reddit_username'), 
-        password=os.environ.get('reddit_password')
-    )
+    if write_empty_newoutputfile == False:
+        # open reddit client
+        reddit = praw.Reddit(
+            user_agent=os.environ.get('reddit_user_agent'), 
+            client_id=os.environ.get('reddit_client_id'), 
+            client_secret=os.environ.get('reddit_client_secret'),
+            username=os.environ.get('reddit_username'), 
+            password=os.environ.get('reddit_password')
+        )
 
-    #not working..
-    # reddit = praw.Reddit(
-    #     user_agent, 
-    #     client_id, 
-    #     client_secret, 
-    #     username, 
-    #     password
-    # )
-    
+        #not working..
+        # reddit = praw.Reddit(
+        #     user_agent, 
+        #     client_id, 
+        #     client_secret, 
+        #     username, 
+        #     password
+        # )
+        
+        posts, c_analyzed, tickers, titles, a_comments, picks, subs, picks_ayz, info_parameters = data_extractor(reddit, subs, us)
+        print('data_extractor finished')
 
-    posts, c_analyzed, tickers, titles, a_comments, picks, subs, picks_ayz, info_parameters = data_extractor(reddit, subs, us)
-    print('data_extractor finished')
+        symbols, times, top, info_ittookxseconds = print_helper(tickers, picks, c_analyzed, posts, subs, titles, time, start_time)
+        print('print_helper finished')
 
-    symbols, times, top, info_ittookxseconds = print_helper(tickers, picks, c_analyzed, posts, subs, titles, time, start_time)
-    print('print_helper finished')
+        #PROBLEM_3: Seems to not work on AWS's due to excessive memory usage...
+        if use_sentiment_analysis_and_visualization == True:
+            scores = sentiment_analysis(picks_ayz, a_comments, symbols, us)
+            print('sentiment_analysis finished') 
 
-    #PROBLEM_3: Seems to not work on AWS's due to excessive memory usage...
-    if use_sentiment_analysis_and_visualization == True:
-        scores = sentiment_analysis(picks_ayz, a_comments, symbols, us)
-        print('sentiment_analysis finished') 
+            visualization(picks_ayz, scores, picks, times, top)
+            print('visualization finished') 
 
-        visualization(picks_ayz, scores, picks, times, top)
-        print('visualization finished') 
-
-        print_logs1_5(symbols, scores)
+            print_logs1_5(symbols, scores)
 
 
     '''*****************************************************************************
     # update output file
     *****************************************************************************'''
     # might be causing MEMORYERROR - probably not
-    # update_previousoutputfilenames(list_savedcsvfiles, max_output_amount, outputname_userinput)
-    update_previousoutputfilenames_sql(list_sqltables, max_output_amount, outputname_userinput)
+    deleteandrename_existingoutputfiles_csv_and_sql(storagetype, list_existingoutputfiles1, max_output_amount, outputname_userinput)
+    
 
 
     '''*****************************************************************************
     # fix/update symbol dictionary with more info
     *****************************************************************************'''
-    # might be causing MEMORYERROR - ?
-    # dict_symbolmc = {'AAPL': '$3035.xB', 'MSFT': '$2514.xB', 'GOOG': '$1974.xB', 'GOOGL': '$1967.xB', 'AMZN': '$1786.xB'}
-    # dict_symbolmc = {}
-    # dict_symbolprice = {'AAPL': '$175.x', 'MSFT': '$334.x', 'GOOG': '$2974.x', 'GOOGL': '$2963.x', 'AMZN': '$3523.x'}
-    # dict_symbolpctchange = {'AAPL': '2.x%', 'MSFT': '0.x%', 'GOOG': '0.x%', 'GOOGL': '0.x%', 'AMZN': '-0.x%'}
-    # dict_name = {'AAPL': ' Apple Inc. Common Stock', 'MSFT': ' Microsoft Corporation Common Stock', 'GOOG': ' Alphabet Inc. Class C Capital Stock', 'GOOGL': ' Alphabet Inc. Class A Common Stock', 'AMZN': ' Amazon.com, Inc. Common Stock'}    
-    # add_newoutputfile_old(outputname_generated, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols, dict_symbolmc, dict_symbolprice, dict_symbolpctchange, dict_name)
+    if write_empty_newoutputfile == False:
+        # might be causing MEMORYERROR - ?
+        # dict_symbolmc = {'AAPL': '$3035.xB', 'MSFT': '$2514.xB', 'GOOG': '$1974.xB', 'GOOGL': '$1967.xB', 'AMZN': '$1786.xB'}
+        # dict_symbolmc = {}
+        # dict_symbolprice = {'AAPL': '$175.x', 'MSFT': '$334.x', 'GOOG': '$2974.x', 'GOOGL': '$2963.x', 'AMZN': '$3523.x'}
+        # dict_symbolpctchange = {'AAPL': '2.x%', 'MSFT': '0.x%', 'GOOG': '0.x%', 'GOOGL': '0.x%', 'AMZN': '-0.x%'}
+        # dict_name = {'AAPL': ' Apple Inc. Common Stock', 'MSFT': ' Microsoft Corporation Common Stock', 'GOOG': ' Alphabet Inc. Class C Capital Stock', 'GOOGL': ' Alphabet Inc. Class A Common Stock', 'AMZN': ' Amazon.com, Inc. Common Stock'}    
+        # add_newoutputfile_csv_old(outputname_generated, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols, dict_symbolmc, dict_symbolprice, dict_symbolpctchange, dict_name)
 
-    # #OR
-    # might be causing MEMORYERROR - testing, probbably not
-    reformatandaddinfoto_symbolsdict(symbols)
+        # #OR
+        # might be causing MEMORYERROR - testing, probbably not
+        reformatandaddinfoto_symbolsdict(symbols)
         
 
     '''*****************************************************************************
     # add new output file
     *****************************************************************************'''
-    # add_newoutputfile(outputname_generated, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols)
+    if write_empty_newoutputfile == False:
+        add_newoutputfile_csv_and_sql(storagetype, outputname_generated, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols)
     
-    add_newsqltable(outputname_generated, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols)
+    if write_empty_newoutputfile == True:
+        add_newoutputfile_csv_and_sql_empty(storagetype, outputname_generated, dt_string)
 
 
-    '''*****************************************************************************
-    # test empty update/create files, typically done without rsa analysis - optional
-    *****************************************************************************'''
-    # add_newoutputfile_empty(outputname_generated, dt_string)
-
-    # add_newsqltable_empty(outputname_generated, dt_string)
-
-    
     '''*****************************************************************************
     # print logs
-    *****************************************************************************'''
-    #log
-    #log
-    table_name1 = outputname_userinput
-    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{table_name1}%';")
-    myresult = cursor.fetchall()
-    previewlist_sqltables = [list(a.values())[0] for a in myresult]
-    print('list_sqltables (after writing new file)'.ljust(45), previewlist_sqltables) #log
-    #log
-    #log
-    
-    # print_logs2(outputname_generated)
-    print_logs2(outputname_generated)
-
-    '''*****************************************************************************
     # close connection mysql
     *****************************************************************************'''
-    connection.close()
+    print_logs2(outputname_userinput, outputname_generated)
+
+    if storagetype == "mysql":
+        connection.close()
 
 
 
@@ -1182,7 +1056,7 @@ if __name__ == '__main__':
     
     #main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1) ##stable
     #main(input_api_nasdaq, output_filename0, subs_membercount_min1, marketcap_min1, marketcap_max1) ##linux/window test large
-    #main(input_api_nasdaq, output_filename0, subs_specificlist1, marketcap_min1, marketcap_max4) ##linux/window test small
+    main(input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4) ##linux/window test small
     #main(input_api_nasdaq, output_filename0, subs_membercount_min2, marketcap_min1, marketcap_max4) ##linux test - testing getlist_subreddits - WORKING, needs TESTING
     #main(input_api_nasdaq, output_filename0, subs_specificlist1, marketcap_min1, marketcap_max4)
 
@@ -1197,47 +1071,47 @@ if __name__ == '__main__':
     ###idea = main(input_csvfile, savedtickers4b, subs_membercount_min1, 4,000,000,000, member counts)
     ###idea = main(input_csvfile, savedtickers200b, subs_membercount_min1, 200,000,000,000, 200,000)
 
-    program_number = 3
-    schedule.every().day.at("23:55").do(nltk.download, 'wordnet')
+    # program_number = 3
+    # schedule.every().day.at("23:55").do(nltk.download, 'wordnet')
 
-    if program_number == 1:
-       #program one
-       main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1) ##
-       schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
-       schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
-       schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
-       schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
-       schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
-       schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
-       schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
-       schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+    # if program_number == 1:
+    #    #program one
+    #    main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1) ##
+    #    schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+    #    schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+    #    schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+    #    schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+    #    schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+    #    schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+    #    schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+    #    schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
 
-    if program_number == 2:
-       #program two
-       #main(input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-       schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-       #schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-       schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-       schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-       schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-       #schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-       schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-       #schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+    # if program_number == 2:
+    #    #program two
+    #    #main(input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+    #    schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+    #    #schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+    #    schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+    #    schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+    #    schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+    #    #schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+    #    schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+    #    #schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
        
-    if program_number == 3:
-       #program three
-       main(input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
-       schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
-       #schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
-       schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
-       schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
-       schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
-       #schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
-       schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
-       #schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
+    # if program_number == 3:
+    #    #program three
+    #    main(input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
+    #    schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
+    #    #schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
+    #    schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
+    #    schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
+    #    schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
+    #    #schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
+    #    schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
+    #    #schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
 
-    while True:
-      schedule.run_pending()
+    # while True:
+    #   schedule.run_pending()
     
 
     '''*****************************************************************************
