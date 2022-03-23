@@ -1,3 +1,4 @@
+#!/usr/bin/python
 '''*****************************************************************************
 Purpose: To analyze the sentiments of the reddit
 This program uses Vader SentimentIntensityAnalyzer to calculate the ticker compound value. 
@@ -10,8 +11,6 @@ It completely ignores the heavily downvoted comments, and there can be a time wh
 the most mentioned ticker is heavily downvoted, but you can change that in upvotes variable.
 Author: github:asad70
 ****************************************************************************'''
-#!/usr/bin/python
-
 #imports by asad70
 import praw
 from data import *
@@ -36,8 +35,8 @@ from prawcore.exceptions import Forbidden
 from multiprocessing import Process
 from threading import Thread
 from datetime import datetime
+import pymysql
 import os, sys, csv, requests, schedule, pathlib, pprint, urllib.request, ast
-
 
 
 '''*****************************************************************************
@@ -45,17 +44,16 @@ import os, sys, csv, requests, schedule, pathlib, pprint, urllib.request, ast
 *****************************************************************************'''
 isPrint_logs = True
 use_sentiment_analysis_and_visualization = False
+storagetype = "mysql"
+write_empty_newoutputfile = True #default: False
 
-max_output_amount = 3
+max_output_amount = 5
 if max_output_amount < 1: raise ValueError('max output amount cannot be <1')
 
 IEX_TOKEN = os.environ.get('IEX_TOKEN')
 IEX_TOKEN = F'?token={IEX_TOKEN}' 
 IEX_TOKEN_SANDBOX = os.environ.get('IEX_TOKEN_SANDBOX')
 IEX_TOKEN_SANDBOX = F'?token={IEX_TOKEN_SANDBOX}' 
-
-storagetype = "csv"
-write_empty_newoutputfile = True
 
 
 '''*****************************************************************************
@@ -69,11 +67,9 @@ path_repo_and_csvfiles = str(pathlib.Path(path_repo + path_csvfiles))
 
 '''*****************************************************************************
 # mysql (for data storage):
-# establish connection to mysql database (can't do initialization idk why)
+# variables + establish connection to mysql database (can't do variable initialization idk why)
 # program options
 *****************************************************************************'''
-import pymysql
-
 def connect_to_mysql():
     connection = pymysql.connect(
                                 host=os.environ.get('MYSQL_HOST'),
@@ -87,7 +83,6 @@ def connect_to_mysql():
 if storagetype == "mysql":
     connection, cursor = connect_to_mysql()
     database_name1 = 'rsa_db'
-
 
 
 '''*****************************************************************************
@@ -124,7 +119,7 @@ marketcap_max5 = 4000000
 
 
 '''*****************************************************************************
-# functions
+# "worker" functions
 *****************************************************************************'''
 def ftn_rsa1():
     print('ftn_rsa1() on rsa.py used')
@@ -140,6 +135,9 @@ def prepare_variables1_csv_and_sql(storagetype, outputname_userinput, max_output
     #3 get new ref number (10 if 10 files there already, 10 if 9 there already, 9 if 8 files there already, 1 if 0, 2 if 1) = ok
     #4 get potential outputname_userinput filename.. to be created if program finishes) = ok
     *****************************************************************************'''
+    if storagetype != "mysql" and storagetype != "csv":
+        print("warning: check your storagetype entry. Could be simply mispelled.")
+
 
     #1
     if storagetype == "mysql":
@@ -205,6 +203,7 @@ def prepare_variables1_csv_and_sql(storagetype, outputname_userinput, max_output
             outputname_generated = outputname_userinput + str(new_ref_number)  
         #print('outputname_generated:', outputname_generated) #log
 
+        
     if storagetype == "csv":
         if new_ref_number < 10:
             outputname_generated = path_repo_and_csvfiles + "/" + outputname_userinput + '00' + str(new_ref_number) + '.csv'
@@ -213,12 +212,13 @@ def prepare_variables1_csv_and_sql(storagetype, outputname_userinput, max_output
         elif new_ref_number >= 100 and new_ref_number < 1000:   
             outputname_generated = path_repo_and_csvfiles + "/" + outputname_userinput + str(new_ref_number) + '.csv'
         #print('outputname_generated', outputname_generated) #log
-    
 
     return outputname_generated, list_existingoutputfiles1
+    
 
+    
 
-def prepare_variables2(subs, marketcap_max):
+def prepare_variables2_additional_info(subs, marketcap_max):
     dt_string = datetime.now().strftime("%m/%d/%Y %H:%M")
     info_subcount = 'Sub count: ' + str(len(subs))
     
@@ -524,7 +524,7 @@ def visualization(picks_ayz, scores, picks, times, top):
     uselessvariable1 = 'this is a useless variable to force-hide show plt.show() above when minimizing this function'
 
 
-def print_logs1_5(symbols, scores):
+def print_logs2(symbols, scores):
     '''*****************************************************************************
     # Info logs for console program - additional info, optional
     *****************************************************************************'''
@@ -842,7 +842,7 @@ def add_newoutputfile_csv_and_sql(storagetype, outputname_generated, dt_string, 
                     continue
 
 
-def print_logs2(outputname_userinput, outputname_generated):
+def print_logs3(outputname_userinput, outputname_generated):
     if storagetype == "mysql":
         cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{outputname_userinput}%';")
         myresult = cursor.fetchall()
@@ -913,7 +913,7 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
     # print logs
     *****************************************************************************'''
 
-    dt_string, info_subcount, info_marketCap_limit = prepare_variables2(subs, marketcap_max)
+    dt_string, info_subcount, info_marketCap_limit = prepare_variables2_additional_info(subs, marketcap_max)
 
     print_logs1(dt_string, outputname_generated, info_subcount, info_marketCap_limit, us) #only for csv files
     
@@ -956,7 +956,7 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
             visualization(picks_ayz, scores, picks, times, top)
             print('visualization finished') 
 
-            print_logs1_5(symbols, scores)
+            print_logs2(symbols, scores)
 
 
     '''*****************************************************************************
@@ -998,7 +998,7 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
     # print logs
     # close connection mysql
     *****************************************************************************'''
-    print_logs2(outputname_userinput, outputname_generated)
+    print_logs3(outputname_userinput, outputname_generated)
 
     if storagetype == "mysql":
         connection.close()
@@ -1040,7 +1040,6 @@ def run_batch_of_processes_1():
 
 
 if __name__ == '__main__':    
-
     '''*****************************************************************************
     # WAY 4 - run program by multiprocessing once (for aws with cron jobs i guess)
     # testing
@@ -1056,7 +1055,7 @@ if __name__ == '__main__':
     
     #main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1) ##stable
     #main(input_api_nasdaq, output_filename0, subs_membercount_min1, marketcap_min1, marketcap_max1) ##linux/window test large
-    main(input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4) ##linux/window test small
+    #main(input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4) ##linux/window test small
     #main(input_api_nasdaq, output_filename0, subs_membercount_min2, marketcap_min1, marketcap_max4) ##linux test - testing getlist_subreddits - WORKING, needs TESTING
     #main(input_api_nasdaq, output_filename0, subs_specificlist1, marketcap_min1, marketcap_max4)
 
@@ -1071,47 +1070,47 @@ if __name__ == '__main__':
     ###idea = main(input_csvfile, savedtickers4b, subs_membercount_min1, 4,000,000,000, member counts)
     ###idea = main(input_csvfile, savedtickers200b, subs_membercount_min1, 200,000,000,000, 200,000)
 
-    # program_number = 3
-    # schedule.every().day.at("23:55").do(nltk.download, 'wordnet')
+    program_number = 3
+    schedule.every().day.at("23:55").do(nltk.download, 'wordnet')
 
-    # if program_number == 1:
-    #    #program one
-    #    main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1) ##
-    #    schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
-    #    schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
-    #    schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
-    #    schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
-    #    schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
-    #    schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
-    #    schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
-    #    schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+    if program_number == 1:
+       #program one
+       main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1) ##
+       schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+       schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+       schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+       schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+       schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+       schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+       schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+       schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
 
-    # if program_number == 2:
-    #    #program two
-    #    #main(input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-    #    schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-    #    #schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-    #    schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-    #    schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-    #    schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-    #    #schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-    #    schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-    #    #schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+    if program_number == 2:
+       #program two
+       #main(input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+       schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+       #schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+       schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+       schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+       schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+       #schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+       schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+       #schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
        
-    # if program_number == 3:
-    #    #program three
-    #    main(input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
-    #    schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
-    #    #schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
-    #    schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
-    #    schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
-    #    schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
-    #    #schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
-    #    schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
-    #    #schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
+    if program_number == 3:
+       #program three
+       main(input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
+       schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
+       #schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
+       schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
+       schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
+       schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
+       #schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
+       schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
+       #schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
 
-    # while True:
-    #   schedule.run_pending()
+    while True:
+      schedule.run_pending()
     
 
     '''*****************************************************************************
