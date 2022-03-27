@@ -106,5 +106,6 @@ if __name__ == "__main__":
     # removed before deploying a production app.
     # application.debug = True
 
-    application.run()
+    # application.run()
+    application.run(threaded=True) #threaded=True to try keep persistent connection with mysql
     

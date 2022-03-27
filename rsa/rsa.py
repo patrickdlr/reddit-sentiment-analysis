@@ -45,9 +45,9 @@ import os, sys, csv, requests, schedule, pathlib, pprint, urllib.request, ast
 isPrint_logs = True
 use_sentiment_analysis_and_visualization = False
 storagetype = "mysql"
-write_empty_newoutputfile = True #default: False
+write_empty_newoutputfile = False #default: False
 
-max_output_amount = 5
+max_output_amount = 10
 if max_output_amount < 1: raise ValueError('max output amount cannot be <1')
 
 IEX_TOKEN = os.environ.get('IEX_TOKEN')
@@ -72,9 +72,9 @@ path_repo_and_csvfiles = str(pathlib.Path(path_repo + path_csvfiles))
 *****************************************************************************'''
 def connect_to_mysql():
     connection = pymysql.connect(
-                                host=os.environ.get('MYSQL_HOST'),
-                                user=os.environ.get('MYSQL_USER'),
-                                password=os.environ.get('MYSQL_PASSWORD'),
+                                host=os.environ.get('MYSQL_HOST_RDS'),
+                                user=os.environ.get('MYSQL_USER_RDS'),
+                                password=os.environ.get('MYSQL_PASSWORD_RDS'),
                                 charset='utf8mb4',
                                 cursorclass=pymysql.cursors.DictCursor)
     cursor = connection.cursor()
@@ -124,6 +124,22 @@ marketcap_max5 = 4000000
 def ftn_rsa1():
     print('ftn_rsa1() on rsa.py used')
 
+def warning_maxoutputexceeded(list_existingoutputfiles1, max_output_amount):
+    if len(list_existingoutputfiles1) > max_output_amount:
+        for r in range(3): #input() doesn't work in multithreading mode
+            print(f"Note: output file count: {len(list_existingoutputfiles1)} > max_output_amount: {max_output_amount}")
+            a = input("Max # of allowed output files is LOWER than existing output files. Proceeding will limit existing output files by deleting the oldest, excessive output files. Do you want to continue? (Y/N) ")
+            
+            if a.lower() == "y" or a.lower() == "yes":
+                break
+            elif a.lower() == "n" or a.lower() == "no" or r >= 2:
+                print("User chose to not continue.. stopping the program now. Review the 'max output amount' variable.")
+                sys.exit()
+                #os._exit() #exits the whole process i think.
+            else:
+                continue
+    
+    
 
 def prepare_variables1_csv_and_sql(storagetype, outputname_userinput, max_output_amount):
     '''*****************************************************************************
@@ -168,23 +184,10 @@ def prepare_variables1_csv_and_sql(storagetype, outputname_userinput, max_output
 
         #print('list_existingoutputfiles1 (prepare_variables1_csv) 1', list_existingoutputfiles1) #log
 
-
-    # 1.5 
-    if len(list_existingoutputfiles1) > max_output_amount:
-        for r in range(3): #input() doesn't work in multithreading mode
-            print(f"Note: output file count: {len(list_existingoutputfiles1)} > max_output_amount: {max_output_amount}")
-            a = input("Max # of allowed output files is LOWER than existing output files. Proceeding will limit existing output files by deleting the oldest, excessive output files. Do you want to continue? (Y/N) ")
-            
-            if a.lower() == "y" or a.lower() == "yes":
-                break
-            elif a.lower() == "n" or a.lower() == "no" or r >= 2:
-                print("User chose to not continue.. stopping the program now. Review the 'max output amount' variable.")
-                sys.exit()
-                #os._exit() #exits the whole process i think.
-            else:
-                continue
-
-
+    # 1.5 - don't use on AWS b/c it prompts user input
+    # warning_maxoutputexceeded(list_existingoutputfiles1, max_output_amount)
+    
+    
     # 2,3
     if len(list_existingoutputfiles1) >= max_output_amount:
         new_ref_number = max_output_amount
@@ -214,8 +217,6 @@ def prepare_variables1_csv_and_sql(storagetype, outputname_userinput, max_output
         #print('outputname_generated', outputname_generated) #log
 
     return outputname_generated, list_existingoutputfiles1
-    
-
     
 
 def prepare_variables2_additional_info(subs, marketcap_max):
@@ -866,17 +867,17 @@ def print_logs3(outputname_userinput, outputname_generated):
 
 def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_max):
     '''*****************************************************************************
-    # refresh/reestablish connection to mysql database = ok
+    # refresh/reestablish connection to mysql database = ?
+    # prepare variables - (for deleting/renaming existing output files/adding new output file)
+    # close connection
     *****************************************************************************'''
     if storagetype == "mysql":
         connection, cursor = connect_to_mysql()
-
-
-    '''*****************************************************************************
-    # prepare variables - (for deleting/renaming existing output files/adding new output file)
-    *****************************************************************************'''
+    
     outputname_generated, list_existingoutputfiles1 = prepare_variables1_csv_and_sql(storagetype, outputname_userinput, max_output_amount)
 
+    if storagetype == "mysql":
+        connection.close()
 
     '''*****************************************************************************
     #1 get list of subreddits (from csv file) - (for Reddit Sentinment Analysis)
@@ -912,7 +913,6 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
     # prepare additional-info variables - (put additional-info into new output file)
     # print logs
     *****************************************************************************'''
-
     dt_string, info_subcount, info_marketCap_limit = prepare_variables2_additional_info(subs, marketcap_max)
 
     print_logs1(dt_string, outputname_generated, info_subcount, info_marketCap_limit, us) #only for csv files
@@ -960,12 +960,16 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
 
 
     '''*****************************************************************************
+    # refresh/reestablish connection to mysql database = ?
     # update output file
     *****************************************************************************'''
+    if storagetype == "mysql":
+        connection, cursor = connect_to_mysql()
+
+    
     # might be causing MEMORYERROR - probably not
     deleteandrename_existingoutputfiles_csv_and_sql(storagetype, list_existingoutputfiles1, max_output_amount, outputname_userinput)
     
-
 
     '''*****************************************************************************
     # fix/update symbol dictionary with more info
@@ -996,7 +1000,7 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
 
     '''*****************************************************************************
     # print logs
-    # close connection mysql
+    # close connection
     *****************************************************************************'''
     print_logs3(outputname_userinput, outputname_generated)
 
@@ -1099,15 +1103,15 @@ if __name__ == '__main__':
        
     if program_number == 3:
        #program three
-       main(input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
-       schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
-       #schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
-       schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
-       schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
-       schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
-       #schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
-       schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
-       #schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4)
+       main(input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
+       schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
+       #schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
+       schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
+       schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
+       schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
+       #schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
+       schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
+       #schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
 
     while True:
       schedule.run_pending()

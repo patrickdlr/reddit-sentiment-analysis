@@ -33,6 +33,10 @@
 #select student_id, table1.name, grade, date, table3.product_id, table3.name, table3.price from table1 join table3 on table1.product_id = table3.product_id;
 #select student_id, t1.name, grade, date, t3.product_id, t3.name, t3.price from table1 t1 join table3 t3 on t1.product_id = t3.product_id;#
 
+#select * FROM information_schema.tables where table_schema = "rsa_db";
+#select table_name, create_time FROM information_schema.tables where table_schema = "rsa_db";
+
+
 #UPDATE
 
 ''' 
