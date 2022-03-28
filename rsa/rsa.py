@@ -92,6 +92,7 @@ input_api_nasdaq = 'api.nasdaq.com'
 
 output_filename0 = 'result_test_'
 output_filename1 = 'result_all_'
+output_filename1_RDS = 'result_all_rds_'
 output_filename2 = 'result_200b_'
 output_filename3 = 'result_15b_'
 output_filename4 = 'result_4b_'
@@ -1057,7 +1058,7 @@ if __name__ == '__main__':
     *****************************************************************************'''
     #print("WAY 0 rsa.py used")
     
-    #main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1) ##stable
+    main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1) ##stable
     #main(input_api_nasdaq, output_filename0, subs_membercount_min1, marketcap_min1, marketcap_max1) ##linux/window test large
     #main(input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4) ##linux/window test small
     #main(input_api_nasdaq, output_filename0, subs_membercount_min2, marketcap_min1, marketcap_max4) ##linux test - testing getlist_subreddits - WORKING, needs TESTING
@@ -1074,47 +1075,47 @@ if __name__ == '__main__':
     ###idea = main(input_csvfile, savedtickers4b, subs_membercount_min1, 4,000,000,000, member counts)
     ###idea = main(input_csvfile, savedtickers200b, subs_membercount_min1, 200,000,000,000, 200,000)
 
-    program_number = 3
-    schedule.every().day.at("23:55").do(nltk.download, 'wordnet')
+    # program_number = 3
+    # schedule.every().day.at("23:55").do(nltk.download, 'wordnet')
 
-    if program_number == 1:
-       #program one
-       main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1) ##
-       schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
-       schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
-       schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
-       schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
-       schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
-       schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
-       schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
-       schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+    # if program_number == 1:
+    #    #program one
+    #    main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1) ##
+    #    schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+    #    schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+    #    schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+    #    schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+    #    schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+    #    schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+    #    schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+    #    schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
 
-    if program_number == 2:
-       #program two
-       #main(input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-       schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-       #schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-       schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-       schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-       schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-       #schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-       schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-       #schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+    # if program_number == 2:
+    #    #program two
+    #    #main(input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+    #    schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+    #    #schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+    #    schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+    #    schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+    #    schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+    #    #schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+    #    schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+    #    #schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
        
-    if program_number == 3:
-       #program three
-       main(input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
-       schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
-       #schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
-       schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
-       schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
-       schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
-       #schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
-       schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
-       #schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
+    # if program_number == 3:
+    #    #program three
+    #    main(input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
+    #    schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
+    #    #schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
+    #    schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
+    #    schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
+    #    schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
+    #    #schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
+    #    schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
+    #    #schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
 
-    while True:
-      schedule.run_pending()
+    # while True:
+    #   schedule.run_pending()
     
 
     '''*****************************************************************************
