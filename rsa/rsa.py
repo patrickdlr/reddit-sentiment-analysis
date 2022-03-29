@@ -874,6 +874,8 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
     *****************************************************************************'''
     if storagetype == "mysql":
         connection, cursor = connect_to_mysql()
+
+    
     
     outputname_generated, list_existingoutputfiles1 = prepare_variables1_csv_and_sql(storagetype, outputname_userinput, max_output_amount)
 

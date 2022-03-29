@@ -2,17 +2,17 @@
 
 from flask import Flask, jsonify
 import csv, os, sys
-# from pathlib import Path, PurePosixPath
 import pathlib
 from flask_cors import CORS
-
+import flask_sqlalchemy# import SQLAlchemy
+import pprint
+import json #for json.dumps (to display json file with string/list in neater form)
 
 print('sys.path: ' + str(sys.path))
 print('os.path: ' + str(os.path))
 sys.path.insert(1, r'rsa') #insert a folder, not .py..?
 from rsa import *
 #import rsa #doesn't work..
-
 
 '''*****************************************************************************
 # variables of file paths & options
@@ -24,14 +24,47 @@ path_repo_and_csvfiles_and_result_all_010 = str(pathlib.Path(path_repo + path_cs
 # print(path_csvfiles_and_result_all_010)
 # print(path_repo_and_csvfiles_and_result_all_010)
 
-
 # EB looks for an 'application' callable by default.
 application = Flask(__name__)
-
 
 # Use CORS..?
 cors = CORS(application)
 application.config['CORS_HEADERS'] = 'Content-Type'
+
+
+
+'''*****************************************************************************
+# SQLAlchemy (test)
+*****************************************************************************'''
+MYSQL_HOST_RDS=os.environ.get('MYSQL_HOST_RDS')
+MYSQL_USER_RDS=os.environ.get('MYSQL_USER_RDS')
+MYSQL_PASSWORD_RDS=os.environ.get('MYSQL_PASSWORD_RDS')
+MYSQL_DB_NAME = 'rsa_db'
+
+application.config['SQLALCHEMY_DATABASE_URI'] = f'mysql://{MYSQL_USER_RDS}:{MYSQL_PASSWORD_RDS}@{MYSQL_HOST_RDS}/{MYSQL_DB_NAME}'
+db = flask_sqlalchemy.SQLAlchemy(application)
+
+application.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
+
+
+
+'''*****************************************************************************
+# accessing mysql (test)
+#get data in dictionary/list form
+*****************************************************************************'''
+import pymysql
+def connect_to_mysql():
+    connection = pymysql.connect(
+                                host=os.environ.get('MYSQL_HOST_RDS'),
+                                user=os.environ.get('MYSQL_USER_RDS'),
+                                password=os.environ.get('MYSQL_PASSWORD_RDS'),
+                                charset='utf8mb4',
+                                cursorclass=pymysql.cursors.DictCursor)
+    cursor = connection.cursor()
+    # cursor = connection.cursor(pymysql.cursors.DictCursor)
+    return connection, cursor
+
+
 
 
 @application.route("/home")
@@ -60,8 +93,6 @@ def readtxtfile():
 @application.route('/test_fetchcsvfile', methods=['GET'])
 def ftn_fetchcsvfile():
     
-    csvfile1 = pathlib.PurePosixPath(r'csvfiles/result_test_010.csv')
-    csvfile2 = pathlib.PurePosixPath(r'/csvfiles/result_test_010.csv')
     
     with open(path_repo_and_csvfiles_and_result_all_010,'r') as f:
         lines = f.readlines()
@@ -77,25 +108,40 @@ def ftn_fetchcsvfile():
         string1 += lines[lines.index(a)]
         string1 += "</br>"
 
-    return jsonify(f"<p>{string1}</p>") #add jsonify to work with front end..?
+    # return jsonify(f"<p>{string1}</p>") #add jsonify to work with front end..?
+    # return jsonify(string1)
+    return json.dumps(string1) #nicer, prints neatly like seen in python console
 
-
-    #headers=lines[0].rstrip().split(',') # rstrip removes end-of-line chars
-    #numLines = len(lines)
-    #linelist = [x.rstrip().split(',') for x in lines[1:numLines+1]]    
-    ## create lineList to include only numLines elements
-    #outputDict = {keyVal:[x[idx] for x in linelist if len(x)==len(headers)] for idx,keyVal in enumerate(headers)}   
-
-    ## list comprehension within dictionary comprehension to split each element by its header and create dictionary of lists 
-    ## print(outputDict)
     
-    ## for u in outputDict['Symbol']:
-    ##     us_local.add(u)
+@application.route('/test_fetchsql', methods=['GET'])
+def ftn_fetchsql():
+    connection, cursor = connect_to_mysql()
+    database_name1 = 'rsa_db'
 
-    #aka = outputDict['Symbol'][:10]
-    #print('aka: ' + str(aka))
+    # 1 - get a list of existing saved tables that contains given outputname_userinput
+    list_existingoutputfiles1 = [] 
+    outputname_userinput = "result_all_rds_"
+    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '{outputname_userinput}%';")
+    result = cursor.fetchall()
 
-    #return jsonify(aka) #jsonify to avoid unexpected token SyntaxError...
+    # 2 -get latest output
+    list_existingoutputfiles1 = [list(a.values())[0] for a in result]
+    latest_output = str(list_existingoutputfiles1[-1])
+    print(latest_output)
+
+
+    cursor.execute(f"SELECT * from {database_name1}.{latest_output} where number < 20;")
+    result = cursor.fetchall()  
+
+    connection.close()
+
+    return jsonify(result) #nicer
+    # return json.dumps(result) 
+    
+    
+
+
+
         
 
 # run the app.
