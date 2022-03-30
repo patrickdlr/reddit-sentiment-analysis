@@ -151,7 +151,6 @@ if __name__ == "__main__":
     # Setting debug to True enables debug output. This line should be
     # removed before deploying a production app.
     # application.debug = True
-
-    # application.run()
-    application.run(threaded=True) #threaded=True to try keep persistent connection with mysql
     
+    #application.run(threaded=True) #threaded=True to try keep persistent connection with mysql = OK, now try application.run() only
+    application.run()

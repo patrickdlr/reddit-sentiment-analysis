@@ -47,7 +47,7 @@ use_sentiment_analysis_and_visualization = False
 storagetype = "mysql"
 write_empty_newoutputfile = False #default: False
 
-max_output_amount = 10
+max_output_amount = 20
 if max_output_amount < 1: raise ValueError('max output amount cannot be <1')
 
 IEX_TOKEN = os.environ.get('IEX_TOKEN')
@@ -138,8 +138,7 @@ def warning_maxoutputexceeded(list_existingoutputfiles1, max_output_amount):
                 sys.exit()
                 #os._exit() #exits the whole process i think.
             else:
-                continue
-    
+                continue 
     
 
 def prepare_variables1_csv_and_sql(storagetype, outputname_userinput, max_output_amount):
@@ -876,7 +875,6 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
         connection, cursor = connect_to_mysql()
 
     
-    
     outputname_generated, list_existingoutputfiles1 = prepare_variables1_csv_and_sql(storagetype, outputname_userinput, max_output_amount)
 
     if storagetype == "mysql":
@@ -1060,7 +1058,8 @@ if __name__ == '__main__':
     *****************************************************************************'''
     #print("WAY 0 rsa.py used")
     
-    main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1) ##stable
+    main(input_api_nasdaq, output_filename1_RDS, subs_membercount_min1, marketcap_min1, marketcap_max1) ##stable RDS
+    #main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1) ##stable
     #main(input_api_nasdaq, output_filename0, subs_membercount_min1, marketcap_min1, marketcap_max1) ##linux/window test large
     #main(input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4) ##linux/window test small
     #main(input_api_nasdaq, output_filename0, subs_membercount_min2, marketcap_min1, marketcap_max4) ##linux test - testing getlist_subreddits - WORKING, needs TESTING
