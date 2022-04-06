@@ -12,7 +12,9 @@ the most mentioned ticker is heavily downvoted, but you can change that in upvot
 Author: github:asad70
 ****************************************************************************'''
 #imports by asad70
+from operator import ne
 import praw
+from pymysql import NULL
 from data import *
 import time
 import pandas as pd
@@ -216,7 +218,7 @@ def prepare_variables1_csv_and_sql(storagetype, outputname_userinput, max_output
             outputname_generated = path_repo_and_csvfiles + "/" + outputname_userinput + str(new_ref_number) + '.csv'
         #print('outputname_generated', outputname_generated) #log
 
-    return outputname_generated, list_existingoutputfiles1
+    return outputname_generated, list_existingoutputfiles1, new_ref_number
     
 
 def prepare_variables2_additional_info(subs, marketcap_max):
@@ -563,7 +565,7 @@ def deleteandrename_existingoutputfiles_csv_and_sql(storagetype, list_existingou
                 #delete first table - sql
                 cursor.execute(f"DROP TABLE {database_name1}.{list_existingoutputfiles1[0]};")
 
-                #refresh list of tables - sql
+                #reinitialize list of tables - sql
                 list_existingoutputfiles1 = []
                 cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{outputname_userinput}%';")
                 myresult = cursor.fetchall()
@@ -579,7 +581,7 @@ def deleteandrename_existingoutputfiles_csv_and_sql(storagetype, list_existingou
                 delete_file = path_repo_and_csvfiles + "/" + list_existingoutputfiles1[0]
                 os.remove(delete_file)
 
-                #refresh list of tables - csv
+                #reinitialize list of tables - csv
                 list_existingoutputfiles1 = []    
                 for a in os.listdir(path_repo_and_csvfiles):
                     #print('checking', a, 'with', outputname_userinput) #log
@@ -657,7 +659,6 @@ def deleteandrename_existingoutputfiles_csv_and_sql(storagetype, list_existingou
             
 
 def reformatandaddinfoto_symbolsdict(symbols):
-    #print(symbols)
     #add function that adds details for list of found symbols
 
 
@@ -727,6 +728,73 @@ def reformatandaddinfoto_symbolsdict(symbols):
 
     endingvar = None
 
+#gives raw int, instead of string number with $ or %
+def reformatandaddinfoto_symbolsdict2(symbols):
+    #add function that adds details for list of found symbols
+
+
+    #reformat symbols dict
+    for k,v in symbols.items():
+        symbols[k] = {"mentions": v}
+
+    #updat symbols dict (add info like marketCap, latestPrice)
+    for k,v in symbols.items():
+
+        time.sleep(0.4)
+
+        #url = 'https://cloud.iexapis.com/stable/stock/' + str(k) + '/quote' + IEX_TOKEN
+        url =  'https://sandbox.iexapis.com/stable/stock/' + str(k) + '/quote' + IEX_TOKEN_SANDBOX
+        
+        r = requests.get(url)
+        # print(r)
+
+        try:
+            j = r.json()
+            # print(j)
+
+            try:            
+                j_val = j["marketCap"]
+                symbols[k].update({"marketCap": j_val})
+            except:
+                symbols[k].update({"marketCap": "NA/crypto"})
+
+            try:
+                j_val = j["latestPrice"]
+                symbols[k].update({"latestPrice": j_val})
+            except:
+                symbols[k].update({"latestPrice": "NA/crypto"})
+
+            try:
+                j_val = j["changePercent"]
+                symbols[k].update({"changePercent": j_val})
+            except:
+                symbols[k].update({"changePercent": "NA/crypto"})
+
+            try:
+                j_val = j["companyName"]
+                symbols[k].update({"companyName": j_val})
+            except:
+                symbols[k].update({"companyName": "NA/crypto"})
+
+            try:
+                j_val = j["peRatio"]
+                if j_val == "" or j_val == None: j_val = NULL
+                symbols[k].update({"peRatio": j_val})
+                
+            except:
+                symbols[k].update({"peRatio": "NA/crypto"})
+
+        except Exception as e:
+            print(e, '--', k, r.reason)
+            continue #try to bypass json.decoder error
+
+
+    # pprint.pprint(symbols)
+    
+    # return symbols
+
+    endingvar = None
+
 
 def add_newoutputfile_csv_and_sql_empty(storagetype, outputname_generated, dt_string):
     '''*****************************************************************************
@@ -734,8 +802,10 @@ def add_newoutputfile_csv_and_sql_empty(storagetype, outputname_generated, dt_st
     #2 Insert result and additional info
     *****************************************************************************'''
     if storagetype == "mysql":
-        #1
-        cursor.execute(f"CREATE TABLE {database_name1}.{outputname_generated} (Number INT, Symbols TEXT, Mentions INT, marketCap TEXT, latestPric TEXT, changePerc TEXT, peRatio TEXT, companyNam TEXT, PRIMARY KEY (Number));")
+        # #1
+        # cursor.execute(f"CREATE TABLE {database_name1}.{outputname_generated} (Number INT, Symbols TEXT, Mentions INT, marketCap TEXT, latestPric TEXT, changePerc TEXT, peRatio TEXT, companyNam TEXT, PRIMARY KEY (Number));")
+        # #1 - improved 
+        cursor.execute(f"CREATE TABLE {database_name1}.{outputname_generated} (Analysis_Id INT, Symbols TEXT, Mentions INT, marketCap DECIMAL(16,2), latestPrice DECIMAL(16,2), changePerc DECIMAL(16,2), peRatio DECIMAL(16,2), companyNam TEXT, Table_Id INT, PRIMARY KEY (Analysis_Id));")
    
     
     if storagetype == "csv":
@@ -752,8 +822,11 @@ def add_newoutputfile_csv_and_sql(storagetype, outputname_generated, dt_string, 
     #2 Insert result and additional info
     *****************************************************************************'''
     if storagetype == "mysql":
-        #1
-        cursor.execute(f"CREATE TABLE {database_name1}.{outputname_generated} (Number INT, Symbols TEXT, Mentions INT, marketCap TEXT, latestPric TEXT, changePerc TEXT, peRatio TEXT, companyNam TEXT, PRIMARY KEY (Number));")
+        # #1
+        # cursor.execute(f"CREATE TABLE {database_name1}.{outputname_generated} (Number INT, Symbols TEXT, Mentions INT, marketCap TEXT, latestPric TEXT, changePerc TEXT, peRatio TEXT, companyNam TEXT, PRIMARY KEY (Number));")
+        # #1 - improved 
+        cursor.execute(f"CREATE TABLE {database_name1}.{outputname_generated} (Analysis_Id INT, Symbols TEXT, Mentions INT, marketCap DECIMAL(16,2), latestPrice DECIMAL(16,2), changePerc DECIMAL(16,2), peRatio DECIMAL(16,2), companyNam TEXT, Table_Id INT, PRIMARY KEY (Analysis_Id));")
+
 
         #2
         info_tickernumber = 1
@@ -772,6 +845,107 @@ def add_newoutputfile_csv_and_sql(storagetype, outputname_generated, dt_string, 
             coldata_11 = "%10s" % v.get('companyName')
 
             cursor.execute(f"INSERT INTO {database_name1}.{outputname_generated} (Number, Symbols, Mentions, marketCap, latestPric, changePerc, peRatio, companyNam) VALUES ('{coldata_00}', '{coldata_01}', '{coldata_02}', '{coldata_07}', '{coldata_08}', '{coldata_09}', '{coldata_10}', '{coldata_11}');" )
+
+            info_tickernumber += 1
+        connection.commit()
+    
+    
+    if storagetype == "csv":
+        #1 and 2 (should try separating into 1 and 2)
+        with open(outputname_generated, 'w', newline='') as f:
+            writer = csv.writer(f)
+
+            writer.writerow(['Date and time: ' + dt_string])
+            writer.writerow([info_subcount])
+            writer.writerow([info_marketCap_limit])
+            writer.writerow([info_parameters])
+            writer.writerow([info_ittookxseconds])
+            writer.writerow(['number of tickers: ' + str(len(symbols))])
+            writer.writerow([])
+
+            maxlength_string = 10
+            col_00 = '%-10s' % 'Number'[:maxlength_string]
+            col_01 = "%-10s" % 'Symbols'[:maxlength_string]
+            col_02 = "%10s" % 'Mentions'[:maxlength_string]
+            # col_03 = "%10s" % 'Bearish'[:maxlength_string]
+            # col_04 = "%10s" % 'Neutral'[:maxlength_string]
+            # col_05 = "%10s" % 'Bullish'[:maxlength_string]
+            # col_06 = "%10s" % 'Total/Comp'[:maxlength_string]
+            col_07 = "%10s" % 'marketCap'[:maxlength_string]
+            col_08 = "%10s" % 'latestPrice'[:maxlength_string]
+            col_09 = "%10s" % 'changePercent'[:maxlength_string]
+            col_10 = "%10s" % 'peRatio'[:maxlength_string]
+            col_11 = "%10s" % 'companyName'[:maxlength_string]
+            
+            #writer.writerow([col_00,col_01,col_02,col_03,col_04,col_05,col_06,col_07,col_08,col_09,col_10,col_11])
+            writer.writerow([col_00,col_01,col_02,
+                            col_07,col_08,col_09,col_10,col_11])
+            
+
+            info_tickernumber = 1
+            for k,v in symbols.items():
+                try:
+                    coldata_00 = '%-10s' % info_tickernumber
+                    coldata_01 = "%-10s" % k
+                    coldata_02 = "%10s" % v.get('mentions')
+                    # coldata_03 = "%10s" % senti.get('neg')
+                    # coldata_04 = "%10s" % senti.get('neu')
+                    # coldata_05 = "%10s" % senti.get('pos')
+                    # coldata_06 = "%10s" % senti.get('compound')
+                    coldata_07 = "%10s" % v.get('marketCap')
+                    coldata_08 = "%10s" % v.get('latestPrice')
+                    coldata_09 = "%10s" % v.get('changePercent')
+                    coldata_10 = "%10s" % v.get('peRatio')
+                    coldata_11 = "%10s" % v.get('companyName')
+
+                    writer.writerow([coldata_00, coldata_01, coldata_02,
+                                    coldata_07, coldata_08, coldata_09, coldata_10, coldata_11])
+
+                    info_tickernumber += 1
+
+                except AttributeError:
+                    #colx_00 = '%-10s' % info_tickernumber
+                    #k_ = "%-10s" % k
+                    #v_ = "%10s" % v
+                    #neg_ = "%10s" % 'X'
+                    #neu_ = "%10s" % 'X'
+                    #pos_ = "%10s" % 'X'
+                    #compound_ = "%10s" % 'X'
+                    #writer.writerow([colx_00, k_, v_, neg_, neu_, pos_, compound_,mc_, price_, pctchange_, name_])
+                    #writer.writerow([colx_00, k_, v_,mc_, price_, pctchange_, name_])
+                    continue
+
+
+def add_newoutputfile_csv_and_sql2(new_ref_number, storagetype, outputname_generated, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols):
+    '''*****************************************************************************
+    #1 Create new output file, using outputname_generated
+    #2 Insert result and additional info
+    *****************************************************************************'''
+    if storagetype == "mysql":
+        # #1
+        # cursor.execute(f"CREATE TABLE {database_name1}.{outputname_generated} (Number INT, Symbols TEXT, Mentions INT, marketCap TEXT, latestPric TEXT, changePerc TEXT, peRatio TEXT, companyNam TEXT, PRIMARY KEY (Number));")
+        # #1 - improved 
+        cursor.execute(f"CREATE TABLE {database_name1}.{outputname_generated} (tickerId INT, symbol TEXT, mentions INT, marketCap DECIMAL(16,2), latestPrice DECIMAL(16,2), changePercent DECIMAL(16,2), peRatio DECIMAL(16,2), companyName TEXT, tableId INT, PRIMARY KEY (tickerId));")
+
+
+        #2
+        info_tickernumber = 1
+        for k,v in symbols.items():
+            coldata_00 = info_tickernumber
+            coldata_01 = k
+            coldata_02 = v.get('mentions')
+            # coldata_03 = senti.get('neg')
+            # coldata_04 = senti.get('neu')
+            # coldata_05 = senti.get('pos')
+            # coldata_06 = senti.get('compound')
+            coldata_07 = v.get('marketCap')
+            coldata_08 = v.get('latestPrice')
+            coldata_09 = v.get('changePercent')
+            coldata_10 = v.get('peRatio')
+            coldata_11 = v.get('companyName')
+            coldata_12 = new_ref_number
+
+            cursor.execute(f"INSERT INTO {database_name1}.{outputname_generated} (tickerId, symbol, mentions, marketCap, latestPrice, changePercent, peRatio, companyName, tableId) VALUES ('{coldata_00}', '{coldata_01}', '{coldata_02}', '{coldata_07}', '{coldata_08}', '{coldata_09}', '{coldata_10}', '{coldata_11}', '{coldata_12}');" )
 
             info_tickernumber += 1
         connection.commit()
@@ -875,7 +1049,9 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
         connection, cursor = connect_to_mysql()
 
     
-    outputname_generated, list_existingoutputfiles1 = prepare_variables1_csv_and_sql(storagetype, outputname_userinput, max_output_amount)
+    outputname_generated, list_existingoutputfiles1, new_ref_number = prepare_variables1_csv_and_sql(storagetype, outputname_userinput, max_output_amount)
+    print('new_ref_number:', new_ref_number)
+
 
     if storagetype == "mysql":
         connection.close()
@@ -924,41 +1100,42 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
     *****************************************************************************'''
     start_time = time.time()
 
-    if write_empty_newoutputfile == False:
-        # open reddit client
-        reddit = praw.Reddit(
-            user_agent=os.environ.get('reddit_user_agent'), 
-            client_id=os.environ.get('reddit_client_id'), 
-            client_secret=os.environ.get('reddit_client_secret'),
-            username=os.environ.get('reddit_username'), 
-            password=os.environ.get('reddit_password')
-        )
+    #if write_empty_newoutputfile == False:
+    # open reddit client
+    reddit = praw.Reddit(
+        user_agent=os.environ.get('reddit_user_agent'), 
+        client_id=os.environ.get('reddit_client_id'), 
+        client_secret=os.environ.get('reddit_client_secret'),
+        username=os.environ.get('reddit_username'), 
+        password=os.environ.get('reddit_password')
+    )
 
-        #not working..
-        # reddit = praw.Reddit(
-        #     user_agent, 
-        #     client_id, 
-        #     client_secret, 
-        #     username, 
-        #     password
-        # )
-        
-        posts, c_analyzed, tickers, titles, a_comments, picks, subs, picks_ayz, info_parameters = data_extractor(reddit, subs, us)
-        print('data_extractor finished')
+    #not working..
+    # reddit = praw.Reddit(
+    #     user_agent, 
+    #     client_id, 
+    #     client_secret, 
+    #     username, 
+    #     password
+    # )
+    
+    posts, c_analyzed, tickers, titles, a_comments, picks, subs, picks_ayz, info_parameters = data_extractor(reddit, subs, us)
+    print('data_extractor finished')
 
-        symbols, times, top, info_ittookxseconds = print_helper(tickers, picks, c_analyzed, posts, subs, titles, time, start_time)
-        print('print_helper finished')
+    symbols, times, top, info_ittookxseconds = print_helper(tickers, picks, c_analyzed, posts, subs, titles, time, start_time)
+    print('print_helper finished')
 
-        #PROBLEM_3: Seems to not work on AWS's due to excessive memory usage...
-        if use_sentiment_analysis_and_visualization == True:
-            scores = sentiment_analysis(picks_ayz, a_comments, symbols, us)
-            print('sentiment_analysis finished') 
+    #PROBLEM_3: Seems to not work on AWS's due to excessive memory usage...
+    if use_sentiment_analysis_and_visualization == True:
+        scores = sentiment_analysis(picks_ayz, a_comments, symbols, us)
+        print('sentiment_analysis finished') 
 
-            visualization(picks_ayz, scores, picks, times, top)
-            print('visualization finished') 
+        visualization(picks_ayz, scores, picks, times, top)
+        print('visualization finished') 
 
-            print_logs2(symbols, scores)
+        print_logs2(symbols, scores)
 
+    print('enfu1', symbols)
 
     '''*****************************************************************************
     # refresh/reestablish connection to mysql database = ?
@@ -975,25 +1152,27 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
     '''*****************************************************************************
     # fix/update symbol dictionary with more info
     *****************************************************************************'''
-    if write_empty_newoutputfile == False:
-        # might be causing MEMORYERROR - ?
-        # dict_symbolmc = {'AAPL': '$3035.xB', 'MSFT': '$2514.xB', 'GOOG': '$1974.xB', 'GOOGL': '$1967.xB', 'AMZN': '$1786.xB'}
-        # dict_symbolmc = {}
-        # dict_symbolprice = {'AAPL': '$175.x', 'MSFT': '$334.x', 'GOOG': '$2974.x', 'GOOGL': '$2963.x', 'AMZN': '$3523.x'}
-        # dict_symbolpctchange = {'AAPL': '2.x%', 'MSFT': '0.x%', 'GOOG': '0.x%', 'GOOGL': '0.x%', 'AMZN': '-0.x%'}
-        # dict_name = {'AAPL': ' Apple Inc. Common Stock', 'MSFT': ' Microsoft Corporation Common Stock', 'GOOG': ' Alphabet Inc. Class C Capital Stock', 'GOOGL': ' Alphabet Inc. Class A Common Stock', 'AMZN': ' Amazon.com, Inc. Common Stock'}    
-        # add_newoutputfile_csv_old(outputname_generated, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols, dict_symbolmc, dict_symbolprice, dict_symbolpctchange, dict_name)
+    #if write_empty_newoutputfile == False:
+    # might be causing MEMORYERROR - ?
+    # dict_symbolmc = {'AAPL': '$3035.xB', 'MSFT': '$2514.xB', 'GOOG': '$1974.xB', 'GOOGL': '$1967.xB', 'AMZN': '$1786.xB'}
+    # dict_symbolmc = {}
+    # dict_symbolprice = {'AAPL': '$175.x', 'MSFT': '$334.x', 'GOOG': '$2974.x', 'GOOGL': '$2963.x', 'AMZN': '$3523.x'}
+    # dict_symbolpctchange = {'AAPL': '2.x%', 'MSFT': '0.x%', 'GOOG': '0.x%', 'GOOGL': '0.x%', 'AMZN': '-0.x%'}
+    # dict_name = {'AAPL': ' Apple Inc. Common Stock', 'MSFT': ' Microsoft Corporation Common Stock', 'GOOG': ' Alphabet Inc. Class C Capital Stock', 'GOOGL': ' Alphabet Inc. Class A Common Stock', 'AMZN': ' Amazon.com, Inc. Common Stock'}    
+    # add_newoutputfile_csv_old(outputname_generated, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols, dict_symbolmc, dict_symbolprice, dict_symbolpctchange, dict_name)
 
-        # #OR
-        # might be causing MEMORYERROR - testing, probbably not
-        reformatandaddinfoto_symbolsdict(symbols)
+    # #OR
+    # might be causing MEMORYERROR - testing, probbably not
+    reformatandaddinfoto_symbolsdict2(symbols)
+    
+    print('enfu2', symbols)
         
 
     '''*****************************************************************************
     # add new output file
     *****************************************************************************'''
     if write_empty_newoutputfile == False:
-        add_newoutputfile_csv_and_sql(storagetype, outputname_generated, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols)
+        add_newoutputfile_csv_and_sql2(new_ref_number, storagetype, outputname_generated, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols)
     
     if write_empty_newoutputfile == True:
         add_newoutputfile_csv_and_sql_empty(storagetype, outputname_generated, dt_string)
@@ -1058,10 +1237,10 @@ if __name__ == '__main__':
     *****************************************************************************'''
     #print("WAY 0 rsa.py used")
     
-    main(input_api_nasdaq, output_filename1_RDS, subs_membercount_min1, marketcap_min1, marketcap_max1) ##stable RDS
+    #main(input_api_nasdaq, output_filename1_RDS, subs_membercount_min1, marketcap_min1, marketcap_max1) ##stable RDS
     #main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1) ##stable
     #main(input_api_nasdaq, output_filename0, subs_membercount_min1, marketcap_min1, marketcap_max1) ##linux/window test large
-    #main(input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4) ##linux/window test small
+    main(input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4) ##linux/window test small
     #main(input_api_nasdaq, output_filename0, subs_membercount_min2, marketcap_min1, marketcap_max4) ##linux test - testing getlist_subreddits - WORKING, needs TESTING
     #main(input_api_nasdaq, output_filename0, subs_specificlist1, marketcap_min1, marketcap_max4)
 
