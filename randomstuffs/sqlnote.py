@@ -146,13 +146,13 @@ WHERE SCHEMA_NAME = 'helloworld';
 '''
 f"CREATE TABLE {database_name1}.{outputname_generated} (Number INT, Symbols TEXT, Mentions INT, marketCap TEXT, latestPric TEXT, changePerc TEXT, peRatio TEXT, companyNam TEXT, PRIMARY KEY (Number));"
 
-CREATE TABLE testtable1 (Analysis_Id INT, Symbols TEXT, Mentions INT, marketCap DECIMAL(16,2), latestPrice DECIMAL(16,2), changePerc DECIMAL(16,2),peRatio DECIMAL(16,2), companyNam TEXT, Table_Id INT, PRIMARY KEY (Analysis_Id)); 
-CREATE TABLE testtable1 (tickerId INT, symbol TEXT, mentions INT, marketCap DECIMAL(16,2), latestPrice DECIMAL(16,2), changePercent DECIMAL(16,2), peRatio DECIMAL(16,2), companyName TEXT, tableId INT, PRIMARY KEY (tickerId));
-CREATE TABLE testtable1 (tickerId INT, symbol TEXT, mentions INT, marketCap DECIMAL(16,2), latestPrice DECIMAL(16,2), changePercent DECIMAL(16,2), peRatio DECIMAL(16,2), companyName TEXT, tableId INT, PRIMARY KEY (tickerId));
+CREATE TABLE table1 (tickerId INT, symbol TEXT, mentions INT, marketCap DECIMAL(16,2), latestPrice DECIMAL(16,2), changePercent DECIMAL(16,2), peRatio DECIMAL(16,2), companyName TEXT, tableId INT, PRIMARY KEY (tickerId));
 
-
-INSERT INTO testtable1 values(1, 'AAPL', 35, 9333222111.015, 100.905, 30.104, -31.105, 'Apple Company', 10);
-INSERT INTO testtable1 values(2, 'AAPL', 35, 7000222111.015, 200.905, 60.104, -61.105, 'Apple Company2', 10);
+INSERT INTO table1 values(1, 'AAPL', 35, 9333222111.015, 100.905, 30.104, -31.105, 'Apple Company', 10);
+INSERT INTO table1 values(2, 'AAPL', 35, 7000222111.015, 200.905, 60.104, -61.105, 'Apple Company2', 10);
+INSERT INTO table1 values(3, 'AAPL', 35, 5000222111.015, 200.905, 60.104, NULL, 'Apple Company2', 10);
+INSERT INTO table1 values(4, 'AAPL', 35, 5000222111.015, 200.905, 60.104, 'NULL', 'Apple Company2', 10);
+INSERT INTO table1 values(6, 'AAPL', 35, 5000222111.015, 200.905, 60.104, NULL, 'Apple Company2', 10);
 
 
 select * from testtable1;
@@ -161,6 +161,8 @@ select analysis_id, symbols, concat("$", format(marketCap, 2)) as marketCap from
 select analysis_id, symbols, concat(changePerc, '%') as changePerc from testtable1 where changePerc < 31;
 
 select tickerid, symbol, concat("$", format(marketCap, 2)) as marketCap from result_4b_007 where marketCap < 400000000000;
+#order by marketcap and show formatted marketcap
+select tickerid, symbol, mentions, concat("$", format(marketcap/1000000000, 2), "B") as marketcap, latestprice, changepercent, peratio, companyname, tableid from result_all_rds_020 order by cast(marketcap as decimal(16,2)) DESC;
 
 SELECT 
 tickerid, 

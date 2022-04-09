@@ -13,6 +13,7 @@ Author: github:asad70
 ****************************************************************************'''
 #imports by asad70
 from operator import ne
+from unittest import expectedFailure
 import praw
 from pymysql import NULL
 from data import *
@@ -752,40 +753,78 @@ def reformatandaddinfoto_symbolsdict2(symbols):
             j = r.json()
             # print(j)
 
-            try:            
-                j_val = j["marketCap"]
-                symbols[k].update({"marketCap": j_val})
-            except:
-                symbols[k].update({"marketCap": "NA/crypto"})
+            # try:
+            for a in ["marketCap", "latestPrice", "changePercent", "companyName", "peRatio"]:
+                j_val = j[a]
 
-            try:
-                j_val = j["latestPrice"]
-                symbols[k].update({"latestPrice": j_val})
-            except:
-                symbols[k].update({"latestPrice": "NA/crypto"})
-
-            try:
-                j_val = j["changePercent"]
-                symbols[k].update({"changePercent": j_val})
-            except:
-                symbols[k].update({"changePercent": "NA/crypto"})
-
-            try:
-                j_val = j["companyName"]
-                symbols[k].update({"companyName": j_val})
-            except:
-                symbols[k].update({"companyName": "NA/crypto"})
-
-            try:
-                j_val = j["peRatio"]
-                if j_val == "" or j_val == None: j_val = NULL
-                symbols[k].update({"peRatio": j_val})
+                # if j_val == None or j_val == 0: 
+                if j_val == None: 
+                    print('note: j_val == ""/None: ', j_val, type(j_val))
+                    symbols[k].update({a: NULL})
+                    continue
                 
-            except:
-                symbols[k].update({"peRatio": "NA/crypto"})
+                if a == "changePercent":
+                    j_val *= 100
+                    
+                symbols[k].update({a: j_val})
+                print('note: j_val == : ', j_val, type(j_val))
+            # except:
+            #     symbols[k].update({a: NULL})
+                    
+    
+
+            # try:            
+            #     j_val = j["marketCap"]
+            #     if j_val == "" or j_val == None or j_val == 0: 
+            #         symbols[k].update({"marketCap": NULL})
+            #         continue
+            #     symbols[k].update({"marketCap": j_val})
+            # except:
+            #     symbols[k].update({"marketCap": NULL})
+
+            # try:
+            #     j_val = j["latestPrice"]
+            #     if j_val == "" or j_val == None or j_val == 0: 
+            #         symbols[k].update({"latestPrice": NULL})
+            #         continue
+            #     symbols[k].update({"latestPrice": j_val})
+            # except:
+            #     symbols[k].update({"latestPrice": NULL})
+
+            # try:
+            #     j_val = j["changePercent"]
+            #     if j_val == "" or j_val == None or j_val == 0: 
+            #         symbols[k].update({"changePercent": NULL})
+            #         continue
+            #     j_val *= 100 #ex: 0.0244 to 2.44 (then formatted to 2.44%)
+            #     symbols[k].update({"changePercent": j_val})
+            # except:
+            #     symbols[k].update({"changePercent": NULL})
+
+            # try:
+            #     j_val = j["companyName"]
+            #     if j_val == "" or j_val == None or j_val == 0: 
+            #         symbols[k].update({"companyName": NULL})
+            #         continue
+            #     symbols[k].update({"companyName": j_val})
+            # except:
+            #     symbols[k].update({"companyName": NULL})
+
+            # try:
+            #     j_val = j["peRatio"]
+            #     if j_val == "" or j_val == None or j_val == 0: 
+            #         symbols[k].update({"peRatio": NULL})
+            #         continue
+            #     symbols[k].update({"peRatio": j_val})
+            # except:
+            #     symbols[k].update({"peRatio": NULL})
 
         except Exception as e:
             print(e, '--', k, r.reason)
+
+            for a in ["marketCap", "latestPrice", "changePercent", "companyName", "peRatio"]:
+                symbols[k].update({a: NULL})
+
             continue #try to bypass json.decoder error
 
 
@@ -803,10 +842,8 @@ def add_newoutputfile_csv_and_sql_empty(storagetype, outputname_generated, dt_st
     *****************************************************************************'''
     if storagetype == "mysql":
         # #1
-        # cursor.execute(f"CREATE TABLE {database_name1}.{outputname_generated} (Number INT, Symbols TEXT, Mentions INT, marketCap TEXT, latestPric TEXT, changePerc TEXT, peRatio TEXT, companyNam TEXT, PRIMARY KEY (Number));")
-        # #1 - improved 
-        cursor.execute(f"CREATE TABLE {database_name1}.{outputname_generated} (Analysis_Id INT, Symbols TEXT, Mentions INT, marketCap DECIMAL(16,2), latestPrice DECIMAL(16,2), changePerc DECIMAL(16,2), peRatio DECIMAL(16,2), companyNam TEXT, Table_Id INT, PRIMARY KEY (Analysis_Id));")
-   
+        cursor.execute(f"CREATE TABLE {database_name1}.{outputname_generated} (tickerId INT, symbol TEXT, mentions INT, marketCap DECIMAL(16,2), latestPrice DECIMAL(16,2), changePercent DECIMAL(16,2), peRatio DECIMAL(16,2), companyName TEXT, tableId INT, PRIMARY KEY (tickerId));")
+
     
     if storagetype == "csv":
         #1
@@ -923,16 +960,13 @@ def add_newoutputfile_csv_and_sql2(new_ref_number, storagetype, outputname_gener
     *****************************************************************************'''
     if storagetype == "mysql":
         # #1
-        # cursor.execute(f"CREATE TABLE {database_name1}.{outputname_generated} (Number INT, Symbols TEXT, Mentions INT, marketCap TEXT, latestPric TEXT, changePerc TEXT, peRatio TEXT, companyNam TEXT, PRIMARY KEY (Number));")
-        # #1 - improved 
         cursor.execute(f"CREATE TABLE {database_name1}.{outputname_generated} (tickerId INT, symbol TEXT, mentions INT, marketCap DECIMAL(16,2), latestPrice DECIMAL(16,2), changePercent DECIMAL(16,2), peRatio DECIMAL(16,2), companyName TEXT, tableId INT, PRIMARY KEY (tickerId));")
-
 
         #2
         info_tickernumber = 1
         for k,v in symbols.items():
             coldata_00 = info_tickernumber
-            coldata_01 = k
+            coldata_01 =  "'%s'" % k
             coldata_02 = v.get('mentions')
             # coldata_03 = senti.get('neg')
             # coldata_04 = senti.get('neu')
@@ -942,10 +976,23 @@ def add_newoutputfile_csv_and_sql2(new_ref_number, storagetype, outputname_gener
             coldata_08 = v.get('latestPrice')
             coldata_09 = v.get('changePercent')
             coldata_10 = v.get('peRatio')
-            coldata_11 = v.get('companyName')
+            coldata_11 = "'%s'" % v.get('companyName')
             coldata_12 = new_ref_number
 
-            cursor.execute(f"INSERT INTO {database_name1}.{outputname_generated} (tickerId, symbol, mentions, marketCap, latestPrice, changePercent, peRatio, companyName, tableId) VALUES ('{coldata_00}', '{coldata_01}', '{coldata_02}', '{coldata_07}', '{coldata_08}', '{coldata_09}', '{coldata_10}', '{coldata_11}', '{coldata_12}');" )
+            if coldata_01 == "'NULL'": coldata_01 = "NULL"
+            if coldata_11 == "'NULL'": coldata_11 = "NULL"
+
+            #way 1 - f string won't work when it comes to  putting NULL into columns
+            # query1 = f"INSERT INTO {database_name1}.{outputname_generated} (tickerId, symbol, mentions, marketCap, latestPrice, changePercent, peRatio, companyName, tableId) VALUES ({coldata_00}, '{coldata_01}', {coldata_02}, {coldata_07}, {coldata_08}, {coldata_09}, {coldata_10}, '{coldata_11}', {coldata_12});"
+            # try: cursor.execute(query1)
+            # except: print("error:", query1)
+
+            #way 2
+            query1="INSERT INTO %s (tickerId, symbol, mentions, marketCap, latestPrice, changePercent, peRatio, companyName, tableId) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            query1 = query1 % (f"{database_name1}.{outputname_generated}", coldata_00, coldata_01, coldata_02, 
+            coldata_07, coldata_08, coldata_09, coldata_10, coldata_11, coldata_12)
+            try: cursor.execute(query1)
+            except: print("error:",query1)
 
             info_tickernumber += 1
         connection.commit()
@@ -1237,10 +1284,10 @@ if __name__ == '__main__':
     *****************************************************************************'''
     #print("WAY 0 rsa.py used")
     
-    #main(input_api_nasdaq, output_filename1_RDS, subs_membercount_min1, marketcap_min1, marketcap_max1) ##stable RDS
-    #main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1) ##stable
+    # main(input_api_nasdaq, output_filename1_RDS, subs_membercount_min1, marketcap_min1, marketcap_max1) ##stable RDS
+    main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1) ##stable
     #main(input_api_nasdaq, output_filename0, subs_membercount_min1, marketcap_min1, marketcap_max1) ##linux/window test large
-    main(input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4) ##linux/window test small
+    #main(input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4) ##linux/window test small
     #main(input_api_nasdaq, output_filename0, subs_membercount_min2, marketcap_min1, marketcap_max4) ##linux test - testing getlist_subreddits - WORKING, needs TESTING
     #main(input_api_nasdaq, output_filename0, subs_specificlist1, marketcap_min1, marketcap_max4)
 

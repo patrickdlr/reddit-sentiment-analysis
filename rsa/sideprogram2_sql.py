@@ -1,5 +1,7 @@
+from asyncore import close_all
 import pathlib, os, time, sys
 import ast, requests, pprint
+from pymysql import NULL
 import pandas as pd
 
 
@@ -343,17 +345,17 @@ cursor = connection.cursor()
 
 
 # # # check if database exists, create one if doesnt exist
-database_name1 = 'sampledb'
-cursor.execute(f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{database_name1}';")
+# database_name1 = 'sampledb'
+# cursor.execute(f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{database_name1}';")
 
-result = cursor.fetchall()
-pprint.pprint(result)
+# result = cursor.fetchall()
+# pprint.pprint(result)
 
-if result == () or result == None: 
-    print(result, '= None')
-    cursor.execute(f"CREATE DATABASE {database_name1}")
-else:
-    print(result, '= not None')
+# if result == () or result == None: 
+#     print(result, '= None')
+#     cursor.execute(f"CREATE DATABASE {database_name1}")
+# else:
+#     print(result, '= not None')
 
 ### connection.commit() # no need..
 
@@ -398,10 +400,10 @@ database_name1 = "rsa_db"
 
 
 # #get list of tables with like name, loop thru the list and change the name numbers
-cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{table_name1}%';")
-myresult = cursor.fetchall()
-list_sqltables = [list(a.values())[0] for a in myresult]
-print('list_sqltables', list_sqltables) #log
+# cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{table_name1}%';")
+# myresult = cursor.fetchall()
+# list_sqltables = [list(a.values())[0] for a in myresult]
+# print('list_sqltables', list_sqltables) #log
 
 
 
@@ -419,4 +421,42 @@ print('list_sqltables', list_sqltables) #log
 #         cursor.execute(f"RENAME TABLE {database_name1}.{a} TO {database_name1}.{table_name1}{num_file};")
 #     except:
 #         continue
-    
+
+
+coldata_00 = 0
+coldata_01 = 'stringg1'
+coldata_02 = 2
+coldata_07 = 3.33
+coldata_08 = 4.44
+coldata_09 = 5.55
+coldata_10 = 6.6633
+coldata_11 = 'stringg2'
+coldata_11 = "'%s'" % (coldata_11)
+coldata_12 = 'NULL'
+
+# query0="INSERT INTO %s (tickerId, symbol, mentions, marketCap, latestPrice, changePercent, peRatio, companyName, tableId) VALUES (%i, %s, %i, %f, %f, %f, %f, %s, %i)"
+query0="INSERT INTO %s (tickerId, symbol, mentions, marketCap, latestPrice, changePercent, peRatio, companyName, tableId) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+
+query0=query0 % (f"{database_name1}.{table_name1}", coldata_00, coldata_01, coldata_02, coldata_07, coldata_08, coldata_09, coldata_10, coldata_11, coldata_12)
+
+print(query0)
+
+
+str1 = "'%s'" % "im weird"
+print(str1)
+
+str2_0 = 'hello'
+str2 = f"'{str2_0}'"
+print(str2)
+
+if str2 == "'hello'":
+    print(str2, 'again')
+
+str3 = "None"
+str4 = None
+print(str3, str4) 
+print(type(str3), type(str4)) 
+if str3 == str4:
+    print('true')
+
+#CREATE TABLE testtable2 (Analysis_Id INT, Symbols VARCHAR(200), Mentions INT, marketCap DECIMAL(16,2), latestPrice DECIMAL(16,2), changePerc DECIMAL(16,2), peRatio DECIMAL(16,2), companyNam Symbols VARCHAR(200), Table_Id INT, PRIMARY KEY (Analysis_Id));
