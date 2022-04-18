@@ -1,6 +1,7 @@
 from asyncore import close_all
 import pathlib, os, time, sys
 import ast, requests, pprint
+from matplotlib.pyplot import table
 from pymysql import NULL
 import pandas as pd
 
@@ -9,19 +10,21 @@ import pandas as pd
 # script 8 - playing with pymysql
 *****************************************************************************'''
 
+table_name1 = "result_test_"
+database_name1 = "rsa_db"
 
 import pymysql
 
 # Connect to the database
 connection = pymysql.connect(
-                        host=os.environ.get('MYSQL_HOST'),
-                        user=os.environ.get('MYSQL_USER'),
-                        password=os.environ.get('MYSQL_PASSWORD'),
+                        host=os.environ.get('MYSQL_HOST_RDS'),
+                        user=os.environ.get('MYSQL_USER_RDS'),
+                        password=os.environ.get('MYSQL_PASSWORD_RDS'),
                         charset='utf8mb4',
                         cursorclass=pymysql.cursors.DictCursor)
 # print(connection)
 
-cursor = connection.cursor()
+# cursor = connection.cursor()
 
 # try:
 #     cursor = connection.cursor()
@@ -117,55 +120,57 @@ cursor = connection.cursor()
     #         print(a["TABLE_NAME"]) #table name from {table data}
     #         # print(a) #{table data}
 
+# with connection:
 
-    # ### find if table exists (within table_schema)
-    # print('\n')
-    # with connection.cursor() as cursor:
-    #     table_schema = 'helloworld'
-    #     table_name = 'table1'
-    #     sql = f"SELECT * FROM information_schema.tables WHERE table_schema = '{table_schema}' AND table_name = '{table_name}'"
-    #     cursor.execute(sql)
-    #     result = cursor.fetchall()
-    #     # pprint.pprint(result)
+#     ### find if table exists (within table_schema)
+#     print('\n')
+#     with connection.cursor() as cursor:
+#         # database_name1 = 'rsa_db'
+#         # table_name1 = 'table1'
+#         # sql = f"SELECT * FROM information_schema.tables WHERE table_schema = '{database_name1}' AND table_name = '{table_name1}'"
+#         # cursor.execute(sql)
+#         # result = cursor.fetchall()
+#         # pprint.pprint(result)
+
+#         database_name1 = 'rsa_db'
+#         table_name1 = 'table1'
+#         # sql = f"SELECT * FROM information_schema.tables WHERE table_name = '{table_name}'"
+#         sql = f"SELECT table_name FROM information_schema.tables WHERE table_schema = '{database_name1}' AND TABLE_NAME = '{table_name1}'"
+#         #sql = f"SELECT count(*) FROM information_schema.TABLES WHERE (TABLE_SCHEMA = '{database_name1}') AND (TABLE_NAME = '{table_name1}')"
         
-    #     table_schema = 'helloworld'
-    #     table_name = 'table99'
-    #     # sql = f"SELECT * FROM information_schema.tables WHERE table_name = '{table_name}'"
-    #     # sql = f"SELECT table_name FROM information_schema.tables WHERE table_schema = '{table_schema}'"
-    #     sql = f"SELECT * FROM information_schema.tables WHERE table_schema = '{table_schema}' AND table_name = '{table_name}'"
         
-    #     if cursor.execute(sql) == 0: #0 = doesn't exist 
-    #         print('this table doesnt exists')
-    #         print(False)
-    #     elif cursor.execute(sql) == 1: #1 = exists
-    #         print('this table exists')
-    #         print(True)
+#         if cursor.execute(sql) == 0: #0 = doesn't exist 
+#             print('this table doesnt exists')
+#             print(False)
+
+#             result = cursor.fetchall()
+#             pprint.pprint(result)
+
+#         elif cursor.execute(sql) == 1: #1 = exists
+#             print('this table exists')
+#             print(True)
         
-    #         result = cursor.fetchall()
-            
-    #         pprint.pprint(result)
-    #         for a in result:
-    #             print(a["TABLE_NAME"]) #table name from {table data}
-    #             # print(a) #{table data}
+#             result = cursor.fetchall()
+#             pprint.pprint(result)
     
 
-    # ###
+#     ###
 
 
-    # # connection is not autocommit by default. So you must commit to save
-    # # your changes.
-    # connection.commit()
-
-
-
+#     # connection is not autocommit by default. So you must commit to save
+#     # your changes.
+#     connection.commit()
 
 
 
-#create database, table on aws
+
+
+
+# create database, table on aws
 #with connection:
-    # ### find if database exists (within table_schema), get last one, and create another table..
+    ### find if database exists (within table_schema), get last one, and create another table..
 
-    ### check if database exists, if not.. create one, check if certain table exists, if not.. create one, then check if rows exist, if not, create one
+    ## check if database exists, if not.. create one, check if certain table exists, if not.. create one, then check if rows exist, if not, create one
     
     # print('\n')
     # with connection.cursor() as cursor:
@@ -189,35 +194,38 @@ cursor = connection.cursor()
     # with connection.cursor() as cursor:
         
     #     #create new table in target schema/database
-    #     table_name = "table4"
-    #     table_schema = "helloworld"
+    #     table_name1 = "table1"
+    #     database_name1 = "rsa_db"
 
         
-    #     #check if table exists
-    #     sql = f"USE {table_schema}"
-    #     cursor.execute(sql)
-    #     sql = f"SELECT * FROM information_schema.tables WHERE table_schema = {table_schema} AND table_name = {table_name}"
+    #     # # check if table exists
+    #     # sql = f"USE {database_name1}"
+    #     # cursor.execute(sql)
+    #     sql = f"SELECT * FROM information_schema.tables WHERE table_schema = '{database_name1}' AND table_name = '{table_name1}'"
         
     #     if cursor.execute(sql) == 1: #1 = exists
-    #         print(f"table {table_name} already exists")
-
+    #         print(f"TABLE {table_name1} already exists")
     #         ###drop table
-    #         print(f"deleting {table_name}")
-    #         sql2 = f"DROP {table_name}"
-    #         cursor.execute(sql2)
+    #         # print(f"deleting {table_name}")
+    #         # sql2 = f"DROP {table_name}"
+    #         # cursor.execute(sql2)
         
     #     elif cursor.execute(sql) == 0: #0 = doesn't exist 
-            
-
+    #         print(f"TABLE {table_name1} doesn't exists")
+    
     #         #create table
-    #         print(f"creating {table_name}")
-    #         sql2 = f"CREATE TABLE {table_name} (id INT, computer_name TEXT);"
-    #         cursor.execute(sql2)
-            
-        
+    #         # print(f"creating {table_name}")
+    #         # sql2 = f"CREATE TABLE {table_name} (id INT, computer_name TEXT);"
+    #         # cursor.execute(sql2)
+                   
     #     result = cursor.fetchall()
     #     pprint.pprint(result)  
 
+
+#         #check if table exists 2 
+#         stmt = f"SHOW TABLES LIKE '{table_name1}'"
+#         cursor.execute(stmt)
+# result = cursor.fetchone()
     
 
 
@@ -364,8 +372,7 @@ cursor = connection.cursor()
 # cursor.execute(f"DROP DATABASE {database_name1};")
 
 
-table_name1 = "result_test_"
-database_name1 = "rsa_db"
+
 
 
 
@@ -423,40 +430,167 @@ database_name1 = "rsa_db"
 #         continue
 
 
-coldata_00 = 0
-coldata_01 = 'stringg1'
-coldata_02 = 2
-coldata_07 = 3.33
-coldata_08 = 4.44
-coldata_09 = 5.55
-coldata_10 = 6.6633
-coldata_11 = 'stringg2'
-coldata_11 = "'%s'" % (coldata_11)
-coldata_12 = 'NULL'
+# coldata_00 = 0
+# coldata_01 = 'stringg1'
+# coldata_02 = 2
+# coldata_07 = 3.33
+# coldata_08 = 4.44
+# coldata_09 = 5.55
+# coldata_10 = 6.6633
+# coldata_11 = 'stringg2'
+# coldata_11 = "'%s'" % (coldata_11)
+# coldata_12 = 'NULL'
 
 # query0="INSERT INTO %s (tickerId, symbol, mentions, marketCap, latestPrice, changePercent, peRatio, companyName, tableId) VALUES (%i, %s, %i, %f, %f, %f, %f, %s, %i)"
-query0="INSERT INTO %s (tickerId, symbol, mentions, marketCap, latestPrice, changePercent, peRatio, companyName, tableId) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+# query0="INSERT INTO %s (tickerId, symbol, mentions, marketCap, latestPrice, changePercent, peRatio, companyName, tableId) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
-query0=query0 % (f"{database_name1}.{table_name1}", coldata_00, coldata_01, coldata_02, coldata_07, coldata_08, coldata_09, coldata_10, coldata_11, coldata_12)
+# query0=query0 % (f"{database_name1}.{table_name1}", coldata_00, coldata_01, coldata_02, coldata_07, coldata_08, coldata_09, coldata_10, coldata_11, coldata_12)
 
-print(query0)
+# print(query0)
 
 
-str1 = "'%s'" % "im weird"
-print(str1)
+# str1 = "'%s'" % "im weird"
+# print(str1)
 
-str2_0 = 'hello'
-str2 = f"'{str2_0}'"
-print(str2)
+# str2_0 = 'hello'
+# str2 = f"'{str2_0}'"
+# print(str2)
 
-if str2 == "'hello'":
-    print(str2, 'again')
+# if str2 == "'hello'":
+#     print(str2, 'again')
 
-str3 = "None"
-str4 = None
-print(str3, str4) 
-print(type(str3), type(str4)) 
-if str3 == str4:
-    print('true')
+# str3 = "None"
+# str4 = None
+# print(str3, str4) 
+# print(type(str3), type(str4)) 
+# if str3 == str4:
+#     print('true')
 
 #CREATE TABLE testtable2 (Analysis_Id INT, Symbols VARCHAR(200), Mentions INT, marketCap DECIMAL(16,2), latestPrice DECIMAL(16,2), changePerc DECIMAL(16,2), peRatio DECIMAL(16,2), companyNam Symbols VARCHAR(200), Table_Id INT, PRIMARY KEY (Analysis_Id));
+
+
+
+
+
+'''*****************************************************************************
+#get list of parenttable_id =ok
+#deleting excessive rows from a child table, =ok
+#deleting excessive rows from a parent table, 
+#renaming leftover rows (ex: 5-8 to 1-4, 6-10 to 1-5)
+*****************************************************************************'''
+max_output_amount = 12
+database_name1 = 'test_db1'
+table_name1_child = 'result_all_child'
+table_name1_parent = 'result_all_parent'
+
+#child table
+with connection.cursor() as cursor:
+    print("\nchild table (deleting/):")
+    sql = f"select parenttable_id from {database_name1}.{table_name1_child} order by parenttable_id ASC;"
+    cursor.execute(sql)
+
+    result = cursor.fetchall()
+    # pprint.pprint(result)
+    #turn into list
+    list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+    # remove duplicates
+    list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+    print(list_existingoutputfiles1)
+
+    print('deleting excessive rows')
+    while True:
+        if len(list_existingoutputfiles1) >= max_output_amount:           
+            #delete first rows - sql
+            cursor.execute(f"DELETE FROM {database_name1}.{table_name1_child} where parenttable_id = {list_existingoutputfiles1[0]};")
+
+            #reinitialize list of tables - sql
+            list_existingoutputfiles1 = []
+            sql = f"select parenttable_id from {database_name1}.{table_name1_child} order by parenttable_id ASC;"
+            cursor.execute(sql)
+
+            result = cursor.fetchall()
+            #turn into list
+            list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+            # remove duplicates
+            list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+            print(list_existingoutputfiles1)
+                
+        else:
+            break
+
+    print('renaming leftover rows')
+    for a in list_existingoutputfiles1:
+        new_parenttable_id = list_existingoutputfiles1.index(a) + 1 #adjust from 0 to 1
+        #old_parenttable_id = a
+        sql = f"UPDATE {database_name1}.{table_name1_child} SET parenttable_id = {new_parenttable_id} where parenttable_id = {a};"
+        cursor.execute(sql)
+    
+    #reinitialize list of tables - sql
+    list_existingoutputfiles1 = []
+    sql = f"select parenttable_id from {database_name1}.{table_name1_child} order by parenttable_id ASC;"
+    cursor.execute(sql)
+
+    result = cursor.fetchall()
+    #turn into list
+    list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+    # remove duplicates
+    list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+    print(list_existingoutputfiles1)
+    
+
+#parent table
+#parent table
+with connection.cursor() as cursor:
+    print("\nparent table (deleting/):")
+    sql = f"select parenttable_id from {database_name1}.{table_name1_parent} order by parenttable_id ASC;"
+    cursor.execute(sql)
+
+    result = cursor.fetchall()
+    # pprint.pprint(result)
+    #turn into list
+    list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+    # remove duplicates
+    list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+    print(list_existingoutputfiles1)
+
+    print('--')
+    while True:
+        if len(list_existingoutputfiles1) >= max_output_amount:           
+            #delete first rows - sql
+            cursor.execute(f"DELETE FROM {database_name1}.{table_name1_parent} where parenttable_id = {list_existingoutputfiles1[0]};")
+
+            #reinitialize list of tables - sql
+            list_existingoutputfiles1 = []
+            sql = f"select parenttable_id from {database_name1}.{table_name1_parent} order by parenttable_id ASC;"
+            cursor.execute(sql)
+
+            result = cursor.fetchall()
+            #turn into list
+            list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+            # remove duplicates
+            list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+            print(list_existingoutputfiles1)
+                
+        else:
+            break
+
+    print('renaming leftover rows')
+    for a in list_existingoutputfiles1:
+        new_parenttable_id = list_existingoutputfiles1.index(a) + 1 #adjust from 0 to 1
+        #old_parenttable_id  = a
+        sql = f"UPDATE {database_name1}.{table_name1_parent} SET parenttable_id = {new_parenttable_id} where parenttable_id = {a};"
+        cursor.execute(sql)
+
+    #reinitialize list of tables - sql
+    list_existingoutputfiles1 = []
+    sql = f"select parenttable_id from {database_name1}.{table_name1_parent} order by parenttable_id ASC;"
+    cursor.execute(sql)
+
+    result = cursor.fetchall()
+    #turn into list
+    list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+    # remove duplicates
+    list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+    print(list_existingoutputfiles1)
+
+connection.commit()

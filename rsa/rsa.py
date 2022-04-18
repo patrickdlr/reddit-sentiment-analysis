@@ -85,8 +85,8 @@ def connect_to_mysql():
 
 if storagetype == "mysql":
     connection, cursor = connect_to_mysql()
-    database_name1 = 'rsa_db'
-
+    # database_name1 = 'rsa_db_onetableversion'
+    database_name1 = 'test_db1'
 
 '''*****************************************************************************
 # Parameters for main function
@@ -222,6 +222,118 @@ def prepare_variables1_csv_and_sql(storagetype, outputname_userinput, max_output
     return outputname_generated, list_existingoutputfiles1, new_ref_number
     
 
+def prepare_variables1_sql_onetableversion(outputname_userinput, max_output_amount):
+    '''*****************************************************************************
+    ### 0 - check if database, parent table, child table exist or doesn't exist yet
+    ### 1 - get new ref number (set as 1 if tables dont exist OR get latest/highest parenttable_id from child table if exist)
+    ### 2 - adjust the new ref number (parenttable_id + 1) -- (using max_output = 10: 10 if parenttable_id = 10 there already, 10 if 9 there already, 9 if 8 files there already, 1 if 0, 2 if 1)
+    # parameters: outputname_userinput, max_output_amount
+    # return variables: new_ref_number
+    *****************************************************************************'''
+
+    #Need testing
+    #   test with child table with parentid
+
+    exists_database = None
+    exists_parenttable = None
+    exists_childtable = None
+
+    print('\nprepare_variables1_sql_onetableversion()*************************')
+    print('outputname_userinput:', outputname_userinput)
+    
+
+    ### 0
+    cursor.execute(f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{database_name1}';")
+    result = cursor.fetchall()
+    if result == () or result == None: 
+        print(f"No such database exists.")
+        print(f"Will create [{database_name1}] database after sentiment analysis")
+        exists_database = False
+    else:
+        print(result)
+        print(f"database exists.. {database_name1} database")
+        exists_database = True
+
+
+    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND TABLE_NAME = '{outputname_userinput}parent';")
+    result = cursor.fetchall()
+    if result == () or result == None: 
+        print(f"No such parent table exists.")
+        print(f"Will create [{database_name1}.{outputname_userinput}parent] table after sentiment analysis")
+        exists_parenttable = False
+    else:
+        print(result)
+        print(f"parent table exists.. [{database_name1}.{outputname_userinput}parent] table")
+        exists_parenttable = True
+
+
+    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND TABLE_NAME = '{outputname_userinput}child';")
+    result = cursor.fetchall()
+    if result == () or result == None: 
+        print(f"No such child table exists.")
+        print(f"Will create [{database_name1}.{outputname_userinput}child] table after sentiment analysis")
+        exists_childtable = False
+    else:
+        print(result)
+        print(f"child table exists.. [{database_name1}.{outputname_userinput}child] table")
+        exists_childtable = True
+
+
+    ### 1
+    new_ref_number = 0
+
+    #xxx 1
+    if exists_database == False and exists_parenttable == False and exists_childtable == False:
+        
+        new_ref_number = 0
+
+        # for later: create the database, parent, and child table, then add new entries
+    
+    #Oxx 2
+    if exists_database == True and exists_parenttable == False and exists_childtable == False:
+        new_ref_number = 0
+
+        #for later: create parent and child table, then add new entries
+
+    #0x0 2
+    if exists_database == True and exists_parenttable == False and exists_childtable == True:
+        #TODO: get latest/highest parenttable_id from child table
+        # #search within child table for hghest parenttable_id now, get the new ref number
+        # query0 = f"SELECT * FROM {database_name1}.{outputname_userinput}child;"
+        # cursor.execute(query0)
+        print(query0)
+        new_ref_number = 9999
+        
+    #O0x 3
+    if exists_database == True and exists_parenttable == True and exists_childtable == False:
+
+        #TODO: clear or delete the parent table
+        #empty the parent table.. later
+        new_ref_number = 0
+
+    #O00 2
+    if exists_database == True and exists_parenttable == True and exists_childtable == True:
+        #get latest/highest parenttable_id from child table
+        query0 = f"SELECT * FROM {database_name1}.{outputname_userinput}child%;"
+        # cursor.execute(query0)
+        print(query0)
+        new_ref_number = 9999
+    
+
+    ### 3
+    if new_ref_number >= max_output_amount:
+        print(f'limiting new_ref_number from {new_ref_number} to {max_output_amount}')
+        new_ref_number = max_output_amount
+        
+    else:
+        new_ref_number += 1
+
+    print('prepare_variables1_sql_onetableversion()*************************\n')
+    return new_ref_number
+
+    
+
+
 def prepare_variables2_additional_info(subs, marketcap_max):
     dt_string = datetime.now().strftime("%m/%d/%Y %H:%M")
     info_subcount = 'Sub count: ' + str(len(subs))
@@ -231,7 +343,8 @@ def prepare_variables2_additional_info(subs, marketcap_max):
     else: 
         info_marketCap_limit = 'Market Cap min: ' + str(marketcap_max/1000000000) + ' billion(s)'
 
-    return dt_string, info_subcount, info_marketCap_limit
+    subreddit_count = len(subs)
+    return dt_string, info_subcount, info_marketCap_limit, subreddit_count
 
 
 def print_logs1(dt_string, outputname_generated, info_subcount, info_marketCap_limit, us):
@@ -356,7 +469,7 @@ def data_extractor(reddit, subs, us):
         except Forbidden:
             continue #SKIP SUBreddit that gives off 403 error>..?
 
-    return posts, c_analyzed, tickers, titles, a_comments, picks, subs, picks_ayz, info_parameters
+    return posts, c_analyzed, tickers, titles, a_comments, picks, subs, picks_ayz, info_parameters, upvoteRatio, ups, limit, upvotes
 
 
 def print_helper(tickers, picks, c_analyzed, posts, subs, titles, time, start_time):
@@ -379,9 +492,9 @@ def print_helper(tickers, picks, c_analyzed, posts, subs, titles, time, start_ti
     # sorts the dictionary
     symbols = dict(sorted(tickers.items(), key=lambda item: item[1], reverse = True))
     top_picks = list(symbols.keys())[0:picks]
-    time = (time.time() - start_time)
-    
-    info_ittookxseconds = "It took {t:.2f} seconds to analyze {c} comments in {p} posts in {s} subreddits.".format(t=time, c=c_analyzed, p=posts, s=len(subs)) #log print
+    seconds_took = (time.time() - start_time) # used to time, before renaming to seconds_took
+
+    info_ittookxseconds = "It took {t:.2f} seconds to analyze {c} comments in {p} posts in {s} subreddits.".format(t=seconds_took, c=c_analyzed, p=posts, s=len(subs)) #log print
     if isPrint_logs == True:
         # print top picks
         #print("It took {t:.2f} seconds to analyze {c} comments in {p} posts in {s} subreddits.".format(t=time, c=c_analyzed, p=posts, s=len(subs)))
@@ -408,7 +521,7 @@ def print_helper(tickers, picks, c_analyzed, posts, subs, titles, time, start_ti
         times.append(symbols[i])
         top.append("{}: {}".format(i,symbols[i]))
 
-    return symbols, times, top, info_ittookxseconds
+    return symbols, times, top, info_ittookxseconds, seconds_took
 
 
 def sentiment_analysis(picks_ayz, a_comments, symbols, us):
@@ -657,8 +770,147 @@ def deleteandrename_existingoutputfiles_csv_and_sql(storagetype, list_existingou
             if a.startswith(outputname_userinput):
                 previewlist_existingoutputfiles1.append(a)
         print('list_existingoutputfiles1 (after num correction)'.ljust(55), previewlist_existingoutputfiles1) #log
-            
 
+def deleteandrename_existingoutputs_sql_onetableversion(max_output_amount, outputname_userinput):
+    #
+    '''*****************************************************************************
+    ### 0 - check if database, parent table, child table exist or doesn't exist yet
+    ### 1 - get new ref number (set as 1 if tables dont exist OR get latest/highest parenttable_id from child table if exist)
+    ### 2 - adjust the new ref number (parenttable_id + 1) -- (using max_output = 10: 10 if parenttable_id = 10 there already, 10 if 9 there already, 9 if 8 files there already, 1 if 0, 2 if 1)
+    # parameters: outputname_userinput, max_output_amount
+    # return variables: new_ref_number
+    *****************************************************************************'''
+
+    #Need testing
+    #   test with child table with parentid
+
+    exists_database = None
+    exists_parenttable = None
+    exists_childtable = None
+
+    print('\ndeleteandrename_existingoutputs_sql_onetableversion()*************************')
+    print('outputname_userinput:', outputname_userinput)
+    
+    
+
+    ### 0
+    cursor.execute(f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{database_name1}';")
+    result = cursor.fetchall()
+    if result == () or result == None: 
+        print(f"No such database exists.")
+        print(f"Will create [{database_name1}] database after sentiment analysis")
+        exists_database = False
+    else:
+        print(result)
+        print(f"database exists.. {database_name1} database")
+        exists_database = True
+
+
+    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND TABLE_NAME = '{outputname_userinput}parent';")
+    result = cursor.fetchall()
+    if result == () or result == None: 
+        print(f"No such parent table exists.")
+        print(f"Will create [{database_name1}.{outputname_userinput}parent] table after sentiment analysis")
+        exists_parenttable = False
+    else:
+        print(result)
+        print(f"parent table exists.. [{database_name1}.{outputname_userinput}parent] table")
+        exists_parenttable = True
+
+
+    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND TABLE_NAME = '{outputname_userinput}child';")
+    result = cursor.fetchall()
+    if result == () or result == None: 
+        print(f"No such child table exists.")
+        print(f"Will create [{database_name1}.{outputname_userinput}child] table after sentiment analysis")
+        exists_childtable = False
+    else:
+        print(result)
+        print(f"child table exists.. [{database_name1}.{outputname_userinput}child] table")
+        exists_childtable = True
+
+
+    ### 1
+    new_ref_number = 0
+
+    #select parenttable_id from result_all_child order by parenttable_id desc limit 1;
+    
+    #xxx 1
+    if exists_database == False and exists_parenttable == False and exists_childtable == False:
+        
+        new_ref_number = 0
+        #TODO = ok
+        #step 0: set ref number as 0 (+ 1)
+        #step 1: create the database, parent, and child table (3 things)
+        #step 2: then add new entries (usually parenttable_id/new ref number = 1)
+    
+    #Oxx 2
+    if exists_database == True and exists_parenttable == False and exists_childtable == False:
+        new_ref_number = 0
+        #TODO = ok
+        #step 0: set ref number as 0 (+ 1)
+        #step 1: create parent and child table (2 things)
+        #step 2: then add new entries (usually parenttable_id/new ref number = 1)
+
+    #0x0 2
+    if exists_database == True and exists_parenttable == False and exists_childtable == True:
+        #TODO = ok, almost there
+        #step 1: get latest/highest parenttable_id from child table (parenttable_id = 0 (+ 1) or whatever number), set as new ref number
+        #step 2: create parent table (1 thing)
+        #step 3: delete excessive entries containing cutoff parenttable_id (in child table) - how?
+        #step 4: then add new entries
+
+
+        # query0 = f"SELECT * FROM {database_name1}.{outputname_userinput}child;"
+        # cursor.execute(query0)
+        print(query0)
+        new_ref_number = 9999
+        
+    #O0x 3
+    if exists_database == True and exists_parenttable == True and exists_childtable == False:
+        #TODO = ok
+        #step 0: set ref number as 0 (+ 1)
+        #step 1: clear or delete/recreate the parent table, and create child table (2 things)
+        #step 2: then add new entries (usually parenttable_id/new ref number = 1)
+
+        new_ref_number = 0
+
+    #O00 2
+    if exists_database == True and exists_parenttable == True and exists_childtable == True:
+        #TODO = ok, almost there
+        #step 1: get latest/highest parenttable_id from child table (parenttable_id = 0 (+ 1) or whatever number), set as new ref number
+        #step 2: delete excessive entries containing cutoff parenttable_id (in parent/child table) - how?
+            #play with sql table first
+        #step 3: then add new entries
+
+
+        query0 = f"SELECT * FROM {database_name1}.{outputname_userinput}child%;"
+        # cursor.execute(query0)
+        print(query0)
+        new_ref_number = 9999
+    
+
+    ### 3
+    if new_ref_number >= max_output_amount:
+        print(f'limiting new_ref_number from {new_ref_number} to {max_output_amount}')
+        new_ref_number = max_output_amount
+        
+    else:
+        new_ref_number += 1
+
+    print('deleteandrename_existingoutputs_sql_onetableversion()*************************\n')
+    return new_ref_number
+
+
+
+
+
+def add_newmetatable():
+    print(None)
+
+def update_existingoutputfiles_sql():
+    print(None)
+    
 def reformatandaddinfoto_symbolsdict(symbols):
     #add function that adds details for list of found symbols
 
@@ -767,7 +1019,7 @@ def reformatandaddinfoto_symbolsdict2(symbols):
                     j_val *= 100
                     
                 symbols[k].update({a: j_val})
-                print('note: j_val == : ', j_val, type(j_val))
+                # print('note: j_val == : ', j_val, type(j_val))
             # except:
             #     symbols[k].update({a: NULL})
                     
@@ -833,6 +1085,7 @@ def reformatandaddinfoto_symbolsdict2(symbols):
     # return symbols
 
     endingvar = None
+
 
 
 def add_newoutputfile_csv_and_sql_empty(storagetype, outputname_generated, dt_string):
@@ -967,6 +1220,7 @@ def add_newoutputfile_csv_and_sql2(new_ref_number, storagetype, outputname_gener
         for k,v in symbols.items():
             coldata_00 = info_tickernumber
             coldata_01 =  "'%s'" % k
+            if coldata_01 == "'NULL'": coldata_01 = "NULL"
             coldata_02 = v.get('mentions')
             # coldata_03 = senti.get('neg')
             # coldata_04 = senti.get('neu')
@@ -977,17 +1231,12 @@ def add_newoutputfile_csv_and_sql2(new_ref_number, storagetype, outputname_gener
             coldata_09 = v.get('changePercent')
             coldata_10 = v.get('peRatio')
             coldata_11 = "'%s'" % v.get('companyName')
+            if coldata_11 == "'NULL'": coldata_11 = "NULL"
             coldata_12 = new_ref_number
 
-            if coldata_01 == "'NULL'": coldata_01 = "NULL"
-            if coldata_11 == "'NULL'": coldata_11 = "NULL"
+            
 
-            #way 1 - f string won't work when it comes to  putting NULL into columns
-            # query1 = f"INSERT INTO {database_name1}.{outputname_generated} (tickerId, symbol, mentions, marketCap, latestPrice, changePercent, peRatio, companyName, tableId) VALUES ({coldata_00}, '{coldata_01}', {coldata_02}, {coldata_07}, {coldata_08}, {coldata_09}, {coldata_10}, '{coldata_11}', {coldata_12});"
-            # try: cursor.execute(query1)
-            # except: print("error:", query1)
-
-            #way 2
+            # don't use f string because it can't put 'NULL' as NULL, use % ()
             query1="INSERT INTO %s (tickerId, symbol, mentions, marketCap, latestPrice, changePercent, peRatio, companyName, tableId) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
             query1 = query1 % (f"{database_name1}.{outputname_generated}", coldata_00, coldata_01, coldata_02, 
             coldata_07, coldata_08, coldata_09, coldata_10, coldata_11, coldata_12)
@@ -1095,12 +1344,16 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
     if storagetype == "mysql":
         connection, cursor = connect_to_mysql()
 
+    #traditional 
+    # outputname_generated, list_existingoutputfiles1, new_ref_number = prepare_variables1_csv_and_sql(storagetype, outputname_userinput, max_output_amount)
     
-    outputname_generated, list_existingoutputfiles1, new_ref_number = prepare_variables1_csv_and_sql(storagetype, outputname_userinput, max_output_amount)
-    print('new_ref_number:', new_ref_number)
-
+    #one table version
+    new_ref_number = prepare_variables1_sql_onetableversion(outputname_userinput, max_output_amount)
+    outputname_generated = 'null'
+    
 
     if storagetype == "mysql":
+        cursor.close()
         connection.close()
 
     '''*****************************************************************************
@@ -1137,10 +1390,15 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
     # prepare additional-info variables - (put additional-info into new output file)
     # print logs
     *****************************************************************************'''
-    dt_string, info_subcount, info_marketCap_limit = prepare_variables2_additional_info(subs, marketcap_max)
+    dt_string, info_subcount, info_marketCap_limit, subreddit_count = prepare_variables2_additional_info(subs, marketcap_max)
+    
 
     print_logs1(dt_string, outputname_generated, info_subcount, info_marketCap_limit, us) #only for csv files
     
+
+    # sys.exit("Forced exit!")
+
+
 
     '''*****************************************************************************
     # Reddit Sentiment Analysis
@@ -1166,10 +1424,12 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
     #     password
     # )
     
-    posts, c_analyzed, tickers, titles, a_comments, picks, subs, picks_ayz, info_parameters = data_extractor(reddit, subs, us)
+    # posts, c_analyzed, tickers, titles, a_comments, picks, subs, picks_ayz, info_parameters = data_extractor(reddit, subs, us)
+    posts, c_analyzed, tickers, titles, a_comments, picks, subs, picks_ayz, info_parameters, upvoteRatio, ups, limit, upvotes = data_extractor(reddit, subs, us)
     print('data_extractor finished')
 
-    symbols, times, top, info_ittookxseconds = print_helper(tickers, picks, c_analyzed, posts, subs, titles, time, start_time)
+    # symbols, times, top, info_ittookxseconds = print_helper(tickers, picks, c_analyzed, posts, subs, titles, time, start_time)
+    symbols, times, top, info_ittookxseconds, seconds_took = print_helper(tickers, picks, c_analyzed, posts, subs, titles, time, start_time)
     print('print_helper finished')
 
     #PROBLEM_3: Seems to not work on AWS's due to excessive memory usage...
@@ -1193,7 +1453,9 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
 
     
     # might be causing MEMORYERROR - probably not
-    deleteandrename_existingoutputfiles_csv_and_sql(storagetype, list_existingoutputfiles1, max_output_amount, outputname_userinput)
+    # deleteandrename_existingoutputfiles_csv_and_sql(storagetype, list_existingoutputfiles1, max_output_amount, outputname_userinput)
+
+    deleteandrename_existingoutputs_sql_onetableversion(max_output_amount, outputname_userinput)
     
 
     '''*****************************************************************************
@@ -1213,6 +1475,10 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
     reformatandaddinfoto_symbolsdict2(symbols)
     
     print('enfu2', symbols)
+
+
+    #data for parent table
+    print(new_ref_number, subreddit_count, upvoteRatio, ups, limit, upvotes, picks, picks_ayz, seconds_took, c_analyzed)
         
 
     '''*****************************************************************************
@@ -1232,6 +1498,7 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
     print_logs3(outputname_userinput, outputname_generated)
 
     if storagetype == "mysql":
+        cursor.close()
         connection.close()
 
 
@@ -1285,9 +1552,9 @@ if __name__ == '__main__':
     #print("WAY 0 rsa.py used")
     
     # main(input_api_nasdaq, output_filename1_RDS, subs_membercount_min1, marketcap_min1, marketcap_max1) ##stable RDS
-    main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1) ##stable
+    #main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1) ##stable
     #main(input_api_nasdaq, output_filename0, subs_membercount_min1, marketcap_min1, marketcap_max1) ##linux/window test large
-    #main(input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4) ##linux/window test small
+    main(input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4) ##linux/window test small
     #main(input_api_nasdaq, output_filename0, subs_membercount_min2, marketcap_min1, marketcap_max4) ##linux test - testing getlist_subreddits - WORKING, needs TESTING
     #main(input_api_nasdaq, output_filename0, subs_specificlist1, marketcap_min1, marketcap_max4)
 
@@ -1302,7 +1569,7 @@ if __name__ == '__main__':
     ###idea = main(input_csvfile, savedtickers4b, subs_membercount_min1, 4,000,000,000, member counts)
     ###idea = main(input_csvfile, savedtickers200b, subs_membercount_min1, 200,000,000,000, 200,000)
 
-    # program_number = 3
+    # program_number = 1
     # schedule.every().day.at("23:55").do(nltk.download, 'wordnet')
 
     # if program_number == 1:

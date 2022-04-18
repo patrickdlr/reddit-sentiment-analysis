@@ -30,7 +30,7 @@
 #select * from helloworld.table1 limit 2,100; #2 = don't show first 2 rows, 100 = limit to 100 rows
 
 #select * from table1 join table3 on table1.product_id = table3.product_id;
-#select student_id, table1.name, grade, date, table3.product_id, table3.name, table3.price from table1 join table3 on table1.product_id = table3.product_id;
+#select student_id, table1.name, grade, date, table3.product_id, table3.name, ta[ble3.price from table1 join table3 on table1.product_id = table3.product_id;
 #select student_id, t1.name, grade, date, t3.product_id, t3.name, t3.price from table1 t1 join table3 t3 on t1.product_id = t3.product_id;#
 
 #select * FROM information_schema.tables where table_schema = "rsa_db";
@@ -144,9 +144,9 @@ WHERE SCHEMA_NAME = 'helloworld';
 
 
 '''
-f"CREATE TABLE {database_name1}.{outputname_generated} (Number INT, Symbols TEXT, Mentions INT, marketCap TEXT, latestPric TEXT, changePerc TEXT, peRatio TEXT, companyNam TEXT, PRIMARY KEY (Number));"
+f"CREATE TABLE {database_name1}.{outputname_generated} (Number INT, Symbols TEXT, Mentions INT, market_cap TEXT, latestPric TEXT, changePerc TEXT, pe_ratio TEXT, companyNam TEXT, PRIMARY KEY (Number));"
 
-CREATE TABLE table1 (tickerId INT, symbol TEXT, mentions INT, marketCap DECIMAL(16,2), latestPrice DECIMAL(16,2), changePercent DECIMAL(16,2), peRatio DECIMAL(16,2), companyName TEXT, tableId INT, PRIMARY KEY (tickerId));
+CREATE TABLE table1 (ticker_id INT, symbol TEXT, mentions INT, market_cap DECIMAL(16,2), latest_price DECIMAL(16,2), change_percent DECIMAL(16,2), pe_ratio DECIMAL(16,2), company_name TEXT, tableId INT, PRIMARY KEY (ticker_id));
 
 INSERT INTO table1 values(1, 'AAPL', 35, 9333222111.015, 100.905, 30.104, -31.105, 'Apple Company', 10);
 INSERT INTO table1 values(2, 'AAPL', 35, 7000222111.015, 200.905, 60.104, -61.105, 'Apple Company2', 10);
@@ -156,11 +156,11 @@ INSERT INTO table1 values(6, 'AAPL', 35, 5000222111.015, 200.905, 60.104, NULL, 
 
 
 select * from testtable1;
-select analysis_id, symbols, concat("$", format(marketCap, 2)) as marketCap from testtable1;
-select analysis_id, symbols, concat("$", format(marketCap, 2)) as marketCap from testtable1 where marketCap < 8333222111;
+select analysis_id, symbols, concat("$", format(market_cap, 2)) as market_cap from testtable1;
+select analysis_id, symbols, concat("$", format(market_cap, 2)) as market_cap from testtable1 where market_cap < 8333222111;
 select analysis_id, symbols, concat(changePerc, '%') as changePerc from testtable1 where changePerc < 31;
 
-select tickerid, symbol, concat("$", format(marketCap, 2)) as marketCap from result_4b_007 where marketCap < 400000000000;
+select tickerid, symbol, concat("$", format(market_cap, 2)) as market_cap from result_4b_007 where market_cap < 400000000000;
 #order by marketcap and show formatted marketcap
 select tickerid, symbol, mentions, concat("$", format(marketcap/1000000000, 2), "B") as marketcap, latestprice, changepercent, peratio, companyname, tableid from result_all_rds_020 order by cast(marketcap as decimal(16,2)) DESC;
 
@@ -168,10 +168,85 @@ SELECT
 tickerid, 
 symbol, 
 latestprice,
-concat("$", format(marketCap/1000000000, 2), "B") as marketCap 
+concat("$", format(market_cap/1000000000, 2), "B") as market_cap 
 FROM result_4b_007 
-WHERE marketCap < 400000000000;
+WHERE market_cap < 400000000000;
 
 '''
 
+
+#########################
+#########################
+#########################
+#########################
+
+'''
+###result_all_parent testing:
+CREATE TABLE result_all_parent (parenttable_id INT, subreddit_count INT, upvote_ratio DECIMAL(16, 1), ups INT, limit_reddit INT, upvotes INT, picks INT, picks_ayz INT, seconds_took DECIMAL(16, 1), comments_analyzed INT, datetime DATETIME, tickers_found INT, max_market_cap DECIMAL(16, 2));
+# ALTER TABLE result_all_parent ADD PRIMARY KEY(parenttable_id);
+
+INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (16, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
+INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (15, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
+INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (14, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
+INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (13, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
+INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (12, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
+INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (11, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
+INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (10, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
+INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (9, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
+INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (8, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
+INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (7, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
+INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (6, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
+INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (5, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
+INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (4, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
+INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (3, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
+INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (2, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
+INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (1, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
+
+#extras:
+select * from result_all_parent where datetime like '2022-04-11%';
+UPDATE result_all_parent SET parenttable_id = 19 WHERE parenttable_id = 20;
+'''
+
+
+'''
+###result_all_child testing:
+CREATE TABLE result_all_child (ticker_id INT, symbol TEXT, mentions INT, market_cap DECIMAL(16,2), latest_price DECIMAL(16,2), change_percent DECIMAL(16,2), pe_ratio DECIMAL(16,2), company_name TEXT, parenttable_id INT);
+ALTER TABLE result_all_child ADD CONSTRAINT fk_metaandanalysis FOREIGN KEY (parenttable_id) REFERENCES result_all_parent(parenttable_id);
+
+INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (2, 'AAPL', 19, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 16);
+INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (2, 'AAPL', 19, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 15);
+INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (1, 'AAPL', 20, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 14);
+INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (1, 'AAPL', 20, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 13);
+INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (2, 'AAPL', 20, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 12);
+INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (2, 'AAPL', 20, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 11);
+INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (2, 'AAPL', 20, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 10);
+INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (2, 'AAPL', 20, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 9);
+INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (2, 'AAPL', 19, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 8);
+INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (2, 'AAPL', 19, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 7);
+INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (1, 'AAPL', 20, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 6);
+INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (1, 'AAPL', 20, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 5);
+INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (2, 'AAPL', 20, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 4);
+INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (2, 'AAPL', 20, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 3);
+INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (2, 'AAPL', 20, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 2);
+INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (2, 'AAPL', 20, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 1);
+
+#extras:
+DELETE FROM result_all_child where parenttable_id = 19;
+UPDATE result_all_child set parenttable_id = 20; #sets all data under parenttable_id column to 20;
+
+
+###using one childtable and one parenttable... to get meta data for a table/batch of tickers by parenttable_id = ok
+SELECT * FROM result_all_parent where parenttable_id = 19; #final
+SELECT * FROM result_all_parent where parenttable_id = 20; #final
+
+###using one childtable and one parenttable... to get a list of tickers with certain parenttable_id and certain tickerids
+# SELECT c1.* FROM result_all_parent m1 JOIN result_all_child c1 WHERE c1.parenttable_id = m1.parenttable_id AND m1.parenttable_id = 19 AND c1.tickerid <= 2;
+SELECT * FROM result_all_child where parenttable_id = 19; #final
+SELECT * FROM result_all_child where parenttable_id = 20; #final
+SELECT * FROM result_all_child where parenttable_id = 20 and ticker_id = 1; #final
+
+#try using multiple childtables and one parenttable? ..use filters, like table_name?
+Proably too slow and requires Python to loop thru all tables for now.
+
+'''
 
