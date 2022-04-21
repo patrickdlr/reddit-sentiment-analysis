@@ -473,124 +473,342 @@ connection = pymysql.connect(
 
 
 '''*****************************************************************************
+#delete excess mysql rows, rename leftover rows = ok 
 #get list of parenttable_id =ok
 #deleting excessive rows from a child table, =ok
-#deleting excessive rows from a parent table, 
-#renaming leftover rows (ex: 5-8 to 1-4, 6-10 to 1-5)
+#deleting excessive rows from a parent table =ok
+#renaming leftover rows (ex: 5-8 to 1-4, 6-10 to 1-5) =ok
 *****************************************************************************'''
-max_output_amount = 12
+max_output_amount = 5
 database_name1 = 'test_db1'
 table_name1_child = 'result_all_child'
 table_name1_parent = 'result_all_parent'
+outputname_userinput = 'result_all_'
 
-#child table
-with connection.cursor() as cursor:
-    print("\nchild table (deleting/):")
-    sql = f"select parenttable_id from {database_name1}.{table_name1_child} order by parenttable_id ASC;"
-    cursor.execute(sql)
+# #child table
+# with connection.cursor() as cursor:
+#     print("\nchild table (deleting/renaming):")
+#     sql = f"select parenttable_id from {database_name1}.{table_name1_child} order by parenttable_id ASC;"
+#     cursor.execute(sql)
 
-    result = cursor.fetchall()
-    # pprint.pprint(result)
-    #turn into list
-    list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
-    # remove duplicates
-    list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
-    print(list_existingoutputfiles1)
+#     result = cursor.fetchall()
+#     # pprint.pprint(result)
+#     #turn into list
+#     list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+#     # remove duplicates
+#     list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+#     print(list_existingoutputfiles1)
 
-    print('deleting excessive rows')
-    while True:
-        if len(list_existingoutputfiles1) >= max_output_amount:           
-            #delete first rows - sql
-            cursor.execute(f"DELETE FROM {database_name1}.{table_name1_child} where parenttable_id = {list_existingoutputfiles1[0]};")
+#     while True:
+#         if len(list_existingoutputfiles1) >= max_output_amount:           
+#             #delete first rows - sql
+#             cursor.execute(f"DELETE FROM {database_name1}.{table_name1_child} where parenttable_id = {list_existingoutputfiles1[0]};")
 
-            #reinitialize list of tables - sql
-            list_existingoutputfiles1 = []
-            sql = f"select parenttable_id from {database_name1}.{table_name1_child} order by parenttable_id ASC;"
-            cursor.execute(sql)
+#             #reinitialize list of tables - sql
+#             list_existingoutputfiles1 = []
+#             sql = f"select parenttable_id from {database_name1}.{table_name1_child} order by parenttable_id ASC;"
+#             cursor.execute(sql)
 
-            result = cursor.fetchall()
-            #turn into list
-            list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
-            # remove duplicates
-            list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
-            print(list_existingoutputfiles1)
+#             result = cursor.fetchall()
+#             #turn into list
+#             list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+#             # remove duplicates
+#             list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+#             print(list_existingoutputfiles1)
                 
-        else:
-            break
+#         else:
+#             break
 
-    print('renaming leftover rows')
-    for a in list_existingoutputfiles1:
-        new_parenttable_id = list_existingoutputfiles1.index(a) + 1 #adjust from 0 to 1
-        #old_parenttable_id = a
-        sql = f"UPDATE {database_name1}.{table_name1_child} SET parenttable_id = {new_parenttable_id} where parenttable_id = {a};"
-        cursor.execute(sql)
+#     print('renaming leftover rows')
+#     for a in list_existingoutputfiles1:
+#         new_parenttable_id = list_existingoutputfiles1.index(a) + 1 #adjust from 0 to 1
+#         #old_parenttable_id = a
+#         sql = f"UPDATE {database_name1}.{table_name1_child} SET parenttable_id = {new_parenttable_id} where parenttable_id = {a};"
+#         cursor.execute(sql)
     
-    #reinitialize list of tables - sql
-    list_existingoutputfiles1 = []
-    sql = f"select parenttable_id from {database_name1}.{table_name1_child} order by parenttable_id ASC;"
-    cursor.execute(sql)
+#     #reinitialize list of tables - sql
+#     list_existingoutputfiles1 = []
+#     sql = f"select parenttable_id from {database_name1}.{table_name1_child} order by parenttable_id ASC;"
+#     cursor.execute(sql)
 
-    result = cursor.fetchall()
-    #turn into list
-    list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
-    # remove duplicates
-    list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
-    print(list_existingoutputfiles1)
+#     result = cursor.fetchall()
+#     #turn into list
+#     list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+#     # remove duplicates
+#     list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+#     print(list_existingoutputfiles1)
     
 
-#parent table
-#parent table
-with connection.cursor() as cursor:
-    print("\nparent table (deleting/):")
-    sql = f"select parenttable_id from {database_name1}.{table_name1_parent} order by parenttable_id ASC;"
-    cursor.execute(sql)
+# #parent table
+# #parent table
+# with connection.cursor() as cursor:
+#     print("\nparent table (deleting/renaming):")
+#     sql = f"select parenttable_id from {database_name1}.{table_name1_parent} order by parenttable_id ASC;"
+#     cursor.execute(sql)
 
-    result = cursor.fetchall()
-    # pprint.pprint(result)
-    #turn into list
-    list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
-    # remove duplicates
-    list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
-    print(list_existingoutputfiles1)
+#     result = cursor.fetchall()
+#     # pprint.pprint(result)
+#     #turn into list
+#     list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+#     # remove duplicates
+#     list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+#     print(list_existingoutputfiles1)
+    
+#     while True:
+#         if len(list_existingoutputfiles1) >= max_output_amount:           
+#             #delete first rows - sql
+#             cursor.execute(f"DELETE FROM {database_name1}.{table_name1_parent} where parenttable_id = {list_existingoutputfiles1[0]};")
 
-    print('--')
-    while True:
-        if len(list_existingoutputfiles1) >= max_output_amount:           
-            #delete first rows - sql
-            cursor.execute(f"DELETE FROM {database_name1}.{table_name1_parent} where parenttable_id = {list_existingoutputfiles1[0]};")
+#             #reinitialize list of tables - sql
+#             list_existingoutputfiles1 = []
+#             sql = f"select parenttable_id from {database_name1}.{table_name1_parent} order by parenttable_id ASC;"
+#             cursor.execute(sql)
 
-            #reinitialize list of tables - sql
-            list_existingoutputfiles1 = []
-            sql = f"select parenttable_id from {database_name1}.{table_name1_parent} order by parenttable_id ASC;"
-            cursor.execute(sql)
-
-            result = cursor.fetchall()
-            #turn into list
-            list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
-            # remove duplicates
-            list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
-            print(list_existingoutputfiles1)
+#             result = cursor.fetchall()
+#             #turn into list
+#             list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+#             # remove duplicates
+#             list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+#             print(list_existingoutputfiles1)
                 
-        else:
-            break
+#         else:
+#             break
 
-    print('renaming leftover rows')
-    for a in list_existingoutputfiles1:
-        new_parenttable_id = list_existingoutputfiles1.index(a) + 1 #adjust from 0 to 1
-        #old_parenttable_id  = a
-        sql = f"UPDATE {database_name1}.{table_name1_parent} SET parenttable_id = {new_parenttable_id} where parenttable_id = {a};"
+#     print('renaming leftover rows')
+#     for a in list_existingoutputfiles1:
+#         new_parenttable_id = list_existingoutputfiles1.index(a) + 1 #adjust from 0 to 1
+#         #old_parenttable_id  = a
+#         sql = f"UPDATE {database_name1}.{table_name1_parent} SET parenttable_id = {new_parenttable_id} where parenttable_id = {a};"
+#         cursor.execute(sql)
+
+#     #reinitialize list of tables - sql
+#     list_existingoutputfiles1 = []
+#     sql = f"select parenttable_id from {database_name1}.{table_name1_parent} order by parenttable_id ASC;"
+#     cursor.execute(sql)
+
+#     result = cursor.fetchall()
+#     #turn into list
+#     list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+#     # remove duplicates
+#     list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+#     print(list_existingoutputfiles1)
+
+# connection.commit()
+
+
+
+
+# INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (16, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
+
+'''*****************************************************************************
+# add new mysql table
+*****************************************************************************'''
+def prepare_variables1_sql_onetableversion(outputname_userinput, max_output_amount):
+    '''*****************************************************************************
+    ### 0 - check if database, parent table, child table exist or doesn't exist yet
+    ### 1 - get new ref number (set as 1 if tables dont exist OR get latest/highest parenttable_id from child table if exist)
+    ### 2 - adjust the new ref number (parenttable_id + 1) -- (using max_output = 10: 10 if parenttable_id = 10 there already, 10 if 9 there already, 9 if 8 files there already, 1 if 0, 2 if 1)
+    # parameters: outputname_userinput, max_output_amount
+    # return variables: new_ref_number
+    *****************************************************************************'''
+
+    exists_database = None
+    exists_parenttable = None
+    exists_childtable = None
+
+    print('\nprepare_variables1_sql_onetableversion()*************************')
+    print('outputname_userinput:', outputname_userinput)
+
+    ### 0
+    #check if database exists
+    cursor.execute(f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{database_name1}';")
+    result = cursor.fetchall()
+    if result == () or result == None: 
+        print(f"No such database exists.")
+        print(f"Will create [{database_name1}] database after sentiment analysis")
+        exists_database = False
+    else:
+        print(result)
+        print(f"database exists.. {database_name1} database")
+        exists_database = True
+
+    #check if parent table exists
+    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND TABLE_NAME = '{outputname_userinput}parent';")
+    result = cursor.fetchall()
+    if result == () or result == None: 
+        print(f"No such parent table exists.")
+        print(f"Will create [{database_name1}.{outputname_userinput}parent] table after sentiment analysis")
+        exists_parenttable = False
+    else:
+        print(result)
+        print(f"parent table exists.. [{database_name1}.{outputname_userinput}parent] table")
+        exists_parenttable = True
+
+    #check if child table exists
+    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND TABLE_NAME = '{outputname_userinput}child';")
+    result = cursor.fetchall()
+    if result == () or result == None: 
+        print(f"No such child table exists.")
+        print(f"Will create [{database_name1}.{outputname_userinput}child] table after sentiment analysis")
+        exists_childtable = False
+    else:
+        print(result)
+        print(f"child table exists.. [{database_name1}.{outputname_userinput}child] table")
+        exists_childtable = True
+
+
+    ### 1
+    new_ref_number = 0
+    #select parenttable_id from result_all_child order by parenttable_id desc limit 1;
+
+
+    #xxx 1
+    if exists_database == False and exists_parenttable == False and exists_childtable == False:
+        #preparevariables1 = ok
+        #step 0: set ref number as 0 (+ 1)
+        new_ref_number = 0
+        
+
+        #deleteandrename = ok, must implement
+        #step 1: create the database, parent, and child table (3 things)
+        #step 2: then add new entries (usually parenttable_id/new ref number = 1)
+    
+    #0xx 2
+    if exists_database == True and exists_parenttable == False and exists_childtable == False:
+        #preparevariables1 = ok
+        #step 0: set ref number as 0 (+ 1)
+        new_ref_number = 0
+        
+
+        #deleteandrename = ok, must implement
+        #step 1: create parent and child table (2 things)
+        #step 2: then add new entries (usually parenttable_id/new ref number = 1)
+        
+
+    #0x0 2
+    if exists_database == True and exists_parenttable == False and exists_childtable == True:
+        #preparevariables1 = ok
+        #step 0: get latest/highest parenttable_id from child table for ref number
+        sql = f"select parenttable_id from {database_name1}.{outputname_userinput}child order by parenttable_id ASC;"
         cursor.execute(sql)
 
-    #reinitialize list of tables - sql
-    list_existingoutputfiles1 = []
-    sql = f"select parenttable_id from {database_name1}.{table_name1_parent} order by parenttable_id ASC;"
-    cursor.execute(sql)
+        result = cursor.fetchall()
+        # pprint.pprint(result)
+        #turn into list
+        list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+        # remove duplicates
+        list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+        print(list_existingoutputfiles1)
 
-    result = cursor.fetchall()
-    #turn into list
-    list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
-    # remove duplicates
-    list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
-    print(list_existingoutputfiles1)
+        new_ref_number = list_existingoutputfiles1[-1]
 
-connection.commit()
+
+        #deleteandrename = ok, must implement
+        #step 1: create parent table (1 thing)
+        #step 2: delete excessive entries - refer to side programs
+        #step 3: rename leftover entries - refer to side programs
+        #step 4: then add new entries
+
+        
+    #00x 3
+    if exists_database == True and exists_parenttable == True and exists_childtable == False:
+        #preparevariables1 = ok
+        #step 0: set ref number as 0 (+ 1)
+        new_ref_number = 0
+
+
+        #deleteandrename = ok, must implement
+        #step 1: clear parent table, create child table (2 things)
+        #step 2: then add new entries (usually parenttable_id/new ref number = 1)
+
+    #000 2
+    if exists_database == True and exists_parenttable == True and exists_childtable == True:
+        #preparevariables1 = ok
+        #step 0: get latest/highest parenttable_id from child table for ref number
+        sql = f"select parenttable_id from {database_name1}.{outputname_userinput}child order by parenttable_id ASC;"
+        cursor.execute(sql)
+
+        result = cursor.fetchall()
+        # pprint.pprint(result)
+        #turn into list
+        list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+        # remove duplicates
+        list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+        print(list_existingoutputfiles1)
+
+        new_ref_number = list_existingoutputfiles1[-1]
+
+
+        #deleteandrename = ok, must implement
+        #step 1: delete excessive entries - refer to side programs
+        #step 2: rename leftover entries - refer to side programs
+        #step 3: then add new entries
+    
+
+    ### 3
+    if new_ref_number >= max_output_amount:
+        print(f'limiting new_ref_number from {new_ref_number} to {max_output_amount}')
+        new_ref_number = max_output_amount
+    else:
+        new_ref_number += 1
+
+    print("new_ref_number set as", new_ref_number)
+    print('prepare_variables1_sql_onetableversion()*************************\n')
+    return new_ref_number
+
+
+with connection.cursor() as cursor:
+    new_ref_number = prepare_variables1_sql_onetableversion(outputname_userinput, max_output_amount)
+print('new_ref_number set as', new_ref_number)
+
+# with connection.cursor() as cursor:
+#     print("\nchild table: add new mysql row):")
+#     sql = f"select parenttable_id from {database_name1}.{table_name1_child} order by parenttable_id ASC;"
+#     cursor.execute(sql)
+
+#     result = cursor.fetchall()
+#     # pprint.pprint(result)
+#     #turn into list
+#     list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+#     # remove duplicates
+#     list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+#     print(list_existingoutputfiles1)
+
+#     while True:
+#         if len(list_existingoutputfiles1) >= max_output_amount:           
+#             #delete first rows - sql
+#             cursor.execute(f"DELETE FROM {database_name1}.{table_name1_child} where parenttable_id = {list_existingoutputfiles1[0]};")
+
+#             #reinitialize list of tables - sql
+#             list_existingoutputfiles1 = []
+#             sql = f"select parenttable_id from {database_name1}.{table_name1_child} order by parenttable_id ASC;"
+#             cursor.execute(sql)
+
+#             result = cursor.fetchall()
+#             #turn into list
+#             list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+#             # remove duplicates
+#             list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+#             print(list_existingoutputfiles1)
+                
+#         else:
+#             break
+
+#     print('renaming leftover rows')
+#     for a in list_existingoutputfiles1:
+#         new_parenttable_id = list_existingoutputfiles1.index(a) + 1 #adjust from 0 to 1
+#         #old_parenttable_id = a
+#         sql = f"UPDATE {database_name1}.{table_name1_child} SET parenttable_id = {new_parenttable_id} where parenttable_id = {a};"
+#         cursor.execute(sql)
+    
+#     #reinitialize list of tables - sql
+#     list_existingoutputfiles1 = []
+#     sql = f"select parenttable_id from {database_name1}.{table_name1_child} order by parenttable_id ASC;"
+#     cursor.execute(sql)
+
+#     result = cursor.fetchall()
+#     #turn into list
+#     list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+#     # remove duplicates
+#     list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+#     print(list_existingoutputfiles1)

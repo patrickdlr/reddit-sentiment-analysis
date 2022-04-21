@@ -231,18 +231,15 @@ def prepare_variables1_sql_onetableversion(outputname_userinput, max_output_amou
     # return variables: new_ref_number
     *****************************************************************************'''
 
-    #Need testing
-    #   test with child table with parentid
-
     exists_database = None
     exists_parenttable = None
     exists_childtable = None
 
     print('\nprepare_variables1_sql_onetableversion()*************************')
     print('outputname_userinput:', outputname_userinput)
-    
 
     ### 0
+    #check if database exists
     cursor.execute(f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{database_name1}';")
     result = cursor.fetchall()
     if result == () or result == None: 
@@ -254,7 +251,7 @@ def prepare_variables1_sql_onetableversion(outputname_userinput, max_output_amou
         print(f"database exists.. {database_name1} database")
         exists_database = True
 
-
+    #check if parent table exists
     cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND TABLE_NAME = '{outputname_userinput}parent';")
     result = cursor.fetchall()
     if result == () or result == None: 
@@ -266,7 +263,7 @@ def prepare_variables1_sql_onetableversion(outputname_userinput, max_output_amou
         print(f"parent table exists.. [{database_name1}.{outputname_userinput}parent] table")
         exists_parenttable = True
 
-
+    #check if child table exists
     cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND TABLE_NAME = '{outputname_userinput}child';")
     result = cursor.fetchall()
     if result == () or result == None: 
@@ -281,53 +278,100 @@ def prepare_variables1_sql_onetableversion(outputname_userinput, max_output_amou
 
     ### 1
     new_ref_number = 0
+    #select parenttable_id from result_all_child order by parenttable_id desc limit 1;
+
 
     #xxx 1
     if exists_database == False and exists_parenttable == False and exists_childtable == False:
+        #preparevariables1 = ok
+        #step 0: set ref number as 0 (+ 1)
+        new_ref_number = 0
         
-        new_ref_number = 0
 
-        # for later: create the database, parent, and child table, then add new entries
+        #deleteandrename = ok, must implement
+        #step 1: create the database, parent, and child table (3 things)
+        #step 2: then add new entries (usually parenttable_id/new ref number = 1)
     
-    #Oxx 2
+    #0xx 2
     if exists_database == True and exists_parenttable == False and exists_childtable == False:
+        #preparevariables1 = ok
+        #step 0: set ref number as 0 (+ 1)
         new_ref_number = 0
+        
 
-        #for later: create parent and child table, then add new entries
+        #deleteandrename = ok, must implement
+        #step 1: create parent and child table (2 things)
+        #step 2: then add new entries (usually parenttable_id/new ref number = 1)
+        
 
     #0x0 2
     if exists_database == True and exists_parenttable == False and exists_childtable == True:
-        #TODO: get latest/highest parenttable_id from child table
-        # #search within child table for hghest parenttable_id now, get the new ref number
-        # query0 = f"SELECT * FROM {database_name1}.{outputname_userinput}child;"
-        # cursor.execute(query0)
-        print(query0)
-        new_ref_number = 9999
-        
-    #O0x 3
-    if exists_database == True and exists_parenttable == True and exists_childtable == False:
+        #preparevariables1 = ok
+        #step 0: get latest/highest parenttable_id from child table for ref number
+        sql = f"select parenttable_id from {database_name1}.{outputname_userinput}child order by parenttable_id ASC;"
+        cursor.execute(sql)
 
-        #TODO: clear or delete the parent table
-        #empty the parent table.. later
+        result = cursor.fetchall()
+        # pprint.pprint(result)
+        #turn into list
+        list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+        # remove duplicates
+        list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+        print(list_existingoutputfiles1)
+
+        new_ref_number = list_existingoutputfiles1[-1]
+
+
+        #deleteandrename = ok, must implement
+        #step 1: create parent table (1 thing)
+        #step 2: delete excessive entries - refer to side programs
+        #step 3: rename leftover entries - refer to side programs
+        #step 4: then add new entries
+
+        
+    #00x 3
+    if exists_database == True and exists_parenttable == True and exists_childtable == False:
+        #preparevariables1 = ok
+        #step 0: set ref number as 0 (+ 1)
         new_ref_number = 0
 
-    #O00 2
+
+        #deleteandrename = ok, must implement
+        #step 1: clear parent table, create child table (2 things)
+        #step 2: then add new entries (usually parenttable_id/new ref number = 1)
+
+    #000 2
     if exists_database == True and exists_parenttable == True and exists_childtable == True:
-        #get latest/highest parenttable_id from child table
-        query0 = f"SELECT * FROM {database_name1}.{outputname_userinput}child%;"
-        # cursor.execute(query0)
-        print(query0)
-        new_ref_number = 9999
+        #preparevariables1 = ok
+        #step 0: get latest/highest parenttable_id from child table for ref number
+        sql = f"select parenttable_id from {database_name1}.{outputname_userinput}child order by parenttable_id ASC;"
+        cursor.execute(sql)
+
+        result = cursor.fetchall()
+        # pprint.pprint(result)
+        #turn into list
+        list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+        # remove duplicates
+        list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+        print(list_existingoutputfiles1)
+
+        new_ref_number = list_existingoutputfiles1[-1]
+
+
+        #deleteandrename = ok, must implement
+        #step 1: delete excessive entries - refer to side programs
+        #step 2: rename leftover entries - refer to side programs
+        #step 3: then add new entries
     
 
     ### 3
     if new_ref_number >= max_output_amount:
         print(f'limiting new_ref_number from {new_ref_number} to {max_output_amount}')
         new_ref_number = max_output_amount
-        
     else:
         new_ref_number += 1
 
+    print("new_ref_number set as", new_ref_number)
     print('prepare_variables1_sql_onetableversion()*************************\n')
     return new_ref_number
 
@@ -775,25 +819,17 @@ def deleteandrename_existingoutputs_sql_onetableversion(max_output_amount, outpu
     #
     '''*****************************************************************************
     ### 0 - check if database, parent table, child table exist or doesn't exist yet
-    ### 1 - get new ref number (set as 1 if tables dont exist OR get latest/highest parenttable_id from child table if exist)
-    ### 2 - adjust the new ref number (parenttable_id + 1) -- (using max_output = 10: 10 if parenttable_id = 10 there already, 10 if 9 there already, 9 if 8 files there already, 1 if 0, 2 if 1)
-    # parameters: outputname_userinput, max_output_amount
-    # return variables: new_ref_number
+    ### 1 - delete/rename
+    # parameters: 
+    # return variables: 
     *****************************************************************************'''
-
-    #Need testing
-    #   test with child table with parentid
 
     exists_database = None
     exists_parenttable = None
     exists_childtable = None
-
-    print('\ndeleteandrename_existingoutputs_sql_onetableversion()*************************')
-    print('outputname_userinput:', outputname_userinput)
-    
-    
-
+ 
     ### 0
+    #check if database exists
     cursor.execute(f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{database_name1}';")
     result = cursor.fetchall()
     if result == () or result == None: 
@@ -805,7 +841,7 @@ def deleteandrename_existingoutputs_sql_onetableversion(max_output_amount, outpu
         print(f"database exists.. {database_name1} database")
         exists_database = True
 
-
+    #check if parent table exists
     cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND TABLE_NAME = '{outputname_userinput}parent';")
     result = cursor.fetchall()
     if result == () or result == None: 
@@ -817,7 +853,7 @@ def deleteandrename_existingoutputs_sql_onetableversion(max_output_amount, outpu
         print(f"parent table exists.. [{database_name1}.{outputname_userinput}parent] table")
         exists_parenttable = True
 
-
+    #check if child table exists
     cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND TABLE_NAME = '{outputname_userinput}child';")
     result = cursor.fetchall()
     if result == () or result == None: 
@@ -831,74 +867,35 @@ def deleteandrename_existingoutputs_sql_onetableversion(max_output_amount, outpu
 
 
     ### 1
-    new_ref_number = 0
 
-    #select parenttable_id from result_all_child order by parenttable_id desc limit 1;
-    
     #xxx 1
     if exists_database == False and exists_parenttable == False and exists_childtable == False:
-        
-        new_ref_number = 0
-        #TODO = ok
-        #step 0: set ref number as 0 (+ 1)
-        #step 1: create the database, parent, and child table (3 things)
-        #step 2: then add new entries (usually parenttable_id/new ref number = 1)
+        var1= None
     
     #Oxx 2
     if exists_database == True and exists_parenttable == False and exists_childtable == False:
-        new_ref_number = 0
-        #TODO = ok
-        #step 0: set ref number as 0 (+ 1)
-        #step 1: create parent and child table (2 things)
-        #step 2: then add new entries (usually parenttable_id/new ref number = 1)
+        var1= None
 
     #0x0 2
     if exists_database == True and exists_parenttable == False and exists_childtable == True:
-        #TODO = ok, almost there
-        #step 1: get latest/highest parenttable_id from child table (parenttable_id = 0 (+ 1) or whatever number), set as new ref number
-        #step 2: create parent table (1 thing)
-        #step 3: delete excessive entries containing cutoff parenttable_id (in child table) - how?
-        #step 4: then add new entries
-
-
-        # query0 = f"SELECT * FROM {database_name1}.{outputname_userinput}child;"
-        # cursor.execute(query0)
-        print(query0)
-        new_ref_number = 9999
+        var1= None
         
     #O0x 3
     if exists_database == True and exists_parenttable == True and exists_childtable == False:
-        #TODO = ok
-        #step 0: set ref number as 0 (+ 1)
-        #step 1: clear or delete/recreate the parent table, and create child table (2 things)
-        #step 2: then add new entries (usually parenttable_id/new ref number = 1)
-
-        new_ref_number = 0
+        var1= None
 
     #O00 2
     if exists_database == True and exists_parenttable == True and exists_childtable == True:
-        #TODO = ok, almost there
-        #step 1: get latest/highest parenttable_id from child table (parenttable_id = 0 (+ 1) or whatever number), set as new ref number
-        #step 2: delete excessive entries containing cutoff parenttable_id (in parent/child table) - how?
-            #play with sql table first
-        #step 3: then add new entries
-
-
-        query0 = f"SELECT * FROM {database_name1}.{outputname_userinput}child%;"
-        # cursor.execute(query0)
-        print(query0)
-        new_ref_number = 9999
+        var1= None
     
 
     ### 3
     if new_ref_number >= max_output_amount:
         print(f'limiting new_ref_number from {new_ref_number} to {max_output_amount}')
         new_ref_number = max_output_amount
-        
     else:
         new_ref_number += 1
 
-    print('deleteandrename_existingoutputs_sql_onetableversion()*************************\n')
     return new_ref_number
 
 
