@@ -221,59 +221,51 @@ def prepare_variables1_csv_and_sql(storagetype, outputname_userinput, max_output
 
     return outputname_generated, list_existingoutputfiles1, new_ref_number
     
+#for prepare_variables1, deleteandrename_existing.. functions
+def check_exists_3tables(outputname_userinput):
+    '''*****************************************************************************
+    ### 0 - check if database, parent table, child table exist or doesn't exist yet
+    *****************************************************************************'''
+    exists_database = None
+    exists_parenttable = None
+    exists_childtable = None
+
+    ### 0
+    #check if database exists
+    cursor.execute(f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{database_name1}';")
+    result = cursor.fetchall()
+    if result == () or result == None: exists_database = False
+    else: exists_database = True
+
+    #check if parent table exists
+    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND TABLE_NAME = '{outputname_userinput}parent';")
+    result = cursor.fetchall()
+    if result == () or result == None: exists_parenttable = False
+    else: exists_parenttable = True
+
+    #check if child table exists
+    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND TABLE_NAME = '{outputname_userinput}child';")
+    result = cursor.fetchall()
+    if result == () or result == None: exists_childtable = False
+    else: exists_childtable = True
+
+
+    return exists_database, exists_parenttable, exists_childtable
+
 
 def prepare_variables1_sql_onetableversion(outputname_userinput, max_output_amount):
     '''*****************************************************************************
     ### 0 - check if database, parent table, child table exist or doesn't exist yet
     ### 1 - get new ref number (set as 1 if tables dont exist OR get latest/highest parenttable_id from child table if exist)
     ### 2 - adjust the new ref number (parenttable_id + 1) -- (using max_output = 10: 10 if parenttable_id = 10 there already, 10 if 9 there already, 9 if 8 files there already, 1 if 0, 2 if 1)
-    # parameters: outputname_userinput, max_output_amount
-    # return variables: new_ref_number
+    ### parameters: outputname_userinput, max_output_amount
+    ### return variables: new_ref_number
     *****************************************************************************'''
-
-    exists_database = None
-    exists_parenttable = None
-    exists_childtable = None
-
+    exists_database, exists_parenttable, exists_childtable = check_exists_3tables(outputname_userinput)
+    print(f"exists_database={exists_database} | exists_parenttable={exists_parenttable} | exists_childtable={exists_childtable}")
+        
     print('\nprepare_variables1_sql_onetableversion()*************************')
     print('outputname_userinput:', outputname_userinput)
-
-    ### 0
-    #check if database exists
-    cursor.execute(f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{database_name1}';")
-    result = cursor.fetchall()
-    if result == () or result == None: 
-        print(f"No such database exists.")
-        print(f"Will create [{database_name1}] database after sentiment analysis")
-        exists_database = False
-    else:
-        print(result)
-        print(f"database exists.. {database_name1} database")
-        exists_database = True
-
-    #check if parent table exists
-    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND TABLE_NAME = '{outputname_userinput}parent';")
-    result = cursor.fetchall()
-    if result == () or result == None: 
-        print(f"No such parent table exists.")
-        print(f"Will create [{database_name1}.{outputname_userinput}parent] table after sentiment analysis")
-        exists_parenttable = False
-    else:
-        print(result)
-        print(f"parent table exists.. [{database_name1}.{outputname_userinput}parent] table")
-        exists_parenttable = True
-
-    #check if child table exists
-    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND TABLE_NAME = '{outputname_userinput}child';")
-    result = cursor.fetchall()
-    if result == () or result == None: 
-        print(f"No such child table exists.")
-        print(f"Will create [{database_name1}.{outputname_userinput}child] table after sentiment analysis")
-        exists_childtable = False
-    else:
-        print(result)
-        print(f"child table exists.. [{database_name1}.{outputname_userinput}child] table")
-        exists_childtable = True
 
 
     ### 1
@@ -285,24 +277,14 @@ def prepare_variables1_sql_onetableversion(outputname_userinput, max_output_amou
     if exists_database == False and exists_parenttable == False and exists_childtable == False:
         #preparevariables1 = ok
         #step 0: set ref number as 0 (+ 1)
-        new_ref_number = 0
-        
+        new_ref_number = 0       
 
-        #deleteandrename = ok, must implement
-        #step 1: create the database, parent, and child table (3 things)
-        #step 2: then add new entries (usually parenttable_id/new ref number = 1)
-    
     #0xx 2
     if exists_database == True and exists_parenttable == False and exists_childtable == False:
         #preparevariables1 = ok
         #step 0: set ref number as 0 (+ 1)
-        new_ref_number = 0
-        
+        new_ref_number = 0       
 
-        #deleteandrename = ok, must implement
-        #step 1: create parent and child table (2 things)
-        #step 2: then add new entries (usually parenttable_id/new ref number = 1)
-        
 
     #0x0 2
     if exists_database == True and exists_parenttable == False and exists_childtable == True:
@@ -321,24 +303,13 @@ def prepare_variables1_sql_onetableversion(outputname_userinput, max_output_amou
 
         new_ref_number = list_existingoutputfiles1[-1]
 
-
-        #deleteandrename = ok, must implement
-        #step 1: create parent table (1 thing)
-        #step 2: delete excessive entries - refer to side programs
-        #step 3: rename leftover entries - refer to side programs
-        #step 4: then add new entries
-
         
     #00x 3
     if exists_database == True and exists_parenttable == True and exists_childtable == False:
         #preparevariables1 = ok
         #step 0: set ref number as 0 (+ 1)
         new_ref_number = 0
-
-
-        #deleteandrename = ok, must implement
-        #step 1: clear parent table, create child table (2 things)
-        #step 2: then add new entries (usually parenttable_id/new ref number = 1)
+      
 
     #000 2
     if exists_database == True and exists_parenttable == True and exists_childtable == True:
@@ -356,15 +327,9 @@ def prepare_variables1_sql_onetableversion(outputname_userinput, max_output_amou
         print(list_existingoutputfiles1)
 
         new_ref_number = list_existingoutputfiles1[-1]
+   
 
-
-        #deleteandrename = ok, must implement
-        #step 1: delete excessive entries - refer to side programs
-        #step 2: rename leftover entries - refer to side programs
-        #step 3: then add new entries
-    
-
-    ### 3
+    ### 2
     if new_ref_number >= max_output_amount:
         print(f'limiting new_ref_number from {new_ref_number} to {max_output_amount}')
         new_ref_number = max_output_amount
@@ -816,97 +781,67 @@ def deleteandrename_existingoutputfiles_csv_and_sql(storagetype, list_existingou
         print('list_existingoutputfiles1 (after num correction)'.ljust(55), previewlist_existingoutputfiles1) #log
 
 def deleteandrename_existingoutputs_sql_onetableversion(max_output_amount, outputname_userinput):
-    #
     '''*****************************************************************************
     ### 0 - check if database, parent table, child table exist or doesn't exist yet
-    ### 1 - delete/rename
-    # parameters: 
-    # return variables: 
+    ### 1 - create 0-3 tables, add new entries (usually parenttable_id/new ref number = 1)
+    ### 1 - create 0-3 tables, delete/rename entries, add new entries
+    ### parameters: 
+    ### return variables:
     *****************************************************************************'''
-
-    exists_database = None
-    exists_parenttable = None
-    exists_childtable = None
- 
-    ### 0
-    #check if database exists
-    cursor.execute(f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{database_name1}';")
-    result = cursor.fetchall()
-    if result == () or result == None: 
-        print(f"No such database exists.")
-        print(f"Will create [{database_name1}] database after sentiment analysis")
-        exists_database = False
-    else:
-        print(result)
-        print(f"database exists.. {database_name1} database")
-        exists_database = True
-
-    #check if parent table exists
-    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND TABLE_NAME = '{outputname_userinput}parent';")
-    result = cursor.fetchall()
-    if result == () or result == None: 
-        print(f"No such parent table exists.")
-        print(f"Will create [{database_name1}.{outputname_userinput}parent] table after sentiment analysis")
-        exists_parenttable = False
-    else:
-        print(result)
-        print(f"parent table exists.. [{database_name1}.{outputname_userinput}parent] table")
-        exists_parenttable = True
-
-    #check if child table exists
-    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND TABLE_NAME = '{outputname_userinput}child';")
-    result = cursor.fetchall()
-    if result == () or result == None: 
-        print(f"No such child table exists.")
-        print(f"Will create [{database_name1}.{outputname_userinput}child] table after sentiment analysis")
-        exists_childtable = False
-    else:
-        print(result)
-        print(f"child table exists.. [{database_name1}.{outputname_userinput}child] table")
-        exists_childtable = True
+    exists_database, exists_parenttable, exists_childtable = check_exists_3tables(outputname_userinput)
+    print(f"exists_database={exists_database} | exists_parenttable={exists_parenttable} | exists_childtable={exists_childtable}")
 
 
     ### 1
 
+
     #xxx 1
     if exists_database == False and exists_parenttable == False and exists_childtable == False:
-        var1= None
+        #deleteandrename = ok, must implement
+        #step 1: create the database, parent, and child table (3 things)
+        #step 2: then add new entries (usually parenttable_id/new ref number = 1)
+        print(f"xxx -> 000: created {database_name1}, {database_name1}.{outputname_userinput}parent, {database_name1}.{outputname_userinput}child")
     
+
     #Oxx 2
     if exists_database == True and exists_parenttable == False and exists_childtable == False:
-        var1= None
+        #deleteandrename = ok, must implement
+        #step 1: create parent and child table (2 things)
+        #step 2: then add new entries (usually parenttable_id/new ref number = 1)
+        
+        print(f"0xx -> 000: created {database_name1}.{outputname_userinput}parent, {database_name1}.{outputname_userinput}child")
+
 
     #0x0 2
     if exists_database == True and exists_parenttable == False and exists_childtable == True:
-        var1= None
+        #deleteandrename = ok, must implement
+        #step 1: create parent table (1 thing)
+        #step 2: delete excessive entries - refer to side programs
+        #step 3: rename leftover entries - refer to side programs
+        #step 4: then add new entries
+
+        print(f"0x0 -> 000: created {database_name1}.{outputname_userinput}parent")
         
+
     #O0x 3
     if exists_database == True and exists_parenttable == True and exists_childtable == False:
-        var1= None
+        #deleteandrename = ok, must implement
+        #step 1: clear parent table, create child table (2 things)
+        #step 2: then add new entries (usually parenttable_id/new ref number = 1)
+
+        print(f"00x -> 000: cleared {database_name1}.{outputname_userinput}parent, created {database_name1}.{outputname_userinput}child")
+
 
     #O00 2
     if exists_database == True and exists_parenttable == True and exists_childtable == True:
-        var1= None
+        #deleteandrename = ok, must implement
+        #step 1: delete excessive entries - refer to side programs
+        #step 2: rename leftover entries - refer to side programs
+        #step 3: then add new entries
+
+        print(f"000 -> 000: OK")
     
 
-    ### 3
-    if new_ref_number >= max_output_amount:
-        print(f'limiting new_ref_number from {new_ref_number} to {max_output_amount}')
-        new_ref_number = max_output_amount
-    else:
-        new_ref_number += 1
-
-    return new_ref_number
-
-
-
-
-
-def add_newmetatable():
-    print(None)
-
-def update_existingoutputfiles_sql():
-    print(None)
     
 def reformatandaddinfoto_symbolsdict(symbols):
     #add function that adds details for list of found symbols

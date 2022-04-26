@@ -210,25 +210,11 @@ UPDATE result_all_parent SET parenttable_id = 19 WHERE parenttable_id = 20;
 
 '''
 ###result_all_child testing:
-CREATE TABLE result_all_child (ticker_id INT, symbol TEXT, mentions INT, market_cap DECIMAL(16,2), latest_price DECIMAL(16,2), change_percent DECIMAL(16,2), pe_ratio DECIMAL(16,2), company_name TEXT, parenttable_id INT);
+CREATE TABLE result_all_child (ticker_id INT, symbol TEXT, mentions INT, market_cap DECIMAL(16,2), latest_price DECIMAL(16,2), change_percent DECIMAL(16,2), pe_ratio DECIMAL(16,2), company_name TEXT, datetime DATETIME, parenttable_id INT);
 ALTER TABLE result_all_child ADD CONSTRAINT fk_metaandanalysis FOREIGN KEY (parenttable_id) REFERENCES result_all_parent(parenttable_id);
 
-INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (2, 'AAPL', 19, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 16);
-INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (2, 'AAPL', 19, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 15);
-INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (1, 'AAPL', 20, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 14);
-INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (1, 'AAPL', 20, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 13);
-INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (2, 'AAPL', 20, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 12);
-INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (2, 'AAPL', 20, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 11);
-INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (2, 'AAPL', 20, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 10);
-INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (2, 'AAPL', 20, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 9);
-INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (2, 'AAPL', 19, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 8);
-INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (2, 'AAPL', 19, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 7);
-INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (1, 'AAPL', 20, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 6);
-INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (1, 'AAPL', 20, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 5);
-INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (2, 'AAPL', 20, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 4);
-INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (2, 'AAPL', 20, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 3);
-INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (2, 'AAPL', 20, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 2);
-INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES (2, 'AAPL', 20, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', 1);
+INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, datetime, parenttable_id) VALUES (2, 'AAPL', 19, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', now(), 8);
+INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, datetime, parenttable_id) VALUES (2, 'AAPL', 19, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', now(), 7);
 
 #extras:
 DELETE FROM result_all_child where parenttable_id = 19;
