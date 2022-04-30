@@ -185,22 +185,10 @@ WHERE market_cap < 400000000000;
 CREATE TABLE result_all_parent (parenttable_id INT, subreddit_count INT, upvote_ratio DECIMAL(16, 1), ups INT, limit_reddit INT, upvotes INT, picks INT, picks_ayz INT, seconds_took DECIMAL(16, 1), comments_analyzed INT, datetime DATETIME, tickers_found INT, max_market_cap DECIMAL(16, 2));
 # ALTER TABLE result_all_parent ADD PRIMARY KEY(parenttable_id);
 
-INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (16, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
-INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (15, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
-INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (14, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
-INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (13, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
-INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (12, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
-INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (11, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
-INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (10, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
-INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (9, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
-INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (8, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
-INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (7, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
-INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (6, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
-INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (5, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
-INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (4, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
-INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (3, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
-INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (2, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
 INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (1, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
+INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (2, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
+INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (3, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
+INSERT INTO result_all_parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES (4, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);
 
 #extras:
 select * from result_all_parent where datetime like '2022-04-11%';
@@ -213,8 +201,11 @@ UPDATE result_all_parent SET parenttable_id = 19 WHERE parenttable_id = 20;
 CREATE TABLE result_all_child (ticker_id INT, symbol TEXT, mentions INT, market_cap DECIMAL(16,2), latest_price DECIMAL(16,2), change_percent DECIMAL(16,2), pe_ratio DECIMAL(16,2), company_name TEXT, datetime DATETIME, parenttable_id INT);
 ALTER TABLE result_all_child ADD CONSTRAINT fk_metaandanalysis FOREIGN KEY (parenttable_id) REFERENCES result_all_parent(parenttable_id);
 
-INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, datetime, parenttable_id) VALUES (2, 'AAPL', 19, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', now(), 8);
-INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, datetime, parenttable_id) VALUES (2, 'AAPL', 19, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', now(), 7);
+INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, datetime, parenttable_id) VALUES (2, 'AAPL', 19, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', now(), 1);
+INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, datetime, parenttable_id) VALUES (2, 'AAPL', 19, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', now(), 2);
+INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, datetime, parenttable_id) VALUES (2, 'AAPL', 19, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', now(), 3);
+INSERT INTO result_all_child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, datetime, parenttable_id) VALUES (2, 'AAPL', 19, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', now(), 4);
+
 
 #extras:
 DELETE FROM result_all_child where parenttable_id = 19;
@@ -236,3 +227,16 @@ Proably too slow and requires Python to loop thru all tables for now.
 
 '''
 
+
+
+
+'''
+ALTER TABLE test_db1.result_all_child
+ADD CONSTRAINT fk_a1
+FOREIGN KEY (parenttable_id) 
+REFERENCES test_db1.result_all_parent (parenttable_id) 
+ON DELETE CASCADE;
+
+ALTER TABLE test_db1.result_all_child
+DROP FOREIGN KEY fk_a1;
+'''

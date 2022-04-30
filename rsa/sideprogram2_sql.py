@@ -471,13 +471,11 @@ connection = pymysql.connect(
 
 
 
-max_output_amount = 5
-database_name1 = 'test_db1'
-table_name1_child = 'result_all_child'
-table_name1_parent = 'result_all_parent'
-outputname_userinput = 'result_all_'
 
 
+'''*****************************************************************************
+# check_exists_3tables
+*****************************************************************************'''
 
 def check_exists_3tables(outputname_userinput):
     '''*****************************************************************************
@@ -608,6 +606,17 @@ def prepare_variables1_sql_onetableversion(outputname_userinput, max_output_amou
     return new_ref_number
     
 
+
+'''*****************************************************************************
+# try fill in missing rows as a way to reconcile the parent/child table
+*****************************************************************************'''
+def reconcile_parentandchildtables():
+    exists_database, exists_parenttable, exists_childtable = check_exists_3tables(outputname_userinput)
+
+
+    print(f"exists_database={exists_database} | exists_parenttable={exists_parenttable} | exists_childtable={exists_childtable}")
+
+
 '''*****************************************************************************
 # create missing tables (and clear parent table)
 *****************************************************************************'''
@@ -624,10 +633,10 @@ def create_missingtables_and_clearparenttable(outputname_userinput):
 
 
     query_db = f"CREATE DATABASE {database_name1}"
-    query_parent = f"CREATE TABLE {database_name1}.{outputname_userinput}parent (parenttable_id INT, subreddit_count INT, upvote_ratio DECIMAL(16, 1), ups INT, limit_reddit INT, upvotes INT, picks INT, picks_ayz INT, seconds_took DECIMAL(16, 1), comments_analyzed INT, datetime DATETIME, tickers_found INT, max_market_cap DECIMAL(16, 2));"
+    query_parent = f"CREATE TABLE {database_name1}.{outputname_userinput}parent (parenttable_id INT UNIQUE, subreddit_count INT, upvote_ratio DECIMAL(16, 1), ups INT, limit_reddit INT, upvotes INT, picks INT, picks_ayz INT, seconds_took DECIMAL(16, 1), comments_analyzed INT, datetime DATETIME, tickers_found INT, max_market_cap DECIMAL(16, 2));"
     query_child = f"CREATE TABLE {database_name1}.{outputname_userinput}child (ticker_id INT, symbol TEXT, mentions INT, market_cap DECIMAL(16,2), latest_price DECIMAL(16,2), change_percent DECIMAL(16,2), pe_ratio DECIMAL(16,2), company_name TEXT, datetime DATETIME, parenttable_id INT);"
 
-    #xxx 1 = ok
+    #xxx 1 = tested/ok
     if exists_database == False and exists_parenttable == False and exists_childtable == False:
         #step 1: create the database, parent, and child table (3 things) = ok
         cursor.execute(query_db)
@@ -635,20 +644,20 @@ def create_missingtables_and_clearparenttable(outputname_userinput):
         cursor.execute(query_child)
         print('xxx -> 000')
 
-    #0xx 2 = ok
+    #0xx 2 = tested/ok
     if exists_database == True and exists_parenttable == False and exists_childtable == False:
         #step 1: create parent and child table (2 things) = ok
         cursor.execute(query_parent)
         cursor.execute(query_child)
         print('0xx -> 000')
 
-    #0x0 2
+    #0x0 2 = tested/ok
     if exists_database == True and exists_parenttable == False and exists_childtable == True:
         #step 1: create parent table (1 thing) = ok
         cursor.execute(query_parent)
         print('0x0 -> 000')
         
-    #00x 3
+    #00x 3 = tested/ok, should replace clear parent table part with mirror_outputs()
     if exists_database == True and exists_parenttable == True and exists_childtable == False:
         #step 1: clear parent table, create child table (2 things) = ok
         query_clearparenttable = f"DELETE FROM {database_name1}.{outputname_userinput}parent;"
@@ -656,12 +665,11 @@ def create_missingtables_and_clearparenttable(outputname_userinput):
         cursor.execute(query_child)
         print('00x -> 000')
         
-    #000 3
+    #000 3 = tested/ok
     if exists_database == True and exists_parenttable == True and exists_childtable == True:
         print('000 -> 000')
-
-
-
+        
+   
 '''*****************************************************************************
 ####delete excess mysql rows, rename leftover rows = ok, must implement in rsa.py
 #get list of parenttable_id =ok
@@ -794,7 +802,7 @@ def add_newoutputfile_childtable():
     
     for a in range(3):
         a += 1
-        sql = f"INSERT INTO {database_name1}.{outputname_userinput}child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, parenttable_id) VALUES ({a}, 'AAPL', 12, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', {new_ref_number});"
+        sql = f"INSERT INTO {database_name1}.{outputname_userinput}child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, datetime, parenttable_id) VALUES ({a}, 'AAPL', 12, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', now(), {new_ref_number});"
         cursor.execute(sql)
 
 
@@ -829,14 +837,22 @@ def printfinalresults():
 
 
 
+max_output_amount = 3
+if max_output_amount < 1: max_output_amount = 1
+
+database_name1 = 'test_db1'
+table_name1_child = 'result_all_child'
+table_name1_parent = 'result_all_parent'
+outputname_userinput = 'result_all_'
+
 with connection.cursor() as cursor:
     new_ref_number = prepare_variables1_sql_onetableversion(outputname_userinput, max_output_amount)
     
     create_missingtables_and_clearparenttable(outputname_userinput)
 
+
     deleteandrename_existingoutputs_sql_parenttable(max_output_amount, outputname_userinput)
     deleteandrename_existingoutputs_sql_childtable(max_output_amount, outputname_userinput)
-
 
     add_newoutputfile_parenttable()
     add_newoutputfile_childtable()
@@ -844,9 +860,5 @@ with connection.cursor() as cursor:
 
     printfinalresults()
     
-
-
-
-"implementing parent/child table creation on mysql, implementing update operations for parent/child tables (ex: deleting and renaming rows) --- WIP 3, writing small programs (isolated blocks of codes) before implementing them into rsa.py"
 
 connection.commit()
