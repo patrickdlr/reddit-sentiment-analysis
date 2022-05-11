@@ -85,8 +85,8 @@ def connect_to_mysql():
 
 if storagetype == "mysql":
     connection, cursor = connect_to_mysql()
-    # database_name1 = 'rsa_db_onetableversion'
-    database_name1 = 'test_db1'
+    # db_name1 = 'rsa_db_onetableversion'
+    db_name1 = 'test_db1'
 
 '''*****************************************************************************
 # Parameters for main function
@@ -161,16 +161,16 @@ def prepare_variables1_csv_and_sql(storagetype, outputname_userinput, max_output
     #1
     if storagetype == "mysql":
         # 0 - if database doesn't exist yet, create one
-        cursor.execute(f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{database_name1}';")
+        cursor.execute(f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{db_name1}';")
         result = cursor.fetchall()
         if result == () or result == None: 
-            print(f"No such database exists. Creating database {database_name1}...")
-            cursor.execute(f"CREATE DATABASE {database_name1}")
-            print(f"Successfully created {database_name1}")
+            print(f"No such database exists. Creating database {db_name1}...")
+            cursor.execute(f"CREATE DATABASE {db_name1}")
+            print(f"Successfully created {db_name1}")
 
         # 1 - get a list of existing saved tables that contains given outputname_userinput
         list_existingoutputfiles1 = []    
-        cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '{outputname_userinput}%';")
+        cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{db_name1}' AND table_name like '{outputname_userinput}%';")
         result = cursor.fetchall()
         list_existingoutputfiles1 = [list(a.values())[0] for a in result]
         #print('list_existingoutputfiles1 (prepare_variables1_csv_and_sql)'.ljust(55), list_existingoutputfiles1) #log
@@ -232,19 +232,19 @@ def check_exists_3tables(outputname_userinput):
 
     ### 0
     #check if database exists
-    cursor.execute(f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{database_name1}';")
+    cursor.execute(f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{db_name1}';")
     result = cursor.fetchall()
     if result == () or result == None: exists_database = False
     else: exists_database = True
 
     #check if parent table exists
-    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND TABLE_NAME = '{outputname_userinput}parent';")
+    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{db_name1}' AND TABLE_NAME = '{outputname_userinput}parent';")
     result = cursor.fetchall()
     if result == () or result == None: exists_parenttable = False
     else: exists_parenttable = True
 
     #check if child table exists
-    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND TABLE_NAME = '{outputname_userinput}child';")
+    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{db_name1}' AND TABLE_NAME = '{outputname_userinput}child';")
     result = cursor.fetchall()
     if result == () or result == None: exists_childtable = False
     else: exists_childtable = True
@@ -290,7 +290,7 @@ def prepare_variables1_sql_onetableversion(outputname_userinput, max_output_amou
     if exists_database == True and exists_parenttable == False and exists_childtable == True:
         #preparevariables1 = ok
         #step 0: get latest/highest parenttable_id from child table for ref number
-        sql = f"select parenttable_id from {database_name1}.{outputname_userinput}child order by parenttable_id ASC;"
+        sql = f"select parenttable_id from {db_name1}.{outputname_userinput}child order by parenttable_id ASC;"
         cursor.execute(sql)
 
         result = cursor.fetchall()
@@ -315,7 +315,7 @@ def prepare_variables1_sql_onetableversion(outputname_userinput, max_output_amou
     if exists_database == True and exists_parenttable == True and exists_childtable == True:
         #preparevariables1 = ok
         #step 0: get latest/highest parenttable_id from child table for ref number
-        sql = f"select parenttable_id from {database_name1}.{outputname_userinput}child order by parenttable_id ASC;"
+        sql = f"select parenttable_id from {db_name1}.{outputname_userinput}child order by parenttable_id ASC;"
         cursor.execute(sql)
 
         result = cursor.fetchall()
@@ -668,7 +668,7 @@ def deleteandrename_existingoutputfiles_csv_and_sql(storagetype, list_existingou
     *****************************************************************************'''
     # log
     if storagetype == "mysql":
-        cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{outputname_userinput}%';")
+        cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{db_name1}' AND table_name like '%{outputname_userinput}%';")
         myresult = cursor.fetchall()
         previewlist_existingoutputfiles1 = [list(a.values())[0] for a in myresult]
         print('list_existingoutputfiles1 (...)'.ljust(55), previewlist_existingoutputfiles1) #log
@@ -686,11 +686,11 @@ def deleteandrename_existingoutputfiles_csv_and_sql(storagetype, list_existingou
         while True:
             if len(list_existingoutputfiles1) >= max_output_amount:           
                 #delete first table - sql
-                cursor.execute(f"DROP TABLE {database_name1}.{list_existingoutputfiles1[0]};")
+                cursor.execute(f"DROP TABLE {db_name1}.{list_existingoutputfiles1[0]};")
 
                 #reinitialize list of tables - sql
                 list_existingoutputfiles1 = []
-                cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{outputname_userinput}%';")
+                cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{db_name1}' AND table_name like '%{outputname_userinput}%';")
                 myresult = cursor.fetchall()
                 list_existingoutputfiles1 = [list(a.values())[0] for a in myresult]
                     
@@ -717,7 +717,7 @@ def deleteandrename_existingoutputfiles_csv_and_sql(storagetype, list_existingou
 
     #log
     if storagetype == "mysql":
-        cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{outputname_userinput}%';")
+        cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{db_name1}' AND table_name like '%{outputname_userinput}%';")
         myresult = cursor.fetchall()
         previewlist_existingoutputfiles1 = [list(a.values())[0] for a in myresult]
         print('list_existingoutputfiles1 (after del excess)  '.ljust(55), previewlist_existingoutputfiles1) #log
@@ -735,14 +735,14 @@ def deleteandrename_existingoutputfiles_csv_and_sql(storagetype, list_existingou
         for a in list_existingoutputfiles1:
             try:
                 num_file = list_existingoutputfiles1.index(a) + 1 #adjust from 0 to 1
-                old_filename = f"{database_name1}.{a}"
+                old_filename = f"{db_name1}.{a}"
 
                 if num_file < 10:
-                    new_filename = f"{database_name1}.{outputname_userinput}00{num_file}"
+                    new_filename = f"{db_name1}.{outputname_userinput}00{num_file}"
                 elif num_file >= 10 and num_file < 100:
-                    new_filename = f"{database_name1}.{outputname_userinput}0{num_file}"
+                    new_filename = f"{db_name1}.{outputname_userinput}0{num_file}"
                 elif num_file >= 100 and num_file < 1000:
-                    new_filename = f"{database_name1}.{outputname_userinput}{num_file}"
+                    new_filename = f"{db_name1}.{outputname_userinput}{num_file}"
             
                 cursor.execute(f"RENAME TABLE {old_filename} TO {new_filename};")
             except:
@@ -768,7 +768,7 @@ def deleteandrename_existingoutputfiles_csv_and_sql(storagetype, list_existingou
 
     #log
     if storagetype == "mysql":
-        cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{outputname_userinput}%';")
+        cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{db_name1}' AND table_name like '%{outputname_userinput}%';")
         myresult = cursor.fetchall()
         previewlist_existingoutputfiles1 = [list(a.values())[0] for a in myresult]
         print('list_existingoutputfiles1 (after num correction)'.ljust(55), previewlist_existingoutputfiles1) #log
@@ -800,7 +800,7 @@ def deleteandrename_existingoutputs_sql_onetableversion(max_output_amount, outpu
         #deleteandrename = ok, must implement
         #step 1: create the database, parent, and child table (3 things)
         #step 2: then add new entries (usually parenttable_id/new ref number = 1)
-        print(f"xxx -> 000: created {database_name1}, {database_name1}.{outputname_userinput}parent, {database_name1}.{outputname_userinput}child")
+        print(f"xxx -> 000: created {db_name1}, {db_name1}.{outputname_userinput}parent, {db_name1}.{outputname_userinput}child")
     
 
     #Oxx 2
@@ -809,7 +809,7 @@ def deleteandrename_existingoutputs_sql_onetableversion(max_output_amount, outpu
         #step 1: create parent and child table (2 things)
         #step 2: then add new entries (usually parenttable_id/new ref number = 1)
         
-        print(f"0xx -> 000: created {database_name1}.{outputname_userinput}parent, {database_name1}.{outputname_userinput}child")
+        print(f"0xx -> 000: created {db_name1}.{outputname_userinput}parent, {db_name1}.{outputname_userinput}child")
 
 
     #0x0 2
@@ -820,7 +820,7 @@ def deleteandrename_existingoutputs_sql_onetableversion(max_output_amount, outpu
         #step 3: rename leftover entries - refer to side programs
         #step 4: then add new entries
 
-        print(f"0x0 -> 000: created {database_name1}.{outputname_userinput}parent")
+        print(f"0x0 -> 000: created {db_name1}.{outputname_userinput}parent")
         
 
     #O0x 3
@@ -829,7 +829,7 @@ def deleteandrename_existingoutputs_sql_onetableversion(max_output_amount, outpu
         #step 1: clear parent table, create child table (2 things)
         #step 2: then add new entries (usually parenttable_id/new ref number = 1)
 
-        print(f"00x -> 000: cleared {database_name1}.{outputname_userinput}parent, created {database_name1}.{outputname_userinput}child")
+        print(f"00x -> 000: cleared {db_name1}.{outputname_userinput}parent, created {db_name1}.{outputname_userinput}child")
 
 
     #O00 2
@@ -1027,7 +1027,7 @@ def add_newoutputfile_csv_and_sql_empty(storagetype, outputname_generated, dt_st
     *****************************************************************************'''
     if storagetype == "mysql":
         # #1
-        cursor.execute(f"CREATE TABLE {database_name1}.{outputname_generated} (tickerId INT, symbol TEXT, mentions INT, marketCap DECIMAL(16,2), latestPrice DECIMAL(16,2), changePercent DECIMAL(16,2), peRatio DECIMAL(16,2), companyName TEXT, tableId INT, PRIMARY KEY (tickerId));")
+        cursor.execute(f"CREATE TABLE {db_name1}.{outputname_generated} (tickerId INT, symbol TEXT, mentions INT, marketCap DECIMAL(16,2), latestPrice DECIMAL(16,2), changePercent DECIMAL(16,2), peRatio DECIMAL(16,2), companyName TEXT, tableId INT, PRIMARY KEY (tickerId));")
 
     
     if storagetype == "csv":
@@ -1045,9 +1045,9 @@ def add_newoutputfile_csv_and_sql(storagetype, outputname_generated, dt_string, 
     *****************************************************************************'''
     if storagetype == "mysql":
         # #1
-        # cursor.execute(f"CREATE TABLE {database_name1}.{outputname_generated} (Number INT, Symbols TEXT, Mentions INT, marketCap TEXT, latestPric TEXT, changePerc TEXT, peRatio TEXT, companyNam TEXT, PRIMARY KEY (Number));")
+        # cursor.execute(f"CREATE TABLE {db_name1}.{outputname_generated} (Number INT, Symbols TEXT, Mentions INT, marketCap TEXT, latestPric TEXT, changePerc TEXT, peRatio TEXT, companyNam TEXT, PRIMARY KEY (Number));")
         # #1 - improved 
-        cursor.execute(f"CREATE TABLE {database_name1}.{outputname_generated} (Analysis_Id INT, Symbols TEXT, Mentions INT, marketCap DECIMAL(16,2), latestPrice DECIMAL(16,2), changePerc DECIMAL(16,2), peRatio DECIMAL(16,2), companyNam TEXT, Table_Id INT, PRIMARY KEY (Analysis_Id));")
+        cursor.execute(f"CREATE TABLE {db_name1}.{outputname_generated} (Analysis_Id INT, Symbols TEXT, Mentions INT, marketCap DECIMAL(16,2), latestPrice DECIMAL(16,2), changePerc DECIMAL(16,2), peRatio DECIMAL(16,2), companyNam TEXT, Table_Id INT, PRIMARY KEY (Analysis_Id));")
 
 
         #2
@@ -1066,7 +1066,7 @@ def add_newoutputfile_csv_and_sql(storagetype, outputname_generated, dt_string, 
             coldata_10 = "%10s" % v.get('peRatio')
             coldata_11 = "%10s" % v.get('companyName')
 
-            cursor.execute(f"INSERT INTO {database_name1}.{outputname_generated} (Number, Symbols, Mentions, marketCap, latestPric, changePerc, peRatio, companyNam) VALUES ('{coldata_00}', '{coldata_01}', '{coldata_02}', '{coldata_07}', '{coldata_08}', '{coldata_09}', '{coldata_10}', '{coldata_11}');" )
+            cursor.execute(f"INSERT INTO {db_name1}.{outputname_generated} (Number, Symbols, Mentions, marketCap, latestPric, changePerc, peRatio, companyNam) VALUES ('{coldata_00}', '{coldata_01}', '{coldata_02}', '{coldata_07}', '{coldata_08}', '{coldata_09}', '{coldata_10}', '{coldata_11}');" )
 
             info_tickernumber += 1
         connection.commit()
@@ -1145,7 +1145,7 @@ def add_newoutputfile_csv_and_sql2(new_ref_number, storagetype, outputname_gener
     *****************************************************************************'''
     if storagetype == "mysql":
         # #1
-        cursor.execute(f"CREATE TABLE {database_name1}.{outputname_generated} (tickerId INT, symbol TEXT, mentions INT, marketCap DECIMAL(16,2), latestPrice DECIMAL(16,2), changePercent DECIMAL(16,2), peRatio DECIMAL(16,2), companyName TEXT, tableId INT, PRIMARY KEY (tickerId));")
+        cursor.execute(f"CREATE TABLE {db_name1}.{outputname_generated} (tickerId INT, symbol TEXT, mentions INT, marketCap DECIMAL(16,2), latestPrice DECIMAL(16,2), changePercent DECIMAL(16,2), peRatio DECIMAL(16,2), companyName TEXT, tableId INT, PRIMARY KEY (tickerId));")
 
         #2
         info_tickernumber = 1
@@ -1170,7 +1170,7 @@ def add_newoutputfile_csv_and_sql2(new_ref_number, storagetype, outputname_gener
 
             # don't use f string because it can't put 'NULL' as NULL, use % ()
             query1="INSERT INTO %s (tickerId, symbol, mentions, marketCap, latestPrice, changePercent, peRatio, companyName, tableId) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-            query1 = query1 % (f"{database_name1}.{outputname_generated}", coldata_00, coldata_01, coldata_02, 
+            query1 = query1 % (f"{db_name1}.{outputname_generated}", coldata_00, coldata_01, coldata_02, 
             coldata_07, coldata_08, coldata_09, coldata_10, coldata_11, coldata_12)
             try: cursor.execute(query1)
             except: print("error:",query1)
@@ -1247,7 +1247,7 @@ def add_newoutputfile_csv_and_sql2(new_ref_number, storagetype, outputname_gener
 
 def print_logs3(outputname_userinput, outputname_generated):
     if storagetype == "mysql":
-        cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '%{outputname_userinput}%';")
+        cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{db_name1}' AND table_name like '%{outputname_userinput}%';")
         myresult = cursor.fetchall()
         previewlist_existingoutputfiles1 = [list(a.values())[0] for a in myresult]
         print('list_existingoutputfiles1 (after writing new file)'.ljust(55), previewlist_existingoutputfiles1) #log
@@ -1281,8 +1281,7 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
     
     #one table version
     new_ref_number = prepare_variables1_sql_onetableversion(outputname_userinput, max_output_amount)
-    outputname_generated = 'null'
-    
+    outputname_generated = outputname_userinput 
 
     if storagetype == "mysql":
         cursor.close()

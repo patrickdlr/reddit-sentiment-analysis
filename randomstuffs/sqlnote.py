@@ -229,8 +229,10 @@ Proably too slow and requires Python to loop thru all tables for now.
 
 
 
-
+# add foreign key = OK
+# drop foreign key = OK
 '''
+
 ALTER TABLE test_db1.result_all_child
 ADD CONSTRAINT fk_a1
 FOREIGN KEY (parenttable_id) 
@@ -239,4 +241,97 @@ ON DELETE CASCADE;
 
 ALTER TABLE test_db1.result_all_child
 DROP FOREIGN KEY fk_a1;
+'''
+
+#### show foreign keys =
+#### table_name = to table (parent), not from table (child)
+'''
+SELECT 
+  TABLE_NAME,COLUMN_NAME,CONSTRAINT_NAME, REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME
+FROM
+  INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+WHERE
+  REFERENCED_TABLE_SCHEMA = 'test_db1' AND
+  REFERENCED_TABLE_NAME = 'result_all_parent';
+#   AND
+#   REFERENCED_COLUMN_NAME = 'parenttable_id';
+'''
+
+
+#### delimiter + create/execute/drop procedure = IP
+#### and more
+'''
+
+delimiter //
+
+CREATE PROCEDURE proc1()
+begin
+select * from test_db1.result_all_parent limit 3;
+select * from test_db1.result_all_parent limit 2;
+select * from test_db1.result_all_parent limit 1;
+end; //
+
+delimiter ;
+
+call proc1;
+drop procedure proc1;
+
+delimiter //
+
+CREATE PROCEDURE proc1()
+begin
+select * from test_db1.result_all_parent limit 3;
+select * from test_db1.result_all_parent limit 2;
+select * from test_db1.result_all_parent limit 1;
+end; //
+
+delimiter ;
+
+call proc1;
+drop procedure proc1;
+
+'''
+
+
+#### delimiter + trigger = OK
+#### and more
+'''
+delimiter $$
+CREATE TRIGGER autodeleteparent 
+AFTER DELETE ON test_db1.result_all_child
+FOR EACH ROW
+begin 
+    # DECLARE cst smallint;
+    # SELECT parenttable_id from test_db1.result_all_parent limit 1 into cst;
+    
+    #working
+    #DELETE FROM test_db1.result_all_parent p WHERE p.parenttable_id = OLD.parenttable_id;
+    
+
+    #working
+    # SELECT * from test_db1.result_all_child
+    # WHERE (  SELECT COUNT(CASE WHEN parenttable_id = 3 THEN 1 END) FROM result_all_child  ) = 3;
+
+    #working
+    DELETE FROM test_db1.result_all_parent p 
+    WHERE p.parenttable_id = OLD.parenttable_id
+    AND 
+    (  SELECT COUNT(CASE WHEN test_db1.result_all_child.parenttable_id = OLD.parenttable_id THEN 1 END) FROM test_db1.result_all_child  ) = 0;
+       
+end;   
+$$
+delimiter ;
+
+
+delete from test_db1.result_all_child where ticker_id = 1 and parenttable_id = 1;
+delete from test_db1.result_all_child where ticker_id = 2 and parenttable_id = 1;
+delete from test_db1.result_all_child where ticker_id = 3 and parenttable_id = 1;
+select * from test_db1.result_all_parent;
+select * from test_db1.result_all_child;
+
+SET FOREIGN_KEY_CHECKS=0; //disable
+SET FOREIGN_KEY_CHECKS=1;
+SET GLOBAL log_bin_trust_function_creators=1; //can be done on local, but not aws rds (must configure on aws website)
+SET GLOBAL log_bin_trust_function_creators=0;
+
 '''
