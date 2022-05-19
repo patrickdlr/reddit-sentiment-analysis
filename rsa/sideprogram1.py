@@ -1,7 +1,7 @@
 import pathlib, os, time, sys
 import ast, requests, pprint
 import pandas as pd
-
+import datetime
 
 '''*****************************************************************************
 # script 0 - create a set ({}) of all possible tickers (including stocks/crypto) from polygon.io, then save to file
@@ -165,4 +165,12 @@ import pandas as pd
 # print(r)
 # j = r.json()
 # print(j)
+
+'''*****************************************************************************
+# script 8 - use datetime module (to insert into sql table, instead of using now())
+*****************************************************************************'''
+
+print(datetime.datetime.now())
+time1 = datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
+print(time1, type(time1))
 

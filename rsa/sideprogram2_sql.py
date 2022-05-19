@@ -474,7 +474,7 @@ connection = pymysql.connect(
 
 
 '''*****************************************************************************
-# check_exists_3tables
+# check_exists_3tables = OK
 *****************************************************************************'''
 
 def check_exists_3tables(outputname_userinput):
@@ -511,8 +511,9 @@ def check_exists_3tables(outputname_userinput):
 '''*****************************************************************************
 # get latest/highest parenttable_id, seyt as new_ref_number = ok, implemeneted in rsa.py
 *****************************************************************************'''
-def prepare_variables1_sql_onetableversion(outputname_userinput, max_output_amount):
+def prepare_variables1_sql_parentandchildtables(outputname_userinput, max_output_amount):
     '''*****************************************************************************
+    ### 0 - check if database, parent table, child table exist or doesn't exist yet
     ### 1 - get new ref number (set as 1 if tables dont exist OR get latest/highest parenttable_id from child table if exist)
     ### 2 - adjust the new ref number (parenttable_id + 1) -- (using max_output = 10: 10 if parenttable_id = 10 there already, 10 if 9 there already, 9 if 8 files there already, 1 if 0, 2 if 1)
     ### parameters: outputname_userinput, max_output_amount
@@ -521,7 +522,7 @@ def prepare_variables1_sql_onetableversion(outputname_userinput, max_output_amou
     exists_database, exists_parenttable, exists_childtable = check_exists_3tables(outputname_userinput)
 
 
-    print('\nprepare_variables1_sql_onetableversion()')
+    print('\nprepare_variables1_sql_parentandchildtables()')
     print('outputname_userinput:', outputname_userinput)
     print(f"exists_database={exists_database} | exists_parenttable={exists_parenttable} | exists_childtable={exists_childtable}")
         
@@ -665,7 +666,7 @@ def create_missingtables_and_clearparenttable(outputname_userinput):
    
 
 '''*****************************************************************************
-# create missing tables (and clear parent table)
+# setup_foreign_key_and_after_delete_trigger
 *****************************************************************************'''
 
 
@@ -839,7 +840,7 @@ def deleteandrename_existingoutputs_sql_childtable(max_output_amount, outputname
 '''*****************************************************************************
 # add new mysql rows
 *****************************************************************************'''
-def add_newoutputfile_parenttable():
+def add_newoutputfile_parenttable_empty():
     print("\nadd_newoutputfile_parenttable()")
     
     sql = f"INSERT INTO {db_name1}.{outputname_userinput}parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES ({new_ref_number}, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);"
@@ -858,7 +859,7 @@ def add_newoutputfile_parenttable():
     list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
     print('end', list_existingoutputfiles1)
 
-def add_newoutputfile_childtable():
+def add_newoutputfile_childtable_empty():
     print("\nadd_newoutputfile_childtable()")
     
     for a in range(3):
@@ -897,21 +898,20 @@ def reconcile_parentandchildtables():
 # final result
 *****************************************************************************'''
 
-
-
-
-max_output_amount = 1
+max_output_amount = 3
 if max_output_amount < 1: max_output_amount = 1
 
 db_name1 = 'test_db1'
-table_name1_child = 'result_all_child'
-table_name1_parent = 'result_all_parent'
-outputname_userinput = 'result_all_'
+outputname_userinput = 'result_4b_'
 
 with connection.cursor() as cursor:
 
-    new_ref_number = prepare_variables1_sql_onetableversion(outputname_userinput, max_output_amount)
+    #before RSA analysis
+    new_ref_number = prepare_variables1_sql_parentandchildtables(outputname_userinput, max_output_amount)
+    # prepare_variables2_additional_info()
+    # print_logs1()
     
+    #after RSA analysis
     create_missingtables_and_clearparenttable(outputname_userinput)
     setup_foreign_key_and_after_delete_trigger(outputname_userinput)
 

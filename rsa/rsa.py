@@ -50,7 +50,7 @@ use_sentiment_analysis_and_visualization = False
 storagetype = "mysql"
 write_empty_newoutputfile = False #default: False
 
-max_output_amount = 20
+max_output_amount = 8
 if max_output_amount < 1: raise ValueError('max output amount cannot be <1')
 
 IEX_TOKEN = os.environ.get('IEX_TOKEN')
@@ -144,6 +144,39 @@ def warning_maxoutputexceeded(list_existingoutputfiles1, max_output_amount):
                 continue 
     
 
+# JUST ADDED
+# for prepare_variables1, deleteandrename_existing.. functions
+def check_exists_3tables(outputname_userinput):
+    '''*****************************************************************************
+    ### 0 - check if database, parent table, child table exist or doesn't exist yet
+    *****************************************************************************'''
+    exists_database = None
+    exists_parenttable = None
+    exists_childtable = None
+
+    ### 0
+    #check if database exists
+    cursor.execute(f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{db_name1}';")
+    result = cursor.fetchall()
+    if result == () or result == None: exists_database = False
+    else: exists_database = True
+
+    #check if parent table exists
+    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{db_name1}' AND TABLE_NAME = '{outputname_userinput}parent';")
+    result = cursor.fetchall()
+    if result == () or result == None: exists_parenttable = False
+    else: exists_parenttable = True
+
+    #check if child table exists
+    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{db_name1}' AND TABLE_NAME = '{outputname_userinput}child';")
+    result = cursor.fetchall()
+    if result == () or result == None: exists_childtable = False
+    else: exists_childtable = True
+
+
+    return exists_database, exists_parenttable, exists_childtable
+
+# OLD
 def prepare_variables1_csv_and_sql(storagetype, outputname_userinput, max_output_amount):
     '''*****************************************************************************
     # Preparing latest outputname_userinput filename
@@ -219,41 +252,10 @@ def prepare_variables1_csv_and_sql(storagetype, outputname_userinput, max_output
             outputname_generated = path_repo_and_csvfiles + "/" + outputname_userinput + str(new_ref_number) + '.csv'
         #print('outputname_generated', outputname_generated) #log
 
-    return outputname_generated, list_existingoutputfiles1, new_ref_number
-    
-#for prepare_variables1, deleteandrename_existing.. functions
-def check_exists_3tables(outputname_userinput):
-    '''*****************************************************************************
-    ### 0 - check if database, parent table, child table exist or doesn't exist yet
-    *****************************************************************************'''
-    exists_database = None
-    exists_parenttable = None
-    exists_childtable = None
+    return outputname_generated, list_existingoutputfiles1, new_ref_number   
 
-    ### 0
-    #check if database exists
-    cursor.execute(f"SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{db_name1}';")
-    result = cursor.fetchall()
-    if result == () or result == None: exists_database = False
-    else: exists_database = True
-
-    #check if parent table exists
-    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{db_name1}' AND TABLE_NAME = '{outputname_userinput}parent';")
-    result = cursor.fetchall()
-    if result == () or result == None: exists_parenttable = False
-    else: exists_parenttable = True
-
-    #check if child table exists
-    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{db_name1}' AND TABLE_NAME = '{outputname_userinput}child';")
-    result = cursor.fetchall()
-    if result == () or result == None: exists_childtable = False
-    else: exists_childtable = True
-
-
-    return exists_database, exists_parenttable, exists_childtable
-
-
-def prepare_variables1_sql_onetableversion(outputname_userinput, max_output_amount):
+# JUST ADDED
+def prepare_variables1_sql_parentandchildtables(outputname_userinput, max_output_amount):
     '''*****************************************************************************
     ### 0 - check if database, parent table, child table exist or doesn't exist yet
     ### 1 - get new ref number (set as 1 if tables dont exist OR get latest/highest parenttable_id from child table if exist)
@@ -262,10 +264,13 @@ def prepare_variables1_sql_onetableversion(outputname_userinput, max_output_amou
     ### return variables: new_ref_number
     *****************************************************************************'''
     exists_database, exists_parenttable, exists_childtable = check_exists_3tables(outputname_userinput)
+
+    print("------------------------------------------------------")
+    print('prepare_variables1_sql_parentandchildtables()')
+    print('outputname_userinput:', outputname_userinput)
     print(f"exists_database={exists_database} | exists_parenttable={exists_parenttable} | exists_childtable={exists_childtable}")
         
-    print('\nprepare_variables1_sql_onetableversion()*************************')
-    print('outputname_userinput:', outputname_userinput)
+    
 
 
     ### 1
@@ -301,7 +306,11 @@ def prepare_variables1_sql_onetableversion(outputname_userinput, max_output_amou
         list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
         print(list_existingoutputfiles1)
 
-        new_ref_number = list_existingoutputfiles1[-1]
+        if list_existingoutputfiles1 == []:
+            new_ref_number = 0
+        else:
+            # new_ref_number = list_existingoutputfiles1[-1]
+            new_ref_number = len(list_existingoutputfiles1)
 
         
     #00x 3
@@ -326,7 +335,11 @@ def prepare_variables1_sql_onetableversion(outputname_userinput, max_output_amou
         list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
         print(list_existingoutputfiles1)
 
-        new_ref_number = list_existingoutputfiles1[-1]
+        if list_existingoutputfiles1 == []:
+            new_ref_number = 0
+        else:
+            # new_ref_number = list_existingoutputfiles1[-1]
+            new_ref_number = len(list_existingoutputfiles1)
    
 
     ### 2
@@ -337,12 +350,9 @@ def prepare_variables1_sql_onetableversion(outputname_userinput, max_output_amou
         new_ref_number += 1
 
     print("new_ref_number set as", new_ref_number)
-    print('prepare_variables1_sql_onetableversion()*************************\n')
     return new_ref_number
 
-    
-
-
+# OK
 def prepare_variables2_additional_info(subs, marketcap_max):
     dt_string = datetime.now().strftime("%m/%d/%Y %H:%M")
     info_subcount = 'Sub count: ' + str(len(subs))
@@ -355,7 +365,7 @@ def prepare_variables2_additional_info(subs, marketcap_max):
     subreddit_count = len(subs)
     return dt_string, info_subcount, info_marketCap_limit, subreddit_count
 
-
+# OK
 def print_logs1(dt_string, outputname_generated, info_subcount, info_marketCap_limit, us):
     if isPrint_logs == True:
         print("------------------------------------------------------")
@@ -365,7 +375,7 @@ def print_logs1(dt_string, outputname_generated, info_subcount, info_marketCap_l
         print(info_marketCap_limit)
         print('Number of tickers found (from input): ' + str(len(us)))
 
-
+# OK
 def data_extractor(reddit, subs, us):
     ##def data_extractor(reddit):
 
@@ -480,7 +490,7 @@ def data_extractor(reddit, subs, us):
 
     return posts, c_analyzed, tickers, titles, a_comments, picks, subs, picks_ayz, info_parameters, upvoteRatio, ups, limit, upvotes
 
-
+# OK
 def print_helper(tickers, picks, c_analyzed, posts, subs, titles, time, start_time):
     '''prints out top tickers, and most mentioned tickers
     
@@ -532,7 +542,7 @@ def print_helper(tickers, picks, c_analyzed, posts, subs, titles, time, start_ti
 
     return symbols, times, top, info_ittookxseconds, seconds_took
 
-
+# OK
 def sentiment_analysis(picks_ayz, a_comments, symbols, us):
     ##def sentiment_analysis(picks_ayz, a_comments, symbols)
     '''analyzes sentiment anaylsis of top tickers
@@ -606,7 +616,7 @@ def sentiment_analysis(picks_ayz, a_comments, symbols, us):
             
     return scores
 
-
+# OK
 def visualization(picks_ayz, scores, picks, times, top):
 
     '''prints sentiment analysis
@@ -649,7 +659,7 @@ def visualization(picks_ayz, scores, picks, times, top):
 
     uselessvariable1 = 'this is a useless variable to force-hide show plt.show() above when minimizing this function'
 
-
+# OK
 def print_logs2(symbols, scores):
     '''*****************************************************************************
     # Info logs for console program - additional info, optional
@@ -659,7 +669,99 @@ def print_logs2(symbols, scores):
         print("print2: ", scores)
     endingvar = None
 
+# JUST ADDED
+def create_missingtables_and_clearparenttable(outputname_userinput):
 
+    '''*****************************************************************************
+    ### 0 - check if db/tables exist
+    ### 1 - create db/tables (ones that are missing)
+    *****************************************************************************'''
+    exists_database, exists_parenttable, exists_childtable = check_exists_3tables(outputname_userinput)
+
+    print('\ncreate_missingtables_and_clearparenttable()')
+    print(f"exists_database={exists_database} | exists_parenttable={exists_parenttable} | exists_childtable={exists_childtable}")
+
+
+    query_db = f"CREATE DATABASE {db_name1}"
+    query_parent = f"CREATE TABLE {db_name1}.{outputname_userinput}parent (parenttable_id INT UNIQUE, subreddit_count INT, upvote_ratio DECIMAL(16, 1), ups INT, limit_reddit INT, upvotes INT, picks INT, picks_ayz INT, seconds_took DECIMAL(16, 1), comments_analyzed INT, datetime DATETIME, tickers_found INT, max_market_cap DECIMAL(16, 2));"
+    query_child = f"CREATE TABLE {db_name1}.{outputname_userinput}child (ticker_id INT, symbol TEXT, mentions INT, market_cap DECIMAL(16,2), latest_price DECIMAL(16,2), change_percent DECIMAL(16,2), pe_ratio DECIMAL(16,2), company_name TEXT, datetime DATETIME, parenttable_id INT);"
+
+    #xxx 1 = tested/ok
+    if exists_database == False and exists_parenttable == False and exists_childtable == False:
+        #step 1: create the database, parent, and child table (3 things) = ok
+        cursor.execute(query_db)
+        cursor.execute(query_parent)
+        cursor.execute(query_child)
+        print('xxx -> 000')
+
+    #0xx 2 = tested/ok
+    if exists_database == True and exists_parenttable == False and exists_childtable == False:
+        #step 1: create parent and child table (2 things) = ok
+        cursor.execute(query_parent)
+        cursor.execute(query_child)
+        print('0xx -> 000')
+
+    #0x0 2 = tested/ok
+    if exists_database == True and exists_parenttable == False and exists_childtable == True:
+        #step 1: create parent table (1 thing) = ok
+        cursor.execute(query_parent)
+        print('0x0 -> 000')
+        
+    #00x 3 = tested/ok, should replace clear parent table part with mirror_outputs()
+    if exists_database == True and exists_parenttable == True and exists_childtable == False:
+        #step 1: clear parent table, create child table (2 things) = ok
+        query_clearparenttable = f"DELETE FROM {db_name1}.{outputname_userinput}parent;"
+        cursor.execute(query_clearparenttable)
+        cursor.execute(query_child)
+        print('00x -> 000')
+        
+    #000 3 = tested/ok
+    if exists_database == True and exists_parenttable == True and exists_childtable == True:
+        print('000 -> 000')
+
+# JUST ADDED
+def setup_foreign_key_and_after_delete_trigger(outputname_userinput):
+    '''*****************************************************************************
+    ### 0 - check if db/tables exist
+    ### 1 - create db/tables (ones that are missing)
+    *****************************************************************************'''
+    exists_database, exists_parenttable, exists_childtable = check_exists_3tables(outputname_userinput)
+
+    print('\nsetup_foreign_key_and_after_delete_trigger()')
+    print(f"exists_database={exists_database} | exists_parenttable={exists_parenttable} | exists_childtable={exists_childtable}")
+
+    #000 = testing
+    if exists_database == True and exists_parenttable == True and exists_childtable == True:
+        # add foreign key
+        sql = f'ALTER TABLE {db_name1}.{outputname_userinput}child ADD CONSTRAINT fk_a1 FOREIGN KEY (parenttable_id) REFERENCES {db_name1}.{outputname_userinput}parent (parenttable_id) ON DELETE CASCADE;'
+        try:
+            cursor.execute(sql)
+            print("added foreign key fk_a1")
+        except Exception as e:
+            print(e)
+
+
+        # add trigger (after delete)
+        sql = '''
+        CREATE TRIGGER {0}.autodeleteparent
+        AFTER DELETE ON {2}
+        FOR EACH ROW
+        begin
+            DELETE FROM {1} p
+            WHERE p.parenttable_id = OLD.parenttable_id
+            AND
+            (  SELECT COUNT(CASE WHEN {2}.parenttable_id = OLD.parenttable_id THEN 1 END) FROM {2}  ) = 0;
+        end;
+        '''.format(f"{db_name1}", f"{db_name1}.{outputname_userinput}parent", f"{db_name1}.{outputname_userinput}child")
+        # print(sql)
+        try:
+            cursor.execute(sql)
+            print("added trigger (after delete)")
+        except Exception as e:
+            print(e)
+
+
+# OLD
 def deleteandrename_existingoutputfiles_csv_and_sql(storagetype, list_existingoutputfiles1, max_output_amount, outputname_userinput):
     '''*****************************************************************************
     # Manage result files for proper numbering and up-to-date content
@@ -780,69 +882,122 @@ def deleteandrename_existingoutputfiles_csv_and_sql(storagetype, list_existingou
                 previewlist_existingoutputfiles1.append(a)
         print('list_existingoutputfiles1 (after num correction)'.ljust(55), previewlist_existingoutputfiles1) #log
 
-def deleteandrename_existingoutputs_sql_onetableversion(max_output_amount, outputname_userinput):
-    '''*****************************************************************************
-    ### 0 - check if database, parent table, child table exist or doesn't exist yet
-    ### 1 - create 0-3 tables, add new entries (usually parenttable_id/new ref number = 1)
-    ### 1 - create 0-3 tables, delete/rename entries, add new entries
-    ### parameters: 
-    ### return variables:
-    *****************************************************************************'''
-    exists_database, exists_parenttable, exists_childtable = check_exists_3tables(outputname_userinput)
-    print(f"exists_database={exists_database} | exists_parenttable={exists_parenttable} | exists_childtable={exists_childtable}")
-
-
-    ### 1
-
-
-    #xxx 1
-    if exists_database == False and exists_parenttable == False and exists_childtable == False:
-        #deleteandrename = ok, must implement
-        #step 1: create the database, parent, and child table (3 things)
-        #step 2: then add new entries (usually parenttable_id/new ref number = 1)
-        print(f"xxx -> 000: created {db_name1}, {db_name1}.{outputname_userinput}parent, {db_name1}.{outputname_userinput}child")
     
+# JUST ADDED
+def deleteandrename_existingoutputs_sql_parenttable(max_output_amount, outputname_userinput):
+    print('\ndeleteandrename_existingoutputs_sql_parenttable()')
 
-    #Oxx 2
-    if exists_database == True and exists_parenttable == False and exists_childtable == False:
-        #deleteandrename = ok, must implement
-        #step 1: create parent and child table (2 things)
-        #step 2: then add new entries (usually parenttable_id/new ref number = 1)
+    #get list of parenttable ids
+    sql = f"select parenttable_id from {db_name1}.{outputname_userinput}parent order by parenttable_id ASC;"
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    # pprint.pprint(result)
+    # turn into list
+    list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+    # remove duplicates
+    list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+    print('start', list_existingoutputfiles1)
+    
+    #delete (also deletes rows from child table thru FK)
+    while True:
+        if len(list_existingoutputfiles1) >= max_output_amount:           
+            #delete first rows - sql
+            cursor.execute(f"DELETE FROM {db_name1}.{outputname_userinput}parent where parenttable_id = {list_existingoutputfiles1[0]};")
+
+            #reinitialize list of parenttable ids
+            list_existingoutputfiles1 = []
+            sql = f"select parenttable_id from {db_name1}.{outputname_userinput}parent order by parenttable_id ASC;"
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            # pprint.pprint(result)
+            #turn into list
+            list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+            # remove duplicates
+            list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))            
+        else:
+            break
         
-        print(f"0xx -> 000: created {db_name1}.{outputname_userinput}parent, {db_name1}.{outputname_userinput}child")
+    print('trimmed', list_existingoutputfiles1)
 
-
-    #0x0 2
-    if exists_database == True and exists_parenttable == False and exists_childtable == True:
-        #deleteandrename = ok, must implement
-        #step 1: create parent table (1 thing)
-        #step 2: delete excessive entries - refer to side programs
-        #step 3: rename leftover entries - refer to side programs
-        #step 4: then add new entries
-
-        print(f"0x0 -> 000: created {db_name1}.{outputname_userinput}parent")
-        
-
-    #O0x 3
-    if exists_database == True and exists_parenttable == True and exists_childtable == False:
-        #deleteandrename = ok, must implement
-        #step 1: clear parent table, create child table (2 things)
-        #step 2: then add new entries (usually parenttable_id/new ref number = 1)
-
-        print(f"00x -> 000: cleared {db_name1}.{outputname_userinput}parent, created {db_name1}.{outputname_userinput}child")
-
-
-    #O00 2
-    if exists_database == True and exists_parenttable == True and exists_childtable == True:
-        #deleteandrename = ok, must implement
-        #step 1: delete excessive entries - refer to side programs
-        #step 2: rename leftover entries - refer to side programs
-        #step 3: then add new entries
-
-        print(f"000 -> 000: OK")
+    #rename
+    cursor.execute('SET FOREIGN_KEY_CHECKS=0;') #disable (only when updating parent table's rows (not needed when deleting))
+    for a in list_existingoutputfiles1:
+        new_parenttable_id = list_existingoutputfiles1.index(a) + 1 #adjust from 0 to 1
+        #old_parenttable_id  = a
+        sql = f"UPDATE {db_name1}.{outputname_userinput}parent SET parenttable_id = {new_parenttable_id} where parenttable_id = {a};"
+        cursor.execute(sql)
+    cursor.execute('SET FOREIGN_KEY_CHECKS=1;') #re-enable (only when updating parent table's rows (not needed when deleting))
     
 
+    #reinitialize list of parenttable ids
+    list_existingoutputfiles1 = []
+    sql = f"select parenttable_id from {db_name1}.{outputname_userinput}parent order by parenttable_id ASC;"
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    # pprint.pprint(result)
+    # turn into list
+    list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+    # remove duplicates
+    list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+    print('renamed', list_existingoutputfiles1)
+
+# JUST ADDED
+def deleteandrename_existingoutputs_sql_childtable(max_output_amount, outputname_userinput):
+    print('\ndeleteandrename_existingoutputs_sql_childtable()')
+
+    #get list of parenttable ids
+    sql = f"select parenttable_id from {db_name1}.{outputname_userinput}child order by parenttable_id ASC;"
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    # pprint.pprint(result)
+    # turn into list
+    list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+    # remove duplicates
+    list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+    print('start', list_existingoutputfiles1)
+
+    #delete, (already deleted by parent table thru FK)
+    while True:
+        if len(list_existingoutputfiles1) >= max_output_amount:           
+            #delete first rows - sql
+            cursor.execute(f"DELETE FROM {db_name1}.{outputname_userinput}child where parenttable_id = {list_existingoutputfiles1[0]};")
+
+            #reinitialize list of parenttable ids
+            list_existingoutputfiles1 = []
+            sql = f"select parenttable_id from {db_name1}.{outputname_userinput}child order by parenttable_id ASC;"
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            # pprint.pprint(result)
+            # turn into list
+            list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+            # remove duplicates
+            list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))                        
+        else:
+            break
     
+    print('trimmed', list_existingoutputfiles1, '(already trimmed using FK constraint, no change)')
+
+    #rename
+    for a in list_existingoutputfiles1:
+        new_parenttable_id = list_existingoutputfiles1.index(a) + 1 #adjust from 0 to 1
+        #old_parenttable_id = a
+        sql = f"UPDATE {db_name1}.{outputname_userinput}child SET parenttable_id = {new_parenttable_id} where parenttable_id = {a};"
+        cursor.execute(sql)
+    
+
+    #reinitialize list of parenttable ids
+    list_existingoutputfiles1 = []
+    sql = f"select parenttable_id from {db_name1}.{outputname_userinput}child order by parenttable_id ASC;"
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    # pprint.pprint(result)
+    # turn into list
+    list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+    # remove duplicates
+    list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+    print('renamed', list_existingoutputfiles1)
+
+# OLD
 def reformatandaddinfoto_symbolsdict(symbols):
     #add function that adds details for list of found symbols
 
@@ -914,17 +1069,32 @@ def reformatandaddinfoto_symbolsdict(symbols):
     endingvar = None
 
 #gives raw int, instead of string number with $ or %
-def reformatandaddinfoto_symbolsdict2(symbols):
-    #add function that adds details for list of found symbols
+def reformatandaddinfoto_symbolsdict2(symbols, marketcap_max):
+    # #delete symbols based on marketcap (probably better after RSA because the symbol list is now 300-ish, instead of 11,000)
+    list_removesymbols = []
+    for k in symbols.keys():
+        url =  'https://sandbox.iexapis.com/stable/stock/' + str(k) + '/quote' + IEX_TOKEN_SANDBOX
+        r = requests.get(url)
+        j = r.json()
+        j_val = j["marketCap"]
+
+        if j_val > marketcap_max and j_val != 0:
+            list_removesymbols.append(k)
+
+    for i in list_removesymbols: 
+        del symbols[i]
+    print("removed symbols w/ >" + str(marketcap_max))
+    print(list_removesymbols)    
 
 
     #reformat symbols dict
     for k,v in symbols.items():
         symbols[k] = {"mentions": v}
 
-    #updat symbols dict (add info like marketCap, latestPrice)
+    
+    #update symbols dict (add info like marketCap, latestPrice) or (delete symbols based on marketCap)
+    count_Null = 0
     for k,v in symbols.items():
-
         time.sleep(0.4)
 
         #url = 'https://cloud.iexapis.com/stable/stock/' + str(k) + '/quote' + IEX_TOKEN
@@ -937,71 +1107,26 @@ def reformatandaddinfoto_symbolsdict2(symbols):
             j = r.json()
             # print(j)
 
-            # try:
             for a in ["marketCap", "latestPrice", "changePercent", "companyName", "peRatio"]:
                 j_val = j[a]
 
                 # if j_val == None or j_val == 0: 
                 if j_val == None: 
-                    print('note: j_val == ""/None: ', j_val, type(j_val))
+                    # print('note: j_val == ""/None: ', j_val, type(j_val))
                     symbols[k].update({a: NULL})
+                    count_Null += 1
                     continue
                 
                 if a == "changePercent":
                     j_val *= 100
-                    
+
+                # if a == "marketCap" and j_val > 1000000000 and j_val != 0:
+                #     print("deleted ", k, symbols[k], j_val)
+                #     del symbols[k]
+                #     break
+                
                 symbols[k].update({a: j_val})
                 # print('note: j_val == : ', j_val, type(j_val))
-            # except:
-            #     symbols[k].update({a: NULL})
-                    
-    
-
-            # try:            
-            #     j_val = j["marketCap"]
-            #     if j_val == "" or j_val == None or j_val == 0: 
-            #         symbols[k].update({"marketCap": NULL})
-            #         continue
-            #     symbols[k].update({"marketCap": j_val})
-            # except:
-            #     symbols[k].update({"marketCap": NULL})
-
-            # try:
-            #     j_val = j["latestPrice"]
-            #     if j_val == "" or j_val == None or j_val == 0: 
-            #         symbols[k].update({"latestPrice": NULL})
-            #         continue
-            #     symbols[k].update({"latestPrice": j_val})
-            # except:
-            #     symbols[k].update({"latestPrice": NULL})
-
-            # try:
-            #     j_val = j["changePercent"]
-            #     if j_val == "" or j_val == None or j_val == 0: 
-            #         symbols[k].update({"changePercent": NULL})
-            #         continue
-            #     j_val *= 100 #ex: 0.0244 to 2.44 (then formatted to 2.44%)
-            #     symbols[k].update({"changePercent": j_val})
-            # except:
-            #     symbols[k].update({"changePercent": NULL})
-
-            # try:
-            #     j_val = j["companyName"]
-            #     if j_val == "" or j_val == None or j_val == 0: 
-            #         symbols[k].update({"companyName": NULL})
-            #         continue
-            #     symbols[k].update({"companyName": j_val})
-            # except:
-            #     symbols[k].update({"companyName": NULL})
-
-            # try:
-            #     j_val = j["peRatio"]
-            #     if j_val == "" or j_val == None or j_val == 0: 
-            #         symbols[k].update({"peRatio": NULL})
-            #         continue
-            #     symbols[k].update({"peRatio": j_val})
-            # except:
-            #     symbols[k].update({"peRatio": NULL})
 
         except Exception as e:
             print(e, '--', k, r.reason)
@@ -1010,16 +1135,14 @@ def reformatandaddinfoto_symbolsdict2(symbols):
                 symbols[k].update({a: NULL})
 
             continue #try to bypass json.decoder error
-
+    print("NULL count: " + str(count_Null))
 
     # pprint.pprint(symbols)
-    
     # return symbols
 
     endingvar = None
 
-
-
+# OLD
 def add_newoutputfile_csv_and_sql_empty(storagetype, outputname_generated, dt_string):
     '''*****************************************************************************
     #1 Create new output file, using outputname_generated
@@ -1038,6 +1161,7 @@ def add_newoutputfile_csv_and_sql_empty(storagetype, outputname_generated, dt_st
                 writer.writerow(['Date and time: ' + dt_string])
                 writer.writerow(['Empty file'])
 
+# OLD
 def add_newoutputfile_csv_and_sql(storagetype, outputname_generated, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols):
     '''*****************************************************************************
     #1 Create new output file, using outputname_generated
@@ -1137,7 +1261,7 @@ def add_newoutputfile_csv_and_sql(storagetype, outputname_generated, dt_string, 
                     #writer.writerow([colx_00, k_, v_,mc_, price_, pctchange_, name_])
                     continue
 
-
+# OLD
 def add_newoutputfile_csv_and_sql2(new_ref_number, storagetype, outputname_generated, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols):
     '''*****************************************************************************
     #1 Create new output file, using outputname_generated
@@ -1244,21 +1368,131 @@ def add_newoutputfile_csv_and_sql2(new_ref_number, storagetype, outputname_gener
                     #writer.writerow([colx_00, k_, v_,mc_, price_, pctchange_, name_])
                     continue
 
+def add_newoutputfile_parenttable_empty(new_ref_number, outputname_userinput):
+    print("\nadd_newoutputfile_parenttable()")
+    print(db_name1, new_ref_number, outputname_userinput)
+    sql = f"INSERT INTO {db_name1}.{outputname_userinput}parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES ({new_ref_number}, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);"
+    cursor.execute(sql)
+    connection.commit()
+
+    #preview list of parenttable ids
+    list_existingoutputfiles1 = []
+    sql = f"select parenttable_id from {db_name1}.{outputname_userinput}parent order by parenttable_id ASC;"
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    # pprint.pprint(result)
+    # turn into list
+    list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+    # remove duplicates
+    list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+    print('end', list_existingoutputfiles1)
+
+# JUST ADDED
+def add_newoutputfile_childtable_empty(new_ref_number, outputname_userinput):
+    print("\nadd_newoutputfile_childtable()")
+    print(db_name1, new_ref_number, outputname_userinput)
+    for a in range(3):
+        a += 1
+        sql = f"INSERT INTO {db_name1}.{outputname_userinput}child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, datetime, parenttable_id) VALUES ({a}, 'AAPL', 12, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', now(), {new_ref_number});"
+        cursor.execute(sql)
+    connection.commit()
+
+    #preview list of parenttable ids
+    list_existingoutputfiles1 = []
+    sql = f"select parenttable_id from {db_name1}.{outputname_userinput}child order by parenttable_id ASC;"
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    # pprint.pprint(result)
+    # turn into list
+    list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+    # remove duplicates
+    list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+    print('end', list_existingoutputfiles1)
+
+
+# JUST ADDED
+def add_newoutputfile_parenttable(outputname_userinput, new_ref_number, subreddit_count, upvoteRatio, ups, limit, upvotes, picks, picks_ayz, seconds_took, c_analyzed, us, marketcap_max):
+    print("\nadd_newoutputfile_parenttable()")
+
+    sql = f"INSERT INTO {db_name1}.{outputname_userinput}parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES ({new_ref_number}, {subreddit_count}, {upvoteRatio}, {ups}, {limit}, {upvotes}, {picks}, {picks_ayz}, {seconds_took}, {c_analyzed}, now(), {len(us)}, {marketcap_max});"
+    cursor.execute(sql)
+    connection.commit()
+
+    #preview list of parenttable ids
+    list_existingoutputfiles1 = []
+    sql = f"select parenttable_id from {db_name1}.{outputname_userinput}parent order by parenttable_id ASC;"
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    # pprint.pprint(result)
+    # turn into list
+    list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+    # remove duplicates
+    list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+    print('end', list_existingoutputfiles1)
+
+# JUST ADDED
+def add_newoutputfile_childtable(new_ref_number, outputname_userinput, symbols):
+    print("\nadd_newoutputfile_childtable()")
+
+    info_tickernumber = 1
+    for k,v in symbols.items():
+        coldata_00 = info_tickernumber
+        coldata_01 =  "'%s'" % k
+        if coldata_01 == "'NULL'": coldata_01 = "NULL"
+        coldata_02 = v.get('mentions')
+        # coldata_03 = senti.get('neg')
+        # coldata_04 = senti.get('neu')
+        # coldata_05 = senti.get('pos')
+        # coldata_06 = senti.get('compound')
+        coldata_07 = v.get('marketCap')
+        coldata_08 = v.get('latestPrice')
+        coldata_09 = v.get('changePercent')
+        coldata_10 = v.get('peRatio')
+        coldata_11 = "'%s'" % v.get('companyName')
+        if coldata_11 == "'NULL'": coldata_11 = "NULL"
+        coldata_12 = new_ref_number
+
+
+        # don't use f string because it can't put 'NULL' as NULL, use % ()
+        query1="INSERT INTO %schild (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, datetime, parenttable_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, now(), %s)"
+        query1 = query1 % (f"{db_name1}.{outputname_userinput}", coldata_00, coldata_01, coldata_02, 
+        coldata_07, coldata_08, coldata_09, coldata_10, coldata_11, coldata_12)
+        try: cursor.execute(query1)
+        except Exception as e: print(e, "error:",query1)
+
+        info_tickernumber += 1
+    connection.commit()
+
+    #preview list of parenttable ids
+    list_existingoutputfiles1 = []
+    sql = f"select parenttable_id from {db_name1}.{outputname_userinput}child order by parenttable_id ASC;"
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    # pprint.pprint(result)
+    # turn into list
+    list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+    # remove duplicates
+    list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+    print('end', list_existingoutputfiles1)
+
+
+
 
 def print_logs3(outputname_userinput, outputname_generated):
+    print()
+
     if storagetype == "mysql":
         cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{db_name1}' AND table_name like '%{outputname_userinput}%';")
         myresult = cursor.fetchall()
         previewlist_existingoutputfiles1 = [list(a.values())[0] for a in myresult]
-        print('list_existingoutputfiles1 (after writing new file)'.ljust(55), previewlist_existingoutputfiles1) #log
+        print('existing sql tables (parent/child)', previewlist_existingoutputfiles1) #log
 
     if storagetype == "csv":
         previewlist_existingoutputfiles1 = []    
         for a in os.listdir(path_repo_and_csvfiles):
             if a.startswith(outputname_userinput):
                 previewlist_existingoutputfiles1.append(a)
-        print('list_existingoutputfiles1 (after writing new file)'.ljust(55), previewlist_existingoutputfiles1) #log
-
+        print('existing csv tables', previewlist_existingoutputfiles1) #log
 
     dt_string = datetime.now().strftime("%m/%d/%Y %H:%M")
     print("Date and Time: " + dt_string + " (End main)")
@@ -1280,7 +1514,7 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
     # outputname_generated, list_existingoutputfiles1, new_ref_number = prepare_variables1_csv_and_sql(storagetype, outputname_userinput, max_output_amount)
     
     #one table version
-    new_ref_number = prepare_variables1_sql_onetableversion(outputname_userinput, max_output_amount)
+    new_ref_number = prepare_variables1_sql_parentandchildtables(outputname_userinput, max_output_amount)
     outputname_generated = outputname_userinput 
 
     if storagetype == "mysql":
@@ -1305,7 +1539,7 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
     # #TEMPORARY SOLUTION 1
     #us, dict_symbolmc, dict_symbolprice, dict_symbolpctchange, dict_name = getlist_from_textfile() 
     us = getlist_from_textfile()
-
+    # print("us", us)
 
     # #TEMPORARY SOLUTION 2
     #us, dict_symbolmc, dict_symbolprice, dict_symbolpctchange, dict_name = getlist_nasdaq_api_chunk(marketcap_min, marketcap_max)  
@@ -1313,9 +1547,7 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
     
     # #TEMPORARY SOLUTION 3 (abandoned)
     #url = "https://api.nasdaq.com/api/screener/stocks?tableonly=true&limit=10"
-    #download_file_separate(url) 
-
-
+    #download_file_separate(url)    
 
     '''*****************************************************************************
     # prepare additional-info variables - (put additional-info into new output file)
@@ -1334,92 +1566,108 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
     '''*****************************************************************************
     # Reddit Sentiment Analysis
     *****************************************************************************'''
-    start_time = time.time()
+    if write_empty_newoutputfile == False:
+        start_time = time.time()
 
-    #if write_empty_newoutputfile == False:
-    # open reddit client
-    reddit = praw.Reddit(
-        user_agent=os.environ.get('reddit_user_agent'), 
-        client_id=os.environ.get('reddit_client_id'), 
-        client_secret=os.environ.get('reddit_client_secret'),
-        username=os.environ.get('reddit_username'), 
-        password=os.environ.get('reddit_password')
-    )
+        #if write_empty_newoutputfile == False:
+        # open reddit client
+        reddit = praw.Reddit(
+            user_agent=os.environ.get('reddit_user_agent'), 
+            client_id=os.environ.get('reddit_client_id'), 
+            client_secret=os.environ.get('reddit_client_secret'),
+            username=os.environ.get('reddit_username'), 
+            password=os.environ.get('reddit_password')
+        )
 
-    #not working..
-    # reddit = praw.Reddit(
-    #     user_agent, 
-    #     client_id, 
-    #     client_secret, 
-    #     username, 
-    #     password
-    # )
-    
-    # posts, c_analyzed, tickers, titles, a_comments, picks, subs, picks_ayz, info_parameters = data_extractor(reddit, subs, us)
-    posts, c_analyzed, tickers, titles, a_comments, picks, subs, picks_ayz, info_parameters, upvoteRatio, ups, limit, upvotes = data_extractor(reddit, subs, us)
-    print('data_extractor finished')
+        #not working..
+        # reddit = praw.Reddit(
+        #     user_agent, 
+        #     client_id, 
+        #     client_secret, 
+        #     username, 
+        #     password
+        # )
+        
+        # posts, c_analyzed, tickers, titles, a_comments, picks, subs, picks_ayz, info_parameters = data_extractor(reddit, subs, us)
+        posts, c_analyzed, tickers, titles, a_comments, picks, subs, picks_ayz, info_parameters, upvoteRatio, ups, limit, upvotes = data_extractor(reddit, subs, us)
+        print('data_extractor finished')
 
-    # symbols, times, top, info_ittookxseconds = print_helper(tickers, picks, c_analyzed, posts, subs, titles, time, start_time)
-    symbols, times, top, info_ittookxseconds, seconds_took = print_helper(tickers, picks, c_analyzed, posts, subs, titles, time, start_time)
-    print('print_helper finished')
+        # symbols, times, top, info_ittookxseconds = print_helper(tickers, picks, c_analyzed, posts, subs, titles, time, start_time)
+        symbols, times, top, info_ittookxseconds, seconds_took = print_helper(tickers, picks, c_analyzed, posts, subs, titles, time, start_time)
+        print('print_helper finished')
 
-    #PROBLEM_3: Seems to not work on AWS's due to excessive memory usage...
-    if use_sentiment_analysis_and_visualization == True:
-        scores = sentiment_analysis(picks_ayz, a_comments, symbols, us)
-        print('sentiment_analysis finished') 
+        #PROBLEM_3: Seems to not work on AWS's due to excessive memory usage...
+        if use_sentiment_analysis_and_visualization == True:
+            scores = sentiment_analysis(picks_ayz, a_comments, symbols, us)
+            print('sentiment_analysis finished') 
 
-        visualization(picks_ayz, scores, picks, times, top)
-        print('visualization finished') 
+            visualization(picks_ayz, scores, picks, times, top)
+            print('visualization finished') 
 
-        print_logs2(symbols, scores)
-
-    print('enfu1', symbols)
+            print_logs2(symbols, scores)
 
     '''*****************************************************************************
     # refresh/reestablish connection to mysql database = ?
-    # update output file
     *****************************************************************************'''
     if storagetype == "mysql":
         connection, cursor = connect_to_mysql()
 
-    
+
+    '''*****************************************************************************
+    # create missing tables if needed
+    # setup FK and trigger (after-delete)
+    *****************************************************************************'''
+    create_missingtables_and_clearparenttable(outputname_userinput)
+    setup_foreign_key_and_after_delete_trigger(outputname_userinput)
+
+
+    '''*****************************************************************************
+    # update output file
+    *****************************************************************************'''
     # might be causing MEMORYERROR - probably not
     # deleteandrename_existingoutputfiles_csv_and_sql(storagetype, list_existingoutputfiles1, max_output_amount, outputname_userinput)
 
-    deleteandrename_existingoutputs_sql_onetableversion(max_output_amount, outputname_userinput)
-    
+    deleteandrename_existingoutputs_sql_parenttable(max_output_amount, outputname_userinput)
+    deleteandrename_existingoutputs_sql_childtable(max_output_amount, outputname_userinput)
+
 
     '''*****************************************************************************
     # fix/update symbol dictionary with more info
     *****************************************************************************'''
-    #if write_empty_newoutputfile == False:
-    # might be causing MEMORYERROR - ?
-    # dict_symbolmc = {'AAPL': '$3035.xB', 'MSFT': '$2514.xB', 'GOOG': '$1974.xB', 'GOOGL': '$1967.xB', 'AMZN': '$1786.xB'}
-    # dict_symbolmc = {}
-    # dict_symbolprice = {'AAPL': '$175.x', 'MSFT': '$334.x', 'GOOG': '$2974.x', 'GOOGL': '$2963.x', 'AMZN': '$3523.x'}
-    # dict_symbolpctchange = {'AAPL': '2.x%', 'MSFT': '0.x%', 'GOOG': '0.x%', 'GOOGL': '0.x%', 'AMZN': '-0.x%'}
-    # dict_name = {'AAPL': ' Apple Inc. Common Stock', 'MSFT': ' Microsoft Corporation Common Stock', 'GOOG': ' Alphabet Inc. Class C Capital Stock', 'GOOGL': ' Alphabet Inc. Class A Common Stock', 'AMZN': ' Amazon.com, Inc. Common Stock'}    
-    # add_newoutputfile_csv_old(outputname_generated, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols, dict_symbolmc, dict_symbolprice, dict_symbolpctchange, dict_name)
+    if write_empty_newoutputfile == False:
+        #if write_empty_newoutputfile == False:
+        # might be causing MEMORYERROR - ?
+        # dict_symbolmc = {'AAPL': '$3035.xB', 'MSFT': '$2514.xB', 'GOOG': '$1974.xB', 'GOOGL': '$1967.xB', 'AMZN': '$1786.xB'}
+        # dict_symbolmc = {}
+        # dict_symbolprice = {'AAPL': '$175.x', 'MSFT': '$334.x', 'GOOG': '$2974.x', 'GOOGL': '$2963.x', 'AMZN': '$3523.x'}
+        # dict_symbolpctchange = {'AAPL': '2.x%', 'MSFT': '0.x%', 'GOOG': '0.x%', 'GOOGL': '0.x%', 'AMZN': '-0.x%'}
+        # dict_name = {'AAPL': ' Apple Inc. Common Stock', 'MSFT': ' Microsoft Corporation Common Stock', 'GOOG': ' Alphabet Inc. Class C Capital Stock', 'GOOGL': ' Alphabet Inc. Class A Common Stock', 'AMZN': ' Amazon.com, Inc. Common Stock'}    
+        # add_newoutputfile_csv_old(outputname_generated, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols, dict_symbolmc, dict_symbolprice, dict_symbolpctchange, dict_name)
 
-    # #OR
-    # might be causing MEMORYERROR - testing, probbably not
-    reformatandaddinfoto_symbolsdict2(symbols)
-    
-    print('enfu2', symbols)
+        # #OR
+        # might be causing MEMORYERROR - testing, probbably not
+        reformatandaddinfoto_symbolsdict2(symbols, marketcap_max)
 
 
-    #data for parent table
-    print(new_ref_number, subreddit_count, upvoteRatio, ups, limit, upvotes, picks, picks_ayz, seconds_took, c_analyzed)
+        
         
 
     '''*****************************************************************************
     # add new output file
     *****************************************************************************'''
-    if write_empty_newoutputfile == False:
-        add_newoutputfile_csv_and_sql2(new_ref_number, storagetype, outputname_generated, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols)
+    # if write_empty_newoutputfile == False:
+    #     add_newoutputfile_csv_and_sql2(new_ref_number, storagetype, outputname_generated, dt_string, info_subcount, info_marketCap_limit, info_parameters, info_ittookxseconds, symbols)
     
+    # if write_empty_newoutputfile == True:
+    #     add_newoutputfile_csv_and_sql_empty(storagetype, outputname_generated, dt_string)
+
     if write_empty_newoutputfile == True:
-        add_newoutputfile_csv_and_sql_empty(storagetype, outputname_generated, dt_string)
+        add_newoutputfile_parenttable_empty(new_ref_number, outputname_userinput)
+        add_newoutputfile_childtable_empty(new_ref_number, outputname_userinput)
+
+    if write_empty_newoutputfile == False:
+        add_newoutputfile_parenttable(outputname_userinput, new_ref_number, subreddit_count, upvoteRatio, ups, limit, upvotes, picks, picks_ayz, seconds_took, c_analyzed, us, marketcap_max)
+        add_newoutputfile_childtable(new_ref_number, outputname_userinput, symbols)
 
 
     '''*****************************************************************************
@@ -1427,6 +1675,7 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
     # close connection
     *****************************************************************************'''
     print_logs3(outputname_userinput, outputname_generated)
+
 
     if storagetype == "mysql":
         cursor.close()
@@ -1485,7 +1734,7 @@ if __name__ == '__main__':
     # main(input_api_nasdaq, output_filename1_RDS, subs_membercount_min1, marketcap_min1, marketcap_max1) ##stable RDS
     #main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1) ##stable
     #main(input_api_nasdaq, output_filename0, subs_membercount_min1, marketcap_min1, marketcap_max1) ##linux/window test large
-    main(input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4) ##linux/window test small
+    #main(input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4) ##linux/window test small
     #main(input_api_nasdaq, output_filename0, subs_membercount_min2, marketcap_min1, marketcap_max4) ##linux test - testing getlist_subreddits - WORKING, needs TESTING
     #main(input_api_nasdaq, output_filename0, subs_specificlist1, marketcap_min1, marketcap_max4)
 
@@ -1567,12 +1816,12 @@ if __name__ == '__main__':
     
 
     '''*****************************************************************************
-    # WAY 2 - run program by fixed interval (old)
+    # WAY 2 - run program for n times with delay
     *****************************************************************************'''
     # print("using way 2 - run program by fixed intervals (old)")
-    # for n in range(20):
-    #     main(input_api_nasdaq, output_filename0, subs_specificlist1, marketcap_min1, marketcap_max4) ##linux/window test small
-    #     time.sleep(60)
+    for n in range(30):
+        main(input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4) ##linux/window test small
+        time.sleep(15)
 
     # input("Press any key to continue . . . (1) ")
     # input("Press any key to continue . . . (2) ")
