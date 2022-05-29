@@ -171,6 +171,8 @@ import datetime
 *****************************************************************************'''
 
 print(datetime.datetime.now())
-time1 = datetime.datetime.now().strftime("%m/%d/%Y %H:%M:%S")
+time1 = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 print(time1, type(time1))
 
+#'2011-12-18 13:17:17'
+#'05/19/2022 23:02:00'

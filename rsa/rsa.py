@@ -37,7 +37,7 @@ nltk.download('vader_lexicon', quiet=True)
 from prawcore.exceptions import Forbidden
 from multiprocessing import Process
 from threading import Thread
-from datetime import datetime
+import datetime
 import pymysql
 import os, sys, csv, requests, schedule, pathlib, pprint, urllib.request, ast
 
@@ -50,7 +50,7 @@ use_sentiment_analysis_and_visualization = False
 storagetype = "mysql"
 write_empty_newoutputfile = False #default: False
 
-max_output_amount = 8
+max_output_amount = 25
 if max_output_amount < 1: raise ValueError('max output amount cannot be <1')
 
 IEX_TOKEN = os.environ.get('IEX_TOKEN')
@@ -86,7 +86,7 @@ def connect_to_mysql():
 if storagetype == "mysql":
     connection, cursor = connect_to_mysql()
     # db_name1 = 'rsa_db_onetableversion'
-    db_name1 = 'test_db1'
+    db_name1 = 'rsa_db'
 
 '''*****************************************************************************
 # Parameters for main function
@@ -109,9 +109,11 @@ subs_membercount_min1 = 0
 subs_membercount_min2 = 600000
 subs_membercount_min3 = 1000000
 
-marketcap_min1 = 0
-marketcap_min2 = 50000000000
-marketcap_max1 = 9000000000000 #all
+marketcap_min0 = 0
+marketcap_min1 = 1000
+marketcap_min2 = 1000000000
+
+marketcap_max1 = 35000000000000 #all
 marketcap_max2 = 200000000000
 marketcap_max3 = 15000000000
 marketcap_max4 = 4000000000
@@ -354,7 +356,7 @@ def prepare_variables1_sql_parentandchildtables(outputname_userinput, max_output
 
 # OK
 def prepare_variables2_additional_info(subs, marketcap_max):
-    dt_string = datetime.now().strftime("%m/%d/%Y %H:%M")
+    dt_string = datetime.datetime.now().strftime("%m/%d/%Y %H:%M")
     info_subcount = 'Sub count: ' + str(len(subs))
     
     if marketcap_max > 2000000000000: 
@@ -403,11 +405,11 @@ def data_extractor(reddit, subs, us):
     ignoreAuthP = {'example'}       # authors to ignore for posts 
     ignoreAuthC = {'example'}       # authors to ignore for comment 
     upvoteRatio = 0.5               # upvote ratio for post to be considered, 0.70 = 70%
-    ups = 20       # define # of upvotes, post is considered if upvotes exceed this # #20
+    ups = 1       # define # of upvotes, post is considered if upvotes exceed this # #20
     limit = 1     # define the limit, comments 'replace more' limit
-    upvotes = 2     # define # of upvotes, comment is consi adered if upvotes exceed this #20
-    picks = 100     # define # of picks here, prints as "Top ## picks are:" 10
-    picks_ayz = 100   # define # of picks for sentiment analysis 5
+    upvotes = 1     # define # of upvotes, comment is consi adered if upvotes exceed this #20
+    picks = 50     # define # of picks here, prints as "Top ## picks are:" 10
+    picks_ayz = 25   # define # of picks for sentiment analysis 5
     
 
     info_parameters = "upvoteRatio: " + str(upvoteRatio) + " | ups: " + str(ups) + " | limit: " + str(limit) + " | upvotes: " + str(upvotes) + " | picks: " + str(picks) + " | picks_ayz: " + str(picks_ayz) #logprint
@@ -530,13 +532,15 @@ def print_helper(tickers, picks, c_analyzed, posts, subs, titles, time, start_ti
     times = []
     top = []
     for i in top_picks:
-        #limit amount of symbols/picks printed
-        if top_picks.index(i) >= picks: #testing
-            break
+        #testing
+        # if top_picks.index(i) >= picks: 
+        #     break
         
+        #limit amount of symbols/picks printed
         if isPrint_logs == True:
             if top_picks.index(i) < 5: #only print up to 5
                 print("{}: {}".format(i,symbols[i]))
+
         times.append(symbols[i])
         top.append("{}: {}".format(i,symbols[i]))
 
@@ -683,7 +687,7 @@ def create_missingtables_and_clearparenttable(outputname_userinput):
 
 
     query_db = f"CREATE DATABASE {db_name1}"
-    query_parent = f"CREATE TABLE {db_name1}.{outputname_userinput}parent (parenttable_id INT UNIQUE, subreddit_count INT, upvote_ratio DECIMAL(16, 1), ups INT, limit_reddit INT, upvotes INT, picks INT, picks_ayz INT, seconds_took DECIMAL(16, 1), comments_analyzed INT, datetime DATETIME, tickers_found INT, max_market_cap DECIMAL(16, 2));"
+    query_parent = f"CREATE TABLE {db_name1}.{outputname_userinput}parent (parenttable_id INT UNIQUE, subreddit_count INT, upvote_ratio DECIMAL(16, 1), ups INT, limit_reddit INT, upvotes INT, picks INT, picks_ayz INT, seconds_took DECIMAL(16, 1), comments_analyzed INT, datetime DATETIME, tickers_found INT, tickers_rsa INT, min_market_cap DECIMAL(16, 2), max_market_cap DECIMAL(16, 2));"
     query_child = f"CREATE TABLE {db_name1}.{outputname_userinput}child (ticker_id INT, symbol TEXT, mentions INT, market_cap DECIMAL(16,2), latest_price DECIMAL(16,2), change_percent DECIMAL(16,2), pe_ratio DECIMAL(16,2), company_name TEXT, datetime DATETIME, parenttable_id INT);"
 
     #xxx 1 = tested/ok
@@ -722,8 +726,8 @@ def create_missingtables_and_clearparenttable(outputname_userinput):
 # JUST ADDED
 def setup_foreign_key_and_after_delete_trigger(outputname_userinput):
     '''*****************************************************************************
-    ### 0 - check if db/tables exist
-    ### 1 - create db/tables (ones that are missing)
+    ### 0 - check if db, parent and child tables exist
+    ### 1 - create fk/triggers
     *****************************************************************************'''
     exists_database, exists_parenttable, exists_childtable = check_exists_3tables(outputname_userinput)
 
@@ -733,7 +737,7 @@ def setup_foreign_key_and_after_delete_trigger(outputname_userinput):
     #000 = testing
     if exists_database == True and exists_parenttable == True and exists_childtable == True:
         # add foreign key
-        sql = f'ALTER TABLE {db_name1}.{outputname_userinput}child ADD CONSTRAINT fk_a1 FOREIGN KEY (parenttable_id) REFERENCES {db_name1}.{outputname_userinput}parent (parenttable_id) ON DELETE CASCADE;'
+        sql = f'ALTER TABLE {db_name1}.{outputname_userinput}child ADD CONSTRAINT fk_{outputname_userinput} FOREIGN KEY (parenttable_id) REFERENCES {db_name1}.{outputname_userinput}parent (parenttable_id) ON DELETE CASCADE;'
         try:
             cursor.execute(sql)
             print("added foreign key fk_a1")
@@ -743,16 +747,16 @@ def setup_foreign_key_and_after_delete_trigger(outputname_userinput):
 
         # add trigger (after delete)
         sql = '''
-        CREATE TRIGGER {0}.autodeleteparent
-        AFTER DELETE ON {2}
+        CREATE TRIGGER {0}.trigger_{1}
+        AFTER DELETE ON {3}
         FOR EACH ROW
         begin
-            DELETE FROM {1} p
+            DELETE FROM {2} p
             WHERE p.parenttable_id = OLD.parenttable_id
             AND
-            (  SELECT COUNT(CASE WHEN {2}.parenttable_id = OLD.parenttable_id THEN 1 END) FROM {2}  ) = 0;
+            (  SELECT COUNT(CASE WHEN {3}.parenttable_id = OLD.parenttable_id THEN 1 END) FROM {3}  ) = 0;
         end;
-        '''.format(f"{db_name1}", f"{db_name1}.{outputname_userinput}parent", f"{db_name1}.{outputname_userinput}child")
+        '''.format(f"{db_name1}", f"trigger_{outputname_userinput}", f"{db_name1}.{outputname_userinput}parent", f"{db_name1}.{outputname_userinput}child")
         # print(sql)
         try:
             cursor.execute(sql)
@@ -1069,23 +1073,36 @@ def reformatandaddinfoto_symbolsdict(symbols):
     endingvar = None
 
 #gives raw int, instead of string number with $ or %
-def reformatandaddinfoto_symbolsdict2(symbols, marketcap_max):
+def reformatandaddinfoto_symbolsdict2(symbols, marketcap_min, marketcap_max):
+    #shorten 
+    
+    
+    
     # #delete symbols based on marketcap (probably better after RSA because the symbol list is now 300-ish, instead of 11,000)
+    print("\nreformatandaddinfoto_symbolsdict2()")
+
     list_removesymbols = []
     for k in symbols.keys():
+        time.sleep(0.4)
         url =  'https://sandbox.iexapis.com/stable/stock/' + str(k) + '/quote' + IEX_TOKEN_SANDBOX
         r = requests.get(url)
-        j = r.json()
-        j_val = j["marketCap"]
 
-        if j_val > marketcap_max and j_val != 0:
-            list_removesymbols.append(k)
+        try:
+            j = r.json()
+            j_val = j["marketCap"]
+
+            if j_val < marketcap_min or j_val > marketcap_max:
+                if j_val != 0:
+                    list_removesymbols.append(k)
+        except Exception as e:
+            print(e, k, j_val)
+            continue #try avoid json error
 
     for i in list_removesymbols: 
         del symbols[i]
     print("removed symbols w/ >" + str(marketcap_max))
-    print(list_removesymbols)    
-
+    print("list_removesymbols", list_removesymbols)    
+    print("symbols:", symbols)
 
     #reformat symbols dict
     for k,v in symbols.items():
@@ -1368,10 +1385,10 @@ def add_newoutputfile_csv_and_sql2(new_ref_number, storagetype, outputname_gener
                     #writer.writerow([colx_00, k_, v_,mc_, price_, pctchange_, name_])
                     continue
 
-def add_newoutputfile_parenttable_empty(new_ref_number, outputname_userinput):
+def add_newoutputfile_parenttable_empty(new_ref_number, outputname_userinput, time1_rsafinished):
     print("\nadd_newoutputfile_parenttable()")
     print(db_name1, new_ref_number, outputname_userinput)
-    sql = f"INSERT INTO {db_name1}.{outputname_userinput}parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES ({new_ref_number}, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, now(), 11796, 4000000000);"
+    sql = f"INSERT INTO {db_name1}.{outputname_userinput}parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, tickers_rsa, min_market_cap, max_market_cap) VALUES ({new_ref_number}, 64, 0.5, 20, 1, 2, 100, 100, 800.91, 480, '{time1_rsafinished}', 11796, 350, 1000, 4000000000);"
     cursor.execute(sql)
     connection.commit()
 
@@ -1388,13 +1405,12 @@ def add_newoutputfile_parenttable_empty(new_ref_number, outputname_userinput):
     print('end', list_existingoutputfiles1)
 
 # JUST ADDED
-def add_newoutputfile_childtable_empty(new_ref_number, outputname_userinput):
-    print("\nadd_newoutputfile_childtable()")
-    print(db_name1, new_ref_number, outputname_userinput)
-    for a in range(3):
-        a += 1
-        sql = f"INSERT INTO {db_name1}.{outputname_userinput}child (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, datetime, parenttable_id) VALUES ({a}, 'AAPL', 12, 4333222111.99, 159.109, 99.95, 25.00, 'Apple Co.', now(), {new_ref_number});"
-        cursor.execute(sql)
+def add_newoutputfile_childtable_empty(new_ref_number, outputname_userinput, time1_rsafinished):
+    print("\add_newoutputfile_childtable_empty()")
+
+    query1="INSERT INTO %schild (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, datetime, parenttable_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, '%s', %s)"
+    query1 = query1 % (f"{db_name1}.{outputname_userinput}", 1, "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", time1_rsafinished, new_ref_number)
+    cursor.execute(query1)
     connection.commit()
 
     #preview list of parenttable ids
@@ -1411,10 +1427,11 @@ def add_newoutputfile_childtable_empty(new_ref_number, outputname_userinput):
 
 
 # JUST ADDED
-def add_newoutputfile_parenttable(outputname_userinput, new_ref_number, subreddit_count, upvoteRatio, ups, limit, upvotes, picks, picks_ayz, seconds_took, c_analyzed, us, marketcap_max):
+def add_newoutputfile_parenttable(outputname_userinput, new_ref_number, subreddit_count, upvoteRatio, ups, limit, upvotes, picks, picks_ayz, seconds_took, c_analyzed, time1_rsafinished, us, symbols, marketcap_min, marketcap_max):
     print("\nadd_newoutputfile_parenttable()")
 
-    sql = f"INSERT INTO {db_name1}.{outputname_userinput}parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, max_market_cap) VALUES ({new_ref_number}, {subreddit_count}, {upvoteRatio}, {ups}, {limit}, {upvotes}, {picks}, {picks_ayz}, {seconds_took}, {c_analyzed}, now(), {len(us)}, {marketcap_max});"
+    sql = f"INSERT INTO {db_name1}.{outputname_userinput}parent (parenttable_id, subreddit_count, upvote_ratio, ups, limit_reddit, upvotes, picks, picks_ayz, seconds_took, comments_analyzed, datetime, tickers_found, tickers_rsa, min_market_cap, max_market_cap) VALUES ({new_ref_number}, {subreddit_count}, {upvoteRatio}, {ups}, {limit}, {upvotes}, {picks}, {picks_ayz}, {seconds_took}, {c_analyzed}, '{time1_rsafinished}', {len(us)}, {len(symbols)}, {marketcap_min}, {marketcap_max});"
+    
     cursor.execute(sql)
     connection.commit()
 
@@ -1431,7 +1448,7 @@ def add_newoutputfile_parenttable(outputname_userinput, new_ref_number, subreddi
     print('end', list_existingoutputfiles1)
 
 # JUST ADDED
-def add_newoutputfile_childtable(new_ref_number, outputname_userinput, symbols):
+def add_newoutputfile_childtable(new_ref_number, outputname_userinput, symbols, time1_rsafinished):
     print("\nadd_newoutputfile_childtable()")
 
     info_tickernumber = 1
@@ -1450,13 +1467,14 @@ def add_newoutputfile_childtable(new_ref_number, outputname_userinput, symbols):
         coldata_10 = v.get('peRatio')
         coldata_11 = "'%s'" % v.get('companyName')
         if coldata_11 == "'NULL'": coldata_11 = "NULL"
+        # time1_rsafinished = "'%s'" % time1_rsafinished
         coldata_12 = new_ref_number
 
 
         # don't use f string because it can't put 'NULL' as NULL, use % ()
-        query1="INSERT INTO %schild (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, datetime, parenttable_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, now(), %s)"
+        query1="INSERT INTO %schild (ticker_id, symbol, mentions, market_cap, latest_price, change_percent, pe_ratio, company_name, datetime, parenttable_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, '%s', %s)"
         query1 = query1 % (f"{db_name1}.{outputname_userinput}", coldata_00, coldata_01, coldata_02, 
-        coldata_07, coldata_08, coldata_09, coldata_10, coldata_11, coldata_12)
+        coldata_07, coldata_08, coldata_09, coldata_10, coldata_11, time1_rsafinished, coldata_12)
         try: cursor.execute(query1)
         except Exception as e: print(e, "error:",query1)
 
@@ -1476,8 +1494,6 @@ def add_newoutputfile_childtable(new_ref_number, outputname_userinput, symbols):
     print('end', list_existingoutputfiles1)
 
 
-
-
 def print_logs3(outputname_userinput, outputname_generated):
     print()
 
@@ -1494,7 +1510,7 @@ def print_logs3(outputname_userinput, outputname_generated):
                 previewlist_existingoutputfiles1.append(a)
         print('existing csv tables', previewlist_existingoutputfiles1) #log
 
-    dt_string = datetime.now().strftime("%m/%d/%Y %H:%M")
+    dt_string = datetime.datetime.now().strftime("%m/%d/%Y %H:%M")
     print("Date and Time: " + dt_string + " (End main)")
     print('Created and wrote ' + outputname_generated)
     print()
@@ -1504,22 +1520,25 @@ def print_logs3(outputname_userinput, outputname_generated):
 def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_max):
     '''*****************************************************************************
     # refresh/reestablish connection to mysql database = ?
-    # prepare variables - (for deleting/renaming existing output files/adding new output file)
+    # prepare variables - (for deleting/renaming existing output files/adding new output file) - preview only
     # close connection
     *****************************************************************************'''
     if storagetype == "mysql":
         connection, cursor = connect_to_mysql()
 
+        #one table version
+        new_ref_number = prepare_variables1_sql_parentandchildtables(outputname_userinput, max_output_amount)
+        outputname_generated = outputname_userinput 
+        print("PREVIEW ONLY")
+
+        cursor.close()
+        connection.close()
+
+    #if storagetype == "csv"
     #traditional 
     # outputname_generated, list_existingoutputfiles1, new_ref_number = prepare_variables1_csv_and_sql(storagetype, outputname_userinput, max_output_amount)
     
-    #one table version
-    new_ref_number = prepare_variables1_sql_parentandchildtables(outputname_userinput, max_output_amount)
-    outputname_generated = outputname_userinput 
-
-    if storagetype == "mysql":
-        cursor.close()
-        connection.close()
+    
 
     '''*****************************************************************************
     #1 get list of subreddits (from csv file) - (for Reddit Sentinment Analysis)
@@ -1606,6 +1625,9 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
 
             print_logs2(symbols, scores)
 
+    time1_rsafinished = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # print(time1_rsafinished, type(time1_rsafinished))
+
     '''*****************************************************************************
     # refresh/reestablish connection to mysql database = ?
     *****************************************************************************'''
@@ -1617,6 +1639,7 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
     # create missing tables if needed
     # setup FK and trigger (after-delete)
     *****************************************************************************'''
+    
     create_missingtables_and_clearparenttable(outputname_userinput)
     setup_foreign_key_and_after_delete_trigger(outputname_userinput)
 
@@ -1627,8 +1650,14 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
     # might be causing MEMORYERROR - probably not
     # deleteandrename_existingoutputfiles_csv_and_sql(storagetype, list_existingoutputfiles1, max_output_amount, outputname_userinput)
 
-    deleteandrename_existingoutputs_sql_parenttable(max_output_amount, outputname_userinput)
-    deleteandrename_existingoutputs_sql_childtable(max_output_amount, outputname_userinput)
+    if storagetype == "mysql":
+        #one table version
+        new_ref_number = prepare_variables1_sql_parentandchildtables(outputname_userinput, max_output_amount)
+        outputname_generated = outputname_userinput 
+        print("ACTUAL REF NUMBER")
+        
+        deleteandrename_existingoutputs_sql_parenttable(max_output_amount, outputname_userinput)
+        deleteandrename_existingoutputs_sql_childtable(max_output_amount, outputname_userinput)
 
 
     '''*****************************************************************************
@@ -1646,10 +1675,9 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
 
         # #OR
         # might be causing MEMORYERROR - testing, probbably not
-        reformatandaddinfoto_symbolsdict2(symbols, marketcap_max)
+        reformatandaddinfoto_symbolsdict2(symbols, marketcap_min, marketcap_max)
 
 
-        
         
 
     '''*****************************************************************************
@@ -1660,14 +1688,18 @@ def main(input, outputname_userinput, parameter_subs, marketcap_min, marketcap_m
     
     # if write_empty_newoutputfile == True:
     #     add_newoutputfile_csv_and_sql_empty(storagetype, outputname_generated, dt_string)
+    if storagetype == "mysql":
+        if write_empty_newoutputfile == True:
+            add_newoutputfile_parenttable_empty(new_ref_number, outputname_userinput, time1_rsafinished)
+            add_newoutputfile_childtable_empty(new_ref_number, outputname_userinput, time1_rsafinished)
 
-    if write_empty_newoutputfile == True:
-        add_newoutputfile_parenttable_empty(new_ref_number, outputname_userinput)
-        add_newoutputfile_childtable_empty(new_ref_number, outputname_userinput)
+        if write_empty_newoutputfile == False:
+            add_newoutputfile_parenttable(outputname_userinput, new_ref_number, subreddit_count, upvoteRatio, ups, limit, upvotes, picks, picks_ayz, seconds_took, c_analyzed, time1_rsafinished, us, symbols, marketcap_min, marketcap_max)
 
-    if write_empty_newoutputfile == False:
-        add_newoutputfile_parenttable(outputname_userinput, new_ref_number, subreddit_count, upvoteRatio, ups, limit, upvotes, picks, picks_ayz, seconds_took, c_analyzed, us, marketcap_max)
-        add_newoutputfile_childtable(new_ref_number, outputname_userinput, symbols)
+            if symbols != {}:
+                add_newoutputfile_childtable(new_ref_number, outputname_userinput, symbols, time1_rsafinished)
+            elif symbols == {}:
+                add_newoutputfile_childtable_empty(new_ref_number, outputname_userinput, time1_rsafinished)
 
 
     '''*****************************************************************************
@@ -1691,14 +1723,14 @@ def run_batch_of_processes_1():
     # should reinitialize those process variables if starting them multiple time (in while loop or schedule module)
     *****************************************************************************'''
     # way 1 - local machine
-    # process_1 = Process(target=main, args=(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)) 
-    # process_2 = Process(target=main, args=(input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3))
-    # process_3 = Process(target=main, args=(input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min1, marketcap_max4))
+    # process_1 = Process(target=main, args=(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min0, marketcap_max1)) 
+    # process_2 = Process(target=main, args=(input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min0, marketcap_max3))
+    # process_3 = Process(target=main, args=(input_api_nasdaq, output_filename4, subs_membercount_min1, marketcap_min0, marketcap_max4))
 
     # way 2  - test
-    process_1 = Process(target=main, args=(input_api_nasdaq, 'result_test1_', subs_specificlist1, marketcap_min1, marketcap_max1)) 
-    process_2 = Process(target=main, args=(input_api_nasdaq, 'result_test2_', subs_specificlist1, marketcap_min1, marketcap_max3))
-    process_3 = Process(target=main, args=(input_api_nasdaq, 'result_test3_', subs_specificlist1, marketcap_min1, marketcap_max4))
+    process_1 = Process(target=main, args=(input_api_nasdaq, 'result_test1_', subs_specificlist1, marketcap_min0, marketcap_max1)) 
+    process_2 = Process(target=main, args=(input_api_nasdaq, 'result_test2_', subs_specificlist1, marketcap_min0, marketcap_max3))
+    process_3 = Process(target=main, args=(input_api_nasdaq, 'result_test3_', subs_specificlist1, marketcap_min0, marketcap_max4))
 
 
     '''*****************************************************************************
@@ -1731,12 +1763,12 @@ if __name__ == '__main__':
     *****************************************************************************'''
     #print("WAY 0 rsa.py used")
     
-    # main(input_api_nasdaq, output_filename1_RDS, subs_membercount_min1, marketcap_min1, marketcap_max1) ##stable RDS
-    #main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1) ##stable
-    #main(input_api_nasdaq, output_filename0, subs_membercount_min1, marketcap_min1, marketcap_max1) ##linux/window test large
-    #main(input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4) ##linux/window test small
-    #main(input_api_nasdaq, output_filename0, subs_membercount_min2, marketcap_min1, marketcap_max4) ##linux test - testing getlist_subreddits - WORKING, needs TESTING
-    #main(input_api_nasdaq, output_filename0, subs_specificlist1, marketcap_min1, marketcap_max4)
+    # main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min0, marketcap_max1) ##stable RDS
+    # main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min0, marketcap_max1) ##stable
+    #main(input_api_nasdaq, output_filename1_RDS, subs_membercount_min1, marketcap_min0, marketcap_max1) ##linux/window test large
+    #main(input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min0, marketcap_max4) ##linux/window test small
+    #main(input_api_nasdaq, output_filename0, subs_membercount_min2, marketcap_min0, marketcap_max4) ##linux test - testing getlist_subreddits - WORKING, needs TESTING
+    #main(input_api_nasdaq, output_filename0, subs_specificlist1, marketcap_min0, marketcap_max4)
 
 
     '''*****************************************************************************
@@ -1754,39 +1786,39 @@ if __name__ == '__main__':
 
     # if program_number == 1:
     #    #program one
-    #    main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1) ##
-    #    schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
-    #    schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
-    #    schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
-    #    schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
-    #    schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
-    #    schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
-    #    schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
-    #    schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min1, marketcap_max1)
+    #    main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min0, marketcap_max1) ##
+    #    schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min0, marketcap_max1)
+    #    schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min0, marketcap_max1)
+    #    schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min0, marketcap_max1)
+    #    schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min0, marketcap_max1)
+    #    schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min0, marketcap_max1)
+    #    schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min0, marketcap_max1)
+    #    schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min0, marketcap_max1)
+    #    schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min0, marketcap_max1)
 
     # if program_number == 2:
     #    #program two
-    #    #main(input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-    #    schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-    #    #schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-    #    schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-    #    schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-    #    schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-    #    #schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-    #    schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
-    #    #schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min1, marketcap_max3)
+    #    #main(input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min0, marketcap_max3)
+    #    schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min0, marketcap_max3)
+    #    #schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min0, marketcap_max3)
+    #    schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min0, marketcap_max3)
+    #    schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min0, marketcap_max3)
+    #    schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min0, marketcap_max3)
+    #    #schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min0, marketcap_max3)
+    #    schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min0, marketcap_max3)
+    #    #schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename3, subs_membercount_min1, marketcap_min0, marketcap_max3)
        
     # if program_number == 3:
     #    #program three
-    #    main(input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
-    #    schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
-    #    #schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
-    #    schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
-    #    schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
-    #    schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
-    #    #schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
-    #    schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
-    #    #schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4)
+    #    main(input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min0, marketcap_max4)
+    #    schedule.every().day.at("00:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min0, marketcap_max4)
+    #    #schedule.every().day.at("03:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min0, marketcap_max4)
+    #    schedule.every().day.at("06:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min0, marketcap_max4)
+    #    schedule.every().day.at("09:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min0, marketcap_max4)
+    #    schedule.every().day.at("12:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min0, marketcap_max4)
+    #    #schedule.every().day.at("15:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min0, marketcap_max4)
+    #    schedule.every().day.at("18:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min0, marketcap_max4)
+    #    #schedule.every().day.at("21:00").do(main, input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min0, marketcap_max4)
 
     # while True:
     #   schedule.run_pending()
@@ -1818,10 +1850,13 @@ if __name__ == '__main__':
     '''*****************************************************************************
     # WAY 2 - run program for n times with delay
     *****************************************************************************'''
-    # print("using way 2 - run program by fixed intervals (old)")
-    for n in range(30):
-        main(input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min1, marketcap_max4) ##linux/window test small
+    print("using way 2 - run program by fixed intervals (old)")
+    for n in range(200):
+        #main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min2, marketcap_max1) ##linux/window test small (1 sub)
+        main(input_api_nasdaq, output_filename1_RDS, subs_membercount_min1, marketcap_min0, marketcap_max1) ##linux/window test large (64 subs)
         time.sleep(15)
+
+        # subs_membercount_min1,subs_specificlist1 
 
     # input("Press any key to continue . . . (1) ")
     # input("Press any key to continue . . . (2) ")
