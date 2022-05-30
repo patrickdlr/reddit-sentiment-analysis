@@ -99,6 +99,7 @@ output_filename1_RDS = 'result_all_rds_'
 output_filename2 = 'result_200b_'
 output_filename3 = 'result_15b_'
 output_filename4 = 'result_4b_'
+output_filename4_RDS = 'result_4b_rds_'
 output_filename5 = 'result_4m_'
 
 subs_specificlist1 = ['wallstreetbets']
@@ -1766,7 +1767,7 @@ if __name__ == '__main__':
     # main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min0, marketcap_max1) ##stable RDS
     # main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min0, marketcap_max1) ##stable
     #main(input_api_nasdaq, output_filename1_RDS, subs_membercount_min1, marketcap_min0, marketcap_max1) ##linux/window test large
-    #main(input_api_nasdaq, output_filename4, subs_specificlist1, marketcap_min0, marketcap_max4) ##linux/window test small
+    main(input_api_nasdaq, output_filename4_RDS, subs_specificlist1, marketcap_min0, marketcap_max4) ##linux/window test small
     #main(input_api_nasdaq, output_filename0, subs_membercount_min2, marketcap_min0, marketcap_max4) ##linux test - testing getlist_subreddits - WORKING, needs TESTING
     #main(input_api_nasdaq, output_filename0, subs_specificlist1, marketcap_min0, marketcap_max4)
 
@@ -1850,11 +1851,11 @@ if __name__ == '__main__':
     '''*****************************************************************************
     # WAY 2 - run program for n times with delay
     *****************************************************************************'''
-    print("using way 2 - run program by fixed intervals (old)")
-    for n in range(200):
-        #main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min2, marketcap_max1) ##linux/window test small (1 sub)
-        main(input_api_nasdaq, output_filename1_RDS, subs_membercount_min1, marketcap_min0, marketcap_max1) ##linux/window test large (64 subs)
-        time.sleep(15)
+    # print("using way 2 - run program by fixed intervals (old)")
+    # for n in range(200):
+    #     #main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min2, marketcap_max1) ##linux/window test small (1 sub)
+    #     main(input_api_nasdaq, output_filename1_RDS, subs_membercount_min1, marketcap_min0, marketcap_max1) ##linux/window test large (64 subs)
+    #     time.sleep(15)
 
         # subs_membercount_min1,subs_specificlist1 
 
