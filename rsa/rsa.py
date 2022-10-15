@@ -50,7 +50,7 @@ use_sentiment_analysis_and_visualization = False
 storagetype = "mysql"
 write_empty_newoutputfile = False #default: False
 
-max_output_amount = 25
+max_output_amount = 300
 if max_output_amount < 1: raise ValueError('max output amount cannot be <1')
 
 IEX_TOKEN = os.environ.get('IEX_TOKEN')
@@ -86,6 +86,7 @@ def connect_to_mysql():
 if storagetype == "mysql":
     connection, cursor = connect_to_mysql()
     # db_name1 = 'rsa_db_onetableversion'
+    # db_name1 = 'test_db1'
     db_name1 = 'rsa_db'
 
 '''*****************************************************************************
@@ -100,6 +101,7 @@ output_filename2 = 'result_200b_'
 output_filename3 = 'result_15b_'
 output_filename4 = 'result_4b_'
 output_filename4_RDS = 'result_4b_rds_'
+output_filename4_300run = 'result_4b_300run_'
 output_filename5 = 'result_4m_'
 
 subs_specificlist1 = ['wallstreetbets']
@@ -1020,6 +1022,9 @@ def reformatandaddinfoto_symbolsdict(symbols):
         url =  'https://sandbox.iexapis.com/stable/stock/' + str(k) + '/quote' + IEX_TOKEN_SANDBOX
         
         r = requests.get(url)
+        # r = requests.post(url)
+        # print(r.status_code, r.reason)
+        # print('##1')
         # print(r)
 
         try:
@@ -1086,7 +1091,12 @@ def reformatandaddinfoto_symbolsdict2(symbols, marketcap_min, marketcap_max):
     for k in symbols.keys():
         time.sleep(0.4)
         url =  'https://sandbox.iexapis.com/stable/stock/' + str(k) + '/quote' + IEX_TOKEN_SANDBOX
+
         r = requests.get(url)
+        # r = requests.post(url)
+        # print(r.status_code, r.reason)
+        # print('##2')
+        # print(r)
 
         try:
             j = r.json()
@@ -1119,6 +1129,9 @@ def reformatandaddinfoto_symbolsdict2(symbols, marketcap_min, marketcap_max):
         url =  'https://sandbox.iexapis.com/stable/stock/' + str(k) + '/quote' + IEX_TOKEN_SANDBOX
         
         r = requests.get(url)
+        # r = requests.post(url)
+        # print(r.status_code, r.reason)
+        # print('##3')
         # print(r)
 
         try:
@@ -1494,7 +1507,7 @@ def add_newoutputfile_childtable(new_ref_number, outputname_userinput, symbols, 
     list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
     print('end', list_existingoutputfiles1)
 
-
+#revise this
 def print_logs3(outputname_userinput, outputname_generated):
     print()
 
@@ -1764,10 +1777,10 @@ if __name__ == '__main__':
     *****************************************************************************'''
     #print("WAY 0 rsa.py used")
     
-    # main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min0, marketcap_max1) ##stable RDS
+    main(input_api_nasdaq, output_filename1_RDS, subs_membercount_min1, marketcap_min0, marketcap_max1) ##stable RDS
     # main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min0, marketcap_max1) ##stable
     #main(input_api_nasdaq, output_filename1_RDS, subs_membercount_min1, marketcap_min0, marketcap_max1) ##linux/window test large
-    main(input_api_nasdaq, output_filename4_RDS, subs_specificlist1, marketcap_min0, marketcap_max4) ##linux/window test small
+    #main(input_api_nasdaq, output_filename4_RDS, subs_specificlist1, marketcap_min0, marketcap_max4) ##linux/window test small
     #main(input_api_nasdaq, output_filename0, subs_membercount_min2, marketcap_min0, marketcap_max4) ##linux test - testing getlist_subreddits - WORKING, needs TESTING
     #main(input_api_nasdaq, output_filename0, subs_specificlist1, marketcap_min0, marketcap_max4)
 
@@ -1851,11 +1864,14 @@ if __name__ == '__main__':
     '''*****************************************************************************
     # WAY 2 - run program for n times with delay
     *****************************************************************************'''
+    #result_4b_300run_
+    #result_4b_1hrdelay_formoretickers_
+
     # print("using way 2 - run program by fixed intervals (old)")
-    # for n in range(200):
-    #     #main(input_api_nasdaq, output_filename1, subs_membercount_min1, marketcap_min2, marketcap_max1) ##linux/window test small (1 sub)
-    #     main(input_api_nasdaq, output_filename1_RDS, subs_membercount_min1, marketcap_min0, marketcap_max1) ##linux/window test large (64 subs)
-    #     time.sleep(15)
+    # for n in range(300):
+    #     main(input_api_nasdaq, 'result_4b_15mindelay_formoretickers_', subs_specificlist1, marketcap_min0, marketcap_max4) ##linux/window test small (1 sub)
+    #     # main(input_api_nasdaq, output_filename1_RDS, subs_membercount_min1, marketcap_min0, marketcap_max1) ##linux/window test large (64 subs)
+    #     time.sleep(900)
 
         # subs_membercount_min1,subs_specificlist1 
 

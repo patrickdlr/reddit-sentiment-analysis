@@ -3,7 +3,7 @@ Flask==2.1.2
 flask_cors==3.0.10
 flask_sqlalchemy==2.5.1
 matplotlib==3.5.1
-nltk==3.7
+nltk>=3.6.6
 numpy==1.22.3
 pandas==1.4.2
 praw==7.5.0

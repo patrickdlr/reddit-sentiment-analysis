@@ -335,3 +335,28 @@ SET GLOBAL log_bin_trust_function_creators=1; //can be done on local, but not aw
 SET GLOBAL log_bin_trust_function_creators=0;
 
 '''
+
+'''
+DELETE multiple tables (using LIKE )'
+
+SELECT CONCAT('DROP TABLE ', TABLE_SCHEMA, '.', TABLE_NAME, ';') 
+FROM INFORMATION_SCHEMA.TABLES 
+WHERE TABLE_NAME LIKE 'result_4b_0%' 
+AND TABLE_SCHEMA = 'rsa_db';
+INTO OUTFILE '/tmp/whatever_filename';
+
+SOURCE /tmp/whatever_filename;
+
+
+SELECT * FROM (
+  SELECT CONCAT('DROP TABLE ', GROUP_CONCAT(table_name) , ';')
+  FROM INFORMATION_SCHEMA.TABLES
+  WHERE table_name LIKE 'result_all_0%'
+) a INTO @mystmt;
+
+PREPARE mystatement FROM @mystmt;
+EXECUTE mystatement;
+
+
+select * from rsa_db.result_all_parent where rsa_db.result_all_parent.parenttable_id > 290;
+'''

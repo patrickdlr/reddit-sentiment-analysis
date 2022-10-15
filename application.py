@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import csv, os, sys
 import pathlib
 from flask_cors import CORS
@@ -31,6 +31,8 @@ application = Flask(__name__)
 cors = CORS(application)
 application.config['CORS_HEADERS'] = 'Content-Type'
 
+#disable jsonify's dict re-ordering
+application.config['JSON_SORT_KEYS'] = False
 
 
 '''*****************************************************************************
@@ -80,6 +82,15 @@ def fetchtest():
     return jsonify({'key1' : data1, 'key2':'002 bkend'})
 
 
+@application.route('/formtest1', methods=['POST'])
+def formtest():
+    if request.method == "POST":
+        print('hfel')
+        # getting input with freq = set_freq in HTML form
+        a = request.form.get("name") # <--- do whatever you want with that value
+        print("Your freq value is " + str(a))
+    return jsonify(a)
+
 @application.route('/readtxtfile', methods=['GET'])
 def readtxtfile():
     with open('sampletext.txt') as file:
@@ -112,35 +123,72 @@ def ftn_fetchcsvfile():
     # return jsonify(string1)
     return json.dumps(string1) #nicer, prints neatly like seen in python console
 
-    
-@application.route('/test_fetchsql', methods=['GET'])
-def ftn_fetchsql():
+
+
+@application.route('/test_fetchsql_parent', methods=['GET'])
+def ftn_fetchsql_parent():
     connection, cursor = connect_to_mysql()
-    database_name1 = 'rsa_db'
+    db_name1 = 'rsa_db'
+    outputname_userinput = 'result_all_rds_'
+    
 
-    # 1 - get a list of existing saved tables that contains given outputname_userinput
-    list_existingoutputfiles1 = [] 
-    outputname_userinput = "result_all_rds_"
-    cursor.execute(f"SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{database_name1}' AND table_name like '{outputname_userinput}%';")
+    #preview list of parenttable ids
+    list_existingoutputfiles1 = []
+    sql = f"select parenttable_id from {db_name1}.{outputname_userinput}parent order by parenttable_id ASC;"
+    cursor.execute(sql)
     result = cursor.fetchall()
+    # pprint.pprint(result)
+    # turn into list
+    list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+    # remove duplicates
+    list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+    #print('end', list_existingoutputfiles1)
+    
+    latest_parenttable_id = list_existingoutputfiles1[-1]
+    print("latest_parenttable_id:", latest_parenttable_id)
 
-    # 2 -get latest output
-    list_existingoutputfiles1 = [list(a.values())[0] for a in result]
-    latest_output = str(list_existingoutputfiles1[-1])
-    print(latest_output)
-
-
-    cursor.execute(f"SELECT * from {database_name1}.{latest_output} where number < 20;")
-    result = cursor.fetchall()  
+    cursor.execute(f"SELECT * FROM {db_name1}.{outputname_userinput}parent where parenttable_id = {latest_parenttable_id};")
+    result = cursor.fetchall() 
+    print(type(result)) 
 
     connection.close()
 
-    return jsonify(result) #nicer
-    # return json.dumps(result) 
-    
-    
+    return jsonify(result) #nicer, can disable re-ordering in app.config?
+    #return json.dumps(result)
 
 
+@application.route('/test_fetchsql', methods=['GET'])
+def ftn_fetchsql():
+    connection, cursor = connect_to_mysql()
+    db_name1 = 'rsa_db'
+    outputname_userinput = 'result_all_rds_'
+    
+
+    #preview list of parenttable ids
+    list_existingoutputfiles1 = []
+    sql = f"select parenttable_id from {db_name1}.{outputname_userinput}parent order by parenttable_id ASC;"
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    # pprint.pprint(result)
+    # turn into list
+    list_existingoutputfiles1 = [list(a.values())[0] for a in result] 
+    # remove duplicates
+    list_existingoutputfiles1 = list(dict.fromkeys(list_existingoutputfiles1))
+    #print('end', list_existingoutputfiles1)
+    
+    latest_parenttable_id = list_existingoutputfiles1[-1]
+    print("latest_parenttable_id:", latest_parenttable_id)
+
+    #try get multiple data tables (in array/list)
+    cursor.execute(f"SELECT ticker_id, symbol, mentions, concat('$', format(market_cap/1000000000, 2), 'B') as market_cap, latest_price, change_percent, pe_ratio, company_name, datetime, parenttable_id from {db_name1}.{outputname_userinput}child where parenttable_id = {latest_parenttable_id} limit 50;")
+    result = cursor.fetchall() 
+    print(type(result)) 
+
+    connection.close()
+
+    return jsonify(result) #nicer, can disable re-ordering in app.config?
+    #return json.dumps(result)
+    
 
         
 
@@ -153,4 +201,5 @@ if __name__ == "__main__":
     # application.debug = True
     
     #application.run(threaded=True) #threaded=True to try keep persistent connection with mysql = OK, now try application.run() only
-    application.run()
+    # application.run()
+    application.run(host='0.0.0.0', port=5000)#, debug=False, threaded=False)
